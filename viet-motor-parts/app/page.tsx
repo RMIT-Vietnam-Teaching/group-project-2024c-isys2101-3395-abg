@@ -1,19 +1,26 @@
 import { Metadata } from "next/types";
+import Hero from "./components/Hero";
+import { ProductList } from "./components/ProductList";
+import Button from "./components/Button";
 
 export const metadata: Metadata = {
-    title: "Homepage | Viet Motor Parts",
-    description: "Homepage of Viet Motor Parts",
+  title: "Homepage | Viet Motor Parts",
+  description: "Homepage of Viet Motor Parts",
 };
 
 export default function Home() {
-    return (
-        <div className="container h-full">
-            <h1 className="text-4xl font-bold">Welcome to DaisyUI</h1>
-            <p className="text-lg mt-4">
-                DaisyUI is a CSS framework that is designed to be simple and lightweight.
-                It is built on top of Tailwind CSS and provides a set of components that
-                are easy to use and customize.
-            </p>
-        </div>
-    );
+  return (
+    <div>
+      <Hero/>
+      <div className="justify-items-center items-center justify-center">
+    <div className="text-center pb-10 grid grid-cols-3">
+        <h1 className="text-5xl font-bold col-start-2">
+            Top Sellers
+        </h1>
+        <Button title="View All" link="/products" className="w-min" />
+    </div>
+      <ProductList/>
+      </div>
+    </div>
+  );
 }

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import SearchBar from "./SearchBar";
 
 export function Navbar() {
   return (
-    <div className="navbar rounded-b-xl bg-brand-600 font-bold">
+    <div className="navbar bg-brand-600 font-bold">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -46,7 +47,12 @@ export function Navbar() {
           </ul>
         </div>
         <Link href="/">
-        <Image src="/logo/LogoWithNameSide.png" alt="Viet Motor Parts logo" width={140} height={75}/>
+          <Image
+            src="/logo/LogoWithNameSide.png"
+            alt="Viet Motor Parts logo"
+            width={140}
+            height={75}
+          />
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
@@ -57,7 +63,7 @@ export function Navbar() {
           <li>
             <details>
               <summary>Tools</summary>
-              <ul className="p-2 bg-brand-600">
+              <ul className="bg-brand-600 p-2">
                 <li>
                   <a>Compatability Check</a>
                 </li>
@@ -72,8 +78,15 @@ export function Navbar() {
           </li>
         </ul>
       </div>
-      <div className="navbar-end">
-        <Link href="/login" className="p-2 bg-brand-500 rounded-btn">Login</Link>
+      <div className="navbar-end grid grid-cols-4">
+        <div className="col-span-3">     
+             <SearchBar />
+        </div>
+        <div className="col-span-1 justify-items-center grid tooltip tooltip-warning tooltip-bottom" data-tip="Only for Admins!">        
+            <Link href="/login" className="rounded-3xl bg-brand-500 px-5 py-3">
+              Login
+            </Link>
+        </div>
       </div>
     </div>
   );
