@@ -1,51 +1,41 @@
 import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
+import { Menu, ShoppingCartIcon } from 'lucide-react';
+
 
 export function Navbar() {
   return (
     <div className="navbar bg-brand-600 font-bold">
       <div className="navbar-start">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </div>
+        <details className="dropdown lg:hidden">
+          <summary className="btn btn-ghost lg:hidden">
+            <Menu size={32} />
+          </summary>
           <ul
             tabIndex={0}
-            className="menu dropdown-content menu-sm z-[1] mt-3 grid w-52 gap-3 rounded-box bg-brand-600 p-2 shadow"
+            className="menu dropdown-content mt-3 grid w-screen gap-2 rounded-box bg-brand-600 shadow"
           >
             <li>
-              <a>Products</a>
+              <Link href="/products">Products</Link>
             </li>
             <li>
-              <a>Tools</a>
+              Tools
               <ul className="p-2">
                 <li>
-                  <a>Compatability</a>
+                  <Link href="/compatability-check">Compatability Check</Link>
                 </li>
                 <li>
-                  <a>Interest Rate Calculator</a>
+                  <Link href="/calculator">Interest Rate Calculator</Link>
                 </li>
               </ul>
             </li>
             <li>
-              <a>Order Tracking</a>
+              <Link href="/order-tracking">Order Tracking</Link>
             </li>
+            <SearchBar />
           </ul>
-        </div>
+        </details>
         <Link href="/">
           <Image
             src="/logo/LogoWithNameSide.png"
@@ -54,38 +44,44 @@ export function Navbar() {
             height={75}
           />
         </Link>
+        <div className="hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              <Link href="/products">Products</Link>
+
+            </li>
+            <li>
+              <div className="dropdown dropdown-hover dropdown-bottom">
+                <div tabIndex={0} role="button">Tools</div>
+                <ul tabIndex={0} className="bg-brand-600 p-2 dropdown-content z-[1] w-52 rounded-lg">
+                  <li>
+                    <Link href="/compatability-check">Compatability Check</Link>
+                  </li>
+                  <li>
+                    <Link href="/calculator">Interest Rate Calculator</Link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <Link href="/order-tracking">Order Tracking</Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <a>Products</a>
-          </li>
-          <li>
-            <details>
-              <summary>Tools</summary>
-              <ul className="bg-brand-600 p-2">
-                <li>
-                  <a>Compatability Check</a>
-                </li>
-                <li>
-                  <a>Interest Rate Calculator</a>
-                </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <a>Orders</a>
-          </li>
-        </ul>
-      </div>
-      <div className="navbar-end grid grid-cols-4">
-        <div className="col-span-3">     
-             <SearchBar />
+        <div className="w-[500px]">
+          <SearchBar />
         </div>
-        <div className="col-span-1 justify-items-center grid tooltip tooltip-warning tooltip-bottom" data-tip="Only for Admins!">        
-            <Link href="/login" className="rounded-3xl bg-brand-500 px-5 py-3">
-              Login
-            </Link>
+      </div>
+      <div className="navbar-end flex gap-5">
+        <Link href='/cart'>
+          <ShoppingCartIcon size={32} />
+        </Link>
+        <div className="tooltip tooltip-warning tooltip-bottom lg:mr-7" data-tip="Only for Admins!">
+          <Link href="/login" className="rounded-3xl bg-brand-500 px-5 py-3">
+            Login
+          </Link>
         </div>
       </div>
     </div>
