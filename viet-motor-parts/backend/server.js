@@ -1,0 +1,28 @@
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const path = require('path');
+const { connectDB } = require("./db/connectDB");
+
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// for testing 
+app.set('view engine', 'ejs');
+
+// support getting local image files
+global.publicDirectory = path.resolve(__dirname, 'public');
+
+connectDB()
+  .catch((error) => {
+    console.log(error)
+  });
+
+app.get("/", (req, res) => {
+  res.json({ message: "API running..." });
+});
+
+const PORT = process.env.TEST_BACKEND_PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
