@@ -1,5 +1,6 @@
 import { ProductList } from '../components/ProductList';
 import { Metadata } from "next/types";
+import { Button } from '../components/shadcn/button';
 
 export const metadata: Metadata = {
     title: "Products | Viet Motor Parts",
@@ -8,13 +9,19 @@ export const metadata: Metadata = {
 
 export default function Page() {
     return (
-        <div className='grid grid-cols-3'>
-            <div className='col-span-1'>
-                Sort and Filter
+        <div>
+            <div className='grid grid-cols-3'>
+                <div className='col-span-1'>
+                    Sort and Filter
+                </div>
+                <div className='col-span-2'>
+                    <ProductList className="py-5" />
+                </div>
             </div>
-            <div className='col-span-2'>
-                <ProductList className="py-5" />
+            <div className='grid grid-cols-3 py-3'>
+                <div className='col-start-2 mx-auto'><Button> Pagination Placeholder</Button></div>
             </div>
         </div>
+
     );
 }

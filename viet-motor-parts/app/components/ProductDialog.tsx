@@ -7,9 +7,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./shadcn/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "./shadcn/select";
 import { Label } from "./shadcn/label";
 import { Textarea } from "./shadcn/textarea";
 import CurrencyInputVietnam from "./CurrencyInputVietnam";
+import { Input } from "./shadcn/input";
 
 export default function ProductDialog() {
 
@@ -32,7 +40,16 @@ export default function ProductDialog() {
                             Name
                         </label>
                         <input
-                            id="name"
+                            id="name" name="name" type="text"
+                            className="col-span-3 rounded-md p-2 bg-white text-black focus:outline-none"
+                        />
+                    </div>
+                    <div className="grid grid-row-2 lg:grid-cols-4 items-center  gap-2 lg:gap-4">
+                        <label htmlFor="brand" className="text-left lg:text-right font-bold">
+                            Brand
+                        </label>
+                        <input
+                            id="brand" name="brand" type="text"
                             className="col-span-3 rounded-md p-2 bg-white text-black focus:outline-none"
                         />
                     </div>
@@ -40,13 +57,40 @@ export default function ProductDialog() {
                         <Label htmlFor="description" className="text-left lg:text-right font-bold">
                             Description
                         </Label>
-                        <Textarea id="description" className="col-span-3 bg-white text-black" />
+                        <Textarea id="description" name="description" className="col-span-3 bg-white text-black" />
                     </div>
                     <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
                         <Label htmlFor="price" className="text-left lg:text-right font-bold">
-                            Price (VND)
+                            Price (VNĐ)
                         </Label>
                         <CurrencyInputVietnam />
+                    </div>
+                    <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
+                        <Label htmlFor="image" className="text-left lg:text-right font-bold">
+                            Image
+                        </Label>
+                        <Input id="image" type="file" name="image" accept="image/*" className="col-span-3 bg-white text-black" multiple />
+                    </div>
+                    <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
+                        <Label htmlFor="quantity" className="text-left lg:text-right font-bold">
+                            Stock Amount
+                        </Label>
+                        <Input id="quantity" type="number" name="quantity" min="0" className="col-span-3 bg-white text-black" />
+                    </div>
+                    <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
+                        <Label htmlFor="category_id" className="text-left lg:text-right font-bold">
+                            Category
+                        </Label>
+                        <Select>
+                            <SelectTrigger className="col-span-3 bg-white text-black">
+                                <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="safety">Safety</SelectItem>
+                                <SelectItem value="liquidcoolant">Liquid Coolant</SelectItem>
+                                <SelectItem value="wheels and tires">Wheels and Tires</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
             </DialogContent>
