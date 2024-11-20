@@ -1,4 +1,11 @@
 import CreditScoreForm from './clientComponent'
+import { Metadata } from "next/types";
+
+
+export const metadata: Metadata = {
+    title: "Interest Rate Calculator | Viet Motor Parts",
+    description: "Viet Motor Part's Interest Rate Calculator",
+};
 
 async function calculateLoan(formData: FormData) {
     'use server'
