@@ -31,7 +31,7 @@ export function Navbar() {
               </ul>
             </li>
             <li>
-              <Link href="/order-tracking">Order Tracking</Link>
+              <Link href="/orders">Order Tracking</Link>
             </li>
             <SearchBar />
           </ul>
@@ -64,7 +64,7 @@ export function Navbar() {
               </div>
             </li>
             <li>
-              <Link href="/order-tracking">Order Tracking</Link>
+              <Link href="/orders">Order Tracking</Link>
             </li>
           </ul>
         </div>

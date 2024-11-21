@@ -17,7 +17,7 @@ export default function productCard() {
       <div className="flex flex-col justify-between gap-3 px-5 pt-3 pb-5">
         <Link href="#">
           <h5 className="text-xl font-semibold tracking-tight line-clamp-2" id="productName">
-            MOTORBIKE 4T 5W30 MOLYGEN SCOOTER LIQUI MOLY
+            Đèn led 2 tầng Zhi.Pat phiên bản Sportline
           </h5>
         </Link>
         <div className="flex items-center justify-between">

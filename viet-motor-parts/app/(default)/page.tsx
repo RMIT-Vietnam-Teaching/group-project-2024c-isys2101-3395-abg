@@ -1,7 +1,7 @@
 import { Metadata } from "next/types";
-import Hero from "./components/Hero";
-import { ProductList } from "./components/ProductList";
-import Button from "./components/Button";
+import Hero from "@/app/components/Hero";
+import { ProductList } from "@/app/components/ProductList";
+import Button from "@/app/components/Button";
 
 export const metadata: Metadata = {
   title: "Homepage | Viet Motor Parts",

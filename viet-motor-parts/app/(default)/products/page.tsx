@@ -1,6 +1,5 @@
-import ProductCard from '../components/ProductCard';
+import ProductCard from '@/app/components/ProductCard';
 import { Metadata } from "next/types";
-import { Button } from '../components/shadcn/button';
 
 export const metadata: Metadata = {
     title: "Products | Viet Motor Parts",
