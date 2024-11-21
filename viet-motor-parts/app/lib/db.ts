@@ -2,6 +2,7 @@ import mongoose, { Mongoose } from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
+
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
 if (!MONGODB_URI) {
@@ -65,5 +66,7 @@ async function dbConnect() {
 
   return cached.conn;
 }
+
+// console.log('db.ts imported in:', typeof window === 'undefined' ? 'server' : 'client');
 
 export default dbConnect;
