@@ -15,13 +15,14 @@ interface CalculateLoanResult {
     monthlyPayment?: string
     totalPayment?: string
 }
+export function formatCurrency(value: number): string {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+};
 
 export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<CalculateLoanResult> }) {
     const [result, setResult] = useState<CalculateLoanResult | null>(null)
 
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
-    };
+
 
     async function handleSubmit(formData: FormData) {
         const calculationResult = await calculateLoan(formData)
@@ -29,15 +30,15 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
     }
 
     return (
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto text-white border-none shadow-xl bg-brand-500">
             <CardHeader>
-                <CardTitle>Credit Score Calculator</CardTitle>
-                <CardDescription>Calculate your interest rate and monthly payment based on your credit score and loan term</CardDescription>
+                <CardTitle className='text-center lg:text-left'>Credit Score Calculator</CardTitle>
+                <CardDescription className='text-white'>Calculate your interest rate and monthly payment based on your credit score and loan term</CardDescription>
             </CardHeader>
             <CardContent>
                 <form action={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="creditScore">Credit Score (300-850)</Label>
+                        <Label htmlFor="creditScore" className='font-semibold'>Credit Score (300-850)</Label>
                         <Input
                             id="creditScore"
                             name="creditScore"
@@ -50,7 +51,7 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="loanTerm">Total Amount (VNĐ)</Label>
-                        <CurrencyInputVietnam className='flex h-9 w-full rounded-md border border-zinc-200 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' />
+                        <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-600 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="loanTerm">Loan Term (months)</Label>
@@ -64,19 +65,19 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
                             required
                         />
                     </div>
-                    <Button type="submit" className="w-full">Calculate</Button>
+                    <Button type="submit" className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl ">Calculate</Button>
                 </form>
             </CardContent>
             <CardFooter className="flex flex-col items-start">
                 {result?.error && (
                     <Alert variant="destructive" className="mb-4">
-                        <AlertCircle className="h-4 w-4" />
+                        <AlertCircle className="w-4 h-4" />
                         <AlertTitle>Error</AlertTitle>
                         <AlertDescription>{result.error}</AlertDescription>
                     </Alert>
                 )}
                 {result?.interestRate && result?.monthlyPayment && (
-                    <div className="space-y-2 w-full">
+                    <div className="w-full space-y-2">
                         <p className="font-semibold">Results:</p>
                         <p>Interest Rate: {result.interestRate}%</p>
                         <p>Monthly Payment: {formatCurrency(Number(result.monthlyPayment))}</p>

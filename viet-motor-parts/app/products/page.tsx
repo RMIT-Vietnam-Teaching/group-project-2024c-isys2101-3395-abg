@@ -1,4 +1,4 @@
-import { ProductList } from '../components/ProductList';
+import ProductCard from '../components/ProductCard';
 import { Metadata } from "next/types";
 import { Button } from '../components/shadcn/button';
 
@@ -9,19 +9,20 @@ export const metadata: Metadata = {
 
 export default function Page() {
     return (
-        <div>
-            <div className='grid grid-cols-3'>
-                <div className='col-span-1'>
-                    Sort and Filter
-                </div>
-                <div className='col-span-2'>
-                    <ProductList className="py-5" />
-                </div>
+        <section className="flex flex-col w-full gap-10 pb-10 my-5 content lg:flex-row px-7">
+            <aside
+                className="left-0 w-full p-5 border rounded-lg bg-palette-3 md:max-lg:block lg:block lg:sticky top-10 h-5/6 lg:w-1/4 md:max-lg:center-and-half">
+                <h2 className="mb-4 text-xl font-bold text-center text-white">Sort/Filter</h2>
+            </aside>
+            <div className="flex flex-col justify-center w-full xl:w-3/4">
+                <section
+                    className="grid items-center justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1281px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
+                    {[...Array(6)].map((_, index) => (
+                        <ProductCard key={index} />
+                    ))}
+                </section>
             </div>
-            <div className='grid grid-cols-3 py-3'>
-                <div className='col-start-2 mx-auto'><Button> Pagination Placeholder</Button></div>
-            </div>
-        </div>
+        </section>
 
     );
 }
