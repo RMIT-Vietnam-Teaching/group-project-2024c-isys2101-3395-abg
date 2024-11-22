@@ -1,7 +1,7 @@
 import {AmountSelector} from "@/app/components/AmountSelector";
 import Image from "next/image";
 
-export default function Pages() {
+export default function Page() {
     return (
     <div className="bg-brand-100 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,6 +41,7 @@ export default function Pages() {
                             <p className="mt-2 text-sm text-green-600 dark:text-green-500"><span className="font-medium">Alright!</span> This part is compatible with your motor!</p>
                     </div>
                     <div className="mb-4">
+                        <label htmlFor="quantity-input" className="font-bold block mb-2 text-brand-600 text-lg">Choose quantity:</label>
                         <AmountSelector/>
                     </div>
                     <div>
