@@ -11,11 +11,17 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next/types";
 interface OrderPageProps {
     params: {
         id: string;
     };
 }
+
+export const metadata: Metadata = {
+    title: "Order Details | Viet Motor Parts",
+    description: "Order Details",
+};
 
 export default function Page({ params }: OrderPageProps) {
     return (
