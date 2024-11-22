@@ -9,6 +9,7 @@ import {
     TableFooter,
 } from "@/app/components/shadcn/table";
 import { formatCurrency } from "@/lib/utils";
+import { CircleCheck } from "lucide-react";
 import Link from "next/link";
 interface OrderPageProps {
     params: {
@@ -37,7 +38,7 @@ export default function Page({ params }: OrderPageProps) {
                     </div>
                     <div className="flex justify-between">
                         <p className="font-semibold">Address:</p>
-                        <p>29/84/6 Đoàn Thị Điểm P.1 Q.Phú Nhuận</p>
+                        <p className="line-clamp-1">29/84/6 Đoàn Thị Điểm P.1 Q.Phú Nhuận</p>
                     </div>
                     <div className="flex justify-between">
                         <p className="font-semibold">Order Date:</p>
@@ -46,87 +47,42 @@ export default function Page({ params }: OrderPageProps) {
                 </div>
                 <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
                     <ul className="timeline timeline-vertical">
-                        <li>
-                            <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">Order Confirmed</div>
+                        <li id="orderConfirmed">
+                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Order Confirmed</div>
                             <div className="timeline-middle">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="text-primary h-5 w-5">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clipRule="evenodd" />
-                                </svg>
+                                <CircleCheck className="text-green-500 h-5 w-5" id="orderConfirmedCircle" />
                             </div>
-                            <hr className="bg-primary" />
+                            <hr className="bg-green-500" id="orderpackaged-line-1" />
                         </li>
-                        <li>
-                            <hr className="bg-primary" />
+                        <li id="orderPackaged">
+                            <hr className="bg-green-500" id="orderpackaged-line-2" />  {/* change line-1 and line-2 when the step is finished */}
+                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Packaged</div>
                             <div className="timeline-middle">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="text-primary h-5 w-5">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clipRule="evenodd" />
-                                </svg>
+                                <CircleCheck className="text-green-500 h-5 w-5" id="orderPackagedCircle" />
                             </div>
-                            <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">Packaged</div>
-                            <hr className="bg-primary" />
+                            <hr className="bg-green-500" id="ordershipped-line-1" />
                         </li>
-                        <li>
-                            <hr className="bg-primary" />
-                            <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">Shipped</div>
+                        <li id="shipped">
+                            <hr className="bg-green-500" id="ordershipped-line-2" />
+                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Shipped</div>
                             <div className="timeline-middle">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="text-primary h-5 w-5">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clipRule="evenodd" />
-                                </svg>
+                                <CircleCheck className="text-green-500 h-5 w-5" id="orderShippedCircle" />
                             </div>
-                            <hr />
+                            <hr className="" id="orderOnTheWay-line-1" />
                         </li>
-                        <li>
-                            <hr />
+                        <li id="onTheWay">
+                            <hr className="" id="orderOnTheWay-line-2" />
                             <div className="timeline-middle">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="h-5 w-5">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clipRule="evenodd" />
-                                </svg>
+                                <CircleCheck className="text-white h-5 w-5" id="orderOnTheWay-2" />
                             </div>
                             <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">On The Way</div>
-                            <hr />
+                            <hr className="" id="orderDelivered-line-1" />
                         </li>
-                        <li>
-                            <hr />
+                        <li id="delivered">
+                            <hr className="" id="orderdelivered-line-2" />
                             <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">Delivered</div>
                             <div className="timeline-middle">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="h-5 w-5">
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                        clipRule="evenodd" />
-                                </svg>
+                                <CircleCheck className="text-white h-5 w-5" id="orderDeliveredCircle" />
                             </div>
                         </li>
                     </ul>
