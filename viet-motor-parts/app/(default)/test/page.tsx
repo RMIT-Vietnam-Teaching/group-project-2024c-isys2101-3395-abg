@@ -1,7 +1,7 @@
 "use client";
 
-import CompatibleVehicle from "../components/CompatibleVehicle";
-import ProductDialog from "../components/ProductDialog";
+import CompatibleVehicle from "@/app/components/CompatibleVehicle";
+import ProductDialog from "@/app/components/ProductDialog";
 import React from "react";
 
 export default function Page() {

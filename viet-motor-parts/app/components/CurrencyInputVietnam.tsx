@@ -16,7 +16,7 @@ export default function CurrencyInputVietnam({ className }: CurrencyInputVietnam
         setRawValue(rawValue || ' ');
     };
     return (<div className="col-span-3">
-        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control ${className} w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="Enter a value" />
+        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control ${className} w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="e.g 120,000đ" />
         <input type="number" name="price" min="0" value={rawValue} className="hidden" />
     </div>
 

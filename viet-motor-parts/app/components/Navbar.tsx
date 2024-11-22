@@ -7,7 +7,7 @@ import { Menu, ShoppingCartIcon } from 'lucide-react';
 export function Navbar() {
   return (
     <div className="navbar bg-brand-600 font-bold">
-      <div className="navbar-start">
+      <div className="w-7/12 justify-start">
         <details className="dropdown lg:hidden">
           <summary className="btn btn-ghost lg:hidden">
             <Menu size={32} />
@@ -31,7 +31,7 @@ export function Navbar() {
               </ul>
             </li>
             <li>
-              <Link href="/order-tracking">Order Tracking</Link>
+              <Link href="/orders">Order Tracking</Link>
             </li>
             <SearchBar />
           </ul>
@@ -64,13 +64,13 @@ export function Navbar() {
               </div>
             </li>
             <li>
-              <Link href="/order-tracking">Order Tracking</Link>
+              <Link href="/orders">Order Tracking</Link>
             </li>
           </ul>
         </div>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <div className="w-[500px]">
+        <div className="w-[420px]">
           <SearchBar />
         </div>
       </div>

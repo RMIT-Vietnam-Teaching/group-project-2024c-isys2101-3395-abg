@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description: "Viet Motor Part's Interest Rate Calculator",
 };
 
-async function calculateLoan(formData: FormData) {
+export async function calculateLoan(formData: FormData) {
     'use server'
 
     const creditScore = Number(formData.get('creditScore'))
@@ -40,7 +40,7 @@ async function calculateLoan(formData: FormData) {
 }
 
 
-function calculateInterestRate(score: number, term: number) {
+export function calculateInterestRate(score: number, term: number) {
     let baseRate = 5.5
     if (score >= 800) baseRate = 3.0
     else if (score >= 750) baseRate = 3.5
