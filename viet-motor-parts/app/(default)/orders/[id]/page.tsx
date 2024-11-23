@@ -26,9 +26,9 @@ export const metadata: Metadata = {
 export default function Page({ params }: OrderPageProps) {
     return (
         <div className="container mx-auto">
-            <h1 className="text-center text-5xl font-bold p-5">Order #{params.id}</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 py-5 gap-5">
-                <div className="grid grid-cols-1 gap-2 w-full h-full shadow-xl rounded-xl bg-brand-500 p-6">
+            <h1 className="p-5 text-5xl font-bold text-center">Order #{params.id}</h1>
+            <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
+                <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
                     <p className="text-2xl font-extrabold">Order Information</p>
                     <div className="flex justify-between">
                         <p className="font-semibold">Name:</p>
@@ -54,47 +54,47 @@ export default function Page({ params }: OrderPageProps) {
                 <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
                     <ul className="timeline timeline-vertical">
                         <li id="orderConfirmed">
-                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Order Confirmed</div>
+                            <div className="bg-green-500 border-none shadow-xl timeline-start timeline-box">Order Confirmed</div>
                             <div className="timeline-middle">
-                                <CircleCheck className="text-green-500 h-5 w-5" id="orderConfirmedCircle" />
+                                <CircleCheck className="w-5 h-5 text-green-500" id="orderConfirmedCircle" />
                             </div>
                             <hr className="bg-green-500" id="orderpackaged-line-1" />
                         </li>
                         <li id="orderPackaged">
                             <hr className="bg-green-500" id="orderpackaged-line-2" />  {/* change line-1 and line-2 when the step is finished */}
-                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Packaged</div>
+                            <div className="bg-green-500 border-none shadow-xl timeline-start timeline-box">Packaged</div>
                             <div className="timeline-middle">
-                                <CircleCheck className="text-green-500 h-5 w-5" id="orderPackagedCircle" />
+                                <CircleCheck className="w-5 h-5 text-green-500" id="orderPackagedCircle" />
                             </div>
                             <hr className="bg-green-500" id="ordershipped-line-1" />
                         </li>
                         <li id="shipped">
                             <hr className="bg-green-500" id="ordershipped-line-2" />
-                            <div className="timeline-start timeline-box bg-green-500 border-none shadow-xl">Shipped</div>
+                            <div className="bg-green-500 border-none shadow-xl timeline-start timeline-box">Shipped</div>
                             <div className="timeline-middle">
-                                <CircleCheck className="text-green-500 h-5 w-5" id="orderShippedCircle" />
+                                <CircleCheck className="w-5 h-5 text-green-500" id="orderShippedCircle" />
                             </div>
                             <hr className="" id="orderOnTheWay-line-1" />
                         </li>
                         <li id="onTheWay">
                             <hr className="" id="orderOnTheWay-line-2" />
                             <div className="timeline-middle">
-                                <CircleCheck className="text-white h-5 w-5" id="orderOnTheWay-2" />
+                                <CircleCheck className="w-5 h-5 text-white" id="orderOnTheWay-2" />
                             </div>
-                            <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">On The Way</div>
+                            <div className="border-none shadow-xl timeline-start timeline-box bg-brand-600">On The Way</div>
                             <hr className="" id="orderDelivered-line-1" />
                         </li>
                         <li id="delivered">
                             <hr className="" id="orderdelivered-line-2" />
-                            <div className="timeline-start timeline-box bg-brand-600 border-none shadow-xl">Delivered</div>
+                            <div className="border-none shadow-xl timeline-start timeline-box bg-brand-600">Delivered</div>
                             <div className="timeline-middle">
-                                <CircleCheck className="text-white h-5 w-5" id="orderDeliveredCircle" />
+                                <CircleCheck className="w-5 h-5 text-white" id="orderDeliveredCircle" />
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-            <Table className="bg-brand-500 rounded-lg p-5 shadow-lg">
+            <Table className="p-5 rounded-lg shadow-lg bg-brand-500">
                 <TableHeader>
                     <TableRow>
                         <TableHead>Product</TableHead>
