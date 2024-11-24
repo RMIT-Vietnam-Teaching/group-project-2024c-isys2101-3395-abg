@@ -1,7 +1,6 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -11,17 +10,18 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 import Link from "next/link";
-import { Metadata } from "next/types";
 interface OrderPageProps {
     params: {
         id: string;
     };
 }
+export async function generateMetadata({ params }: OrderPageProps) {
+    return {
+        title: `Order #${params.id} | Viet Motor Parts`,
+        description: `Order #${params.id} details`,
+    }
+}
 
-export const metadata: Metadata = {
-    title: "Order Details | Viet Motor Parts",
-    description: "Order Details",
-};
 
 export default function Page({ params }: OrderPageProps) {
     return (
