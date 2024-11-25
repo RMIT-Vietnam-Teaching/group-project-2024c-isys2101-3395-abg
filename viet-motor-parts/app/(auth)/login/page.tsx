@@ -39,7 +39,7 @@ export default function Page() {
                 localStorage.setItem("token", data.token);
     
                 // Redirect to orders page
-                window.location.href = "/orders";
+                window.location.href = "/orders/admin";
             }
         } catch (err) {
             console.error("Error logging in:", err);
