@@ -1,5 +1,5 @@
 import dbConnect from '@/app/lib/db';
-import User from '@/app/lib/models/users'; // Adjust the path to your User model
+import User from '@/app/lib/models/users'; // Adjust the path to User model
 import bcrypt from 'bcryptjs'; // For password hashing
 import jwt from 'jsonwebtoken'; // For creating authentication tokens
 
@@ -35,9 +35,9 @@ export default async function handler(req, res) {
 
         // Generate a JWT token
         const token = jwt.sign(
-            { id: user._id, username: user.username }, // Payload
+            { id: user._id, username: user.username, role: user.role }, // Payload
             process.env.JWT_SECRET, // Secret key
-            { expiresIn: '1h' } // Token expiry
+            { expiresIn: '100h' } // Token expiry
         );
 
         // Respond with the token

@@ -1,5 +1,5 @@
 import dbConnect from '@/app/lib/db';
-import Order from '@/app/lib/models/order';
+import Product from '@/app/lib/models/product';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (!id) {
-    return res.status(400).json({ success: false, error: 'Order ID is required' });
+    return res.status(400).json({ success: false, error: 'Product ID is required' });
   }
 
   if (req.method === 'PATCH') {
@@ -28,19 +28,19 @@ export default async function handler(req, res) {
 
       const updateData = req.body;
 
-      const updatedOrder = await Order.findByIdAndUpdate(id, updateData, {
+      const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
         new: true, // Return the updated document
         runValidators: true, // Run validation on updated fields
       });
 
-      if (!updatedOrder) {
-        return res.status(404).json({ success: false, error: 'Order not found' });
+      if (!updatedProduct) {
+        return res.status(404).json({ success: false, error: 'Product not found' });
       }
 
-      res.status(200).json({ success: true, data: updatedOrder });
+      res.status(200).json({ success: true, data: updatedProduct });
     } catch (error) {
-      console.error('Error updating order:', error);
-      res.status(500).json({ success: false, error: 'Failed to update order' });
+      console.error('Error updating product:', error);
+      res.status(500).json({ success: false, error: 'Failed to update product' });
     }
   } else if (req.method === 'DELETE') {
     const authHeader = req.headers.authorization;
@@ -57,16 +57,16 @@ export default async function handler(req, res) {
         return res.status(403).json({ success: false, error: 'Access denied' });
       }
 
-      const deletedOrder = await Order.findByIdAndDelete(id);
+      const deletedProduct = await Product.findByIdAndDelete(id);
 
-      if (!deletedOrder) {
-        return res.status(404).json({ success: false, error: 'Order not found' });
+      if (!deletedProduct) {
+        return res.status(404).json({ success: false, error: 'Product not found' });
       }
 
-      res.status(200).json({ success: true, data: deletedOrder });
+      res.status(200).json({ success: true, data: deletedProduct });
     } catch (error) {
-      console.error('Error deleting order:', error);
-      res.status(500).json({ success: false, error: 'Failed to delete order' });
+      console.error('Error deleting product:', error);
+      res.status(500).json({ success: false, error: 'Failed to delete product' });
     }
   } else {
     res.setHeader('Allow', ['PATCH', 'DELETE']);

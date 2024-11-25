@@ -2,7 +2,7 @@
 const users = [
     {
         username: 'adminUser',
-        password: 'Admin123!', // Use hashing in production
+        password: '$2y$10$OVQyG45s4BNJrTCGU5v.MO/D3EqdiQjtWs8f1O5gQUoJbkRMSaEgi', // Use hashing in production
         role: 'admin',
         avatar: 'https://img.myloview.com/stickers/default-avatar-profile-icon-vector-social-media-user-700-202768327.jpg',
     },

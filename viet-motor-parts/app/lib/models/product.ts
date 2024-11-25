@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-// Interface for the Product document
+// Interface for Product
 export interface IProduct extends Document {
   name: string;
   description: string;
@@ -21,60 +21,26 @@ export interface IProduct extends Document {
 // Schema Definition
 const productSchema: Schema<IProduct> = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, 'Product name is required'],
-      minLength: [3, 'Product name must be at least 3 characters long']
-    },
-    description: {
-      type: String,
-      required: [true, 'Description is required'],
-      minLength: [10, 'Description must be at least 10 characters long']
-    },
-    brand: {
-      type: String,
-      required: [true, 'Brand is required'],
-      minLength: [2, 'Brand must be at least 2 characters long']
-    },
-    category_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: [true, 'Category ID is required']
-    },
-    price: {
-      type: Number,
-      required: [true, 'Price is required'],
-      min: [0, 'Price must be a positive number']
-    },
-    stock_quantity: {
-      type: Number,
-      required: [true, 'Stock quantity is required'],
-      min: [0, 'Stock quantity must be a non-negative number']
-    },
-    image_base64: {
-      type: String,
-      required: [true, 'Image in Base64 format is required']
-    },
-    compatible_vehicles: {
-      type: [
-        {
-          make: { type: String, required: [true, 'Vehicle make is required'] },
-          model: { type: String, required: [true, 'Vehicle model is required'] },
-          year: {
-            type: Number,
-            required: [true, 'Vehicle year is required'],
-            min: [1900, 'Year must be a valid year'],
-            max: [new Date().getFullYear(), 'Year cannot be in the future']
-          }
-        }
-      ],
-    }
+    name: { type: String, required: true, minLength: 3 },
+    description: { type: String, required: true, minLength: 10 },
+    brand: { type: String, required: true },
+    category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    price: { type: Number, required: true, min: 0 },
+    stock_quantity: { type: Number, required: true, min: 0 },
+    image_base64: { type: String, required: true },
+    compatible_vehicles: [
+      {
+        make: { type: String, required: true },
+        model: { type: String, required: true },
+        year: { type: Number, required: true, min: 1900, max: new Date().getFullYear() },
+      },
+    ],
   },
-  {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
-  }
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
-// Create and Export Product Model
-const Product: Model<IProduct> = mongoose.model<IProduct>('Product', productSchema);
+// Avoid OverwriteModelError
+const Product: Model<IProduct> =
+  mongoose.models.Product || mongoose.model<IProduct>('Product', productSchema);
+
 export default Product;
