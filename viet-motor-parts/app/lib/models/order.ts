@@ -15,8 +15,6 @@ export interface IOrder extends Document {
     quantity: number;
     price: number;
   }>;
-  created_at?: Date;
-  updated_at?: Date;
 }
 
 // Schema Definition
@@ -25,72 +23,72 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     customer_name: {
       type: String,
       required: [true, 'Customer name is required'],
-      minLength: [5, 'Customer name must be at least 5 characters long']
+      minLength: [5, 'Customer name must be at least 5 characters long'],
     },
     phone_number: {
       type: String,
       required: [true, 'Phone number is required'],
       validate: {
         validator: valid_phone_number,
-        message: props => `${props.value} is not a valid phone number!`
-      }
+        message: (props) => `${props.value} is not a valid phone number!`,
+      },
     },
     address: {
       type: String,
       required: [true, 'Address is required'],
       validate: {
         validator: valid_address,
-        message: props => `${props.value} is not a valid phone number!`
-      }
+        message: (props) => `${props.value} is not a valid address!`,
+      },
     },
     total_amount: {
       type: Number,
       required: [true, 'Total amount is required'],
-      min: [0, 'Total amount must be a positive number']
+      min: [0, 'Total amount must be a positive number'],
     },
     order_status: {
       type: String,
       required: [true, 'Order status is required'],
       enum: {
         values: ['Pending', 'Confirmed', 'Shipping', 'Delivered', 'Canceled'],
-        message: 'Order status "{VALUE}" is not supported'
+        message: 'Order status "{VALUE}" is not supported',
       },
-      default: 'Pending'
+      default: 'Pending',
     },
     payment_method: {
       type: String,
       required: [true, 'Payment method is required'],
       enum: {
         values: ['Cash', 'PayPal'],
-        message: 'Payment method "{VALUE}" is not supported'
-      }
+        message: 'Payment method "{VALUE}" is not supported',
+      },
     },
     shipping_label: {
       type: String,
-      default: null
+      default: null, // Default value for optional field
     },
     order_details: [
       {
         product_id: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Product',
-          required: [true, 'Product ID is required']
+          required: [true, 'Product ID is required'],
         },
         quantity: {
           type: Number,
           required: [true, 'Quantity is required'],
-          min: [1, 'Quantity must be at least 1']
+          min: [1, 'Quantity must be at least 1'],
         },
         price: {
           type: Number,
           required: [true, 'Price is required'],
-          min: [0, 'Price must be a positive number']
-        }
-      }
-    ]
+          min: [0, 'Price must be a positive number'],
+        },
+      },
+    ],
   },
   {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   }
 );
 
