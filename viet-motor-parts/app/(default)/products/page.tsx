@@ -15,7 +15,7 @@ export default function Page() {
             </aside>
             <div className="flex flex-col justify-center w-full xl:w-3/4">
                 <section
-                    className="grid items-center justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1281px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
+                    className="grid items-center justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1440px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
                     {[...Array(6)].map((_, index) => (
                         <ProductCard key={index} />
                     ))}
