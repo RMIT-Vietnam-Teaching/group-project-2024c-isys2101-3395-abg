@@ -3,6 +3,7 @@ import Button from "../../components/Button";
 import { Metadata } from "next/types";
 import { formatCurrency } from "@/lib/utils";
 import OrderSummary from "@/app/components/OrderSummary";
+import { CartProductList } from "@/app/components/CartProductList";
 
 export const metadata: Metadata = {
     title: "Shopping Cart | Viet Motor Parts",
@@ -19,8 +20,8 @@ export default function Page() {
             </div>
             <div className='container grid grid-rows-2 gap-5 mx-auto lg:gap-0 lg:grid-cols-9'>
                 <div className='lg:col-span-5'>
-                    <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
-                        <p className="text-5xl font-extrabold">Cart List Placeholder</p>
+                    <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl">
+                        <CartProductList />
                     </div>
                 </div>
                 <div className='lg:col-span-3 lg:col-start-7'>

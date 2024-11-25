@@ -1,6 +1,6 @@
-import { SearchBarVehicles } from "../components/SearchBarVehicles";
-import SearchBar from "../components/SearchBar";
-import { Button } from "../components/shadcn/button";
+import { SearchBarVehicles } from "../../components/SearchBarVehicles";
+import SearchBar from "../../components/SearchBar";
+import { Button } from "../../components/shadcn/button";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     description: "Part Compatability Check page",
 };
 
-export default function Pages() {
+export default function Page() {
     return (
         <form className="grid grid-cols-1 gap-6 md:grid-cols-7">
             {/* Left Section */}
@@ -24,7 +24,7 @@ export default function Pages() {
                         <a href="#" className="h-12 w-12 shrink-0">
                             <img className="h-full w-full rounded" src="/ProductPlaceholder.webp" alt="A random motor" />
                         </a>
-                        <a href="#" className="flex-1 text-brand-100 hover:underline">Honda Civic MK-9</a>
+                        <p className="flex-1 text-brand-100">Honda Civic MK-9</p>
                     </div>
                 </div>
             </div>
@@ -33,11 +33,10 @@ export default function Pages() {
             <div className="col-span-1 md:col-span-1 flex flex-col items-center md:order-none order-11">
                 <button
                     type="button" disabled
-                    className={`${
-                        true /* replace with your disabled logic */
-                          ? 'bg-gray-400 cursor-not-allowed text-brand-600'
-                          : 'bg-gradient-to-r from-brand-300 via-brand-400 to-brand-500 hover:bg-gradient-to-br'
-                      } text-brand-100 focus:ring-4 focus:outline-none focus:ring-brand-100 font-medium rounded-lg text-sm px-4 py-2 text-center flex justify-start items-center`}
+                    className={`${true /* replace with your disabled logic */
+                        ? 'bg-gray-400 cursor-not-allowed text-brand-600'
+                        : 'bg-gradient-to-r from-brand-300 via-brand-400 to-brand-500 hover:bg-gradient-to-br'
+                        } text-brand-100 focus:ring-4 focus:outline-none focus:ring-brand-100 font-medium rounded-lg text-sm px-4 py-2 text-center flex justify-start items-center`}
                 >
                     Check Compatibility
                     <svg className="h-6 w-6 ml-3 md:ml-0" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -78,20 +77,20 @@ export default function Pages() {
                     </div>
                 </div>
             </div>
-            <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12">
+            <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12 rounded-2xl">
                 <div className="flex flex-col md:flex-row items-center bg-brand-600 rounded p-3">
-                <svg className="h-20 w-20 text-brand-100"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <path d="M9 12l2 2l4 -4" /></svg>
+                    <svg className="h-20 w-20 text-brand-100" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <circle cx="12" cy="12" r="9" />  <path d="M9 12l2 2l4 -4" /></svg>
                     <div className="ml-3 text-center md:text-left">
                         <h1 className="text-brand-100 text-xl md:text-2xl font-bold mb-2">Compatible!</h1>
                         <h2 className="text-brand-100 text-sm md:text-lg font-bold">The chosen vehicle and part are compatible!</h2>
                     </div>
                 </div>
             </div>
-            <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12">
+            <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12 rounded-2xl">
                 <div className="flex flex-col md:flex-row items-center bg-brand-100 rounded p-3">
-                <svg className="h-20 w-20 text-brand-600"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-</svg>
+                    <svg className="h-20 w-20 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                     <div className="ml-3 text-center md:text-left">
                         <h1 className="text-brand-600 text-xl md:text-2xl font-bold mb-2">Not compatible!</h1>
                         <h2 className="text-brand-600 text-sm md:text-lg font-bold">The chosen vehicle and part are not compatible!</h2>

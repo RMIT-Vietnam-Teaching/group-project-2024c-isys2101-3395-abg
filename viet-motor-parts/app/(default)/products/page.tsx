@@ -1,4 +1,5 @@
 import ProductCard from '@/app/components/ProductCard';
+import { SideFilter } from '@/app/components/SideFilter';
 import { Metadata } from "next/types";
 
 export const metadata: Metadata = {
@@ -11,7 +12,7 @@ export default function Page() {
         <section className="flex flex-col w-full gap-10 pb-10 my-5 content lg:flex-row px-7">
             <aside
                 className="left-0 w-full p-5 border rounded-lg bg-palette-3 md:max-lg:block lg:block lg:sticky top-10 h-5/6 lg:w-1/4 md:max-lg:center-and-half">
-                <h2 className="mb-4 text-xl font-bold text-center text-white">Sort/Filter</h2>
+                <SideFilter />
             </aside>
             <div className="flex flex-col justify-center w-full xl:w-3/4">
                 <section

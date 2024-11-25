@@ -5,7 +5,7 @@ import Button from './Button';
 export default function productCard() {
   return (
     <div className="bg-brand-500 w-[330px] rounded-2xl shadow-xl">
-      <a href="#">
+      <a href="/products/3">
         <Image
           className="rounded-t-lg"
           src="https://placehold.co/330x200/webP"
@@ -15,7 +15,7 @@ export default function productCard() {
         />
       </a>
       <div className="flex flex-col justify-between gap-3 px-5 pt-3 pb-5">
-        <Link href="#">
+        <Link href="/products/3">
           <h5 className="text-xl font-semibold tracking-tight line-clamp-2" id="productName">
             Đèn led 2 tầng Zhi.Pat phiên bản Sportline
           </h5>
