@@ -1,6 +1,5 @@
 export function SideFilter() {
-    return <div className="flex items-center justify-center p-4">
-            <div className="z-10 w-full p-3 bg-brand-100 rounded-lg shadow">
+    return <div className="z-10 w-10/12 p-3 bg-brand-100 m-4 rounded-lg shadow">
               <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white rounded dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
                 <h1 className="text-brand-500 text-xl font-bold mx-4"><svg className="h-8 w-8 text-brand-400 inline-block"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"> <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg> Filter</h1>
                 <h2 id="accordion-flush-heading-1" className="my-3">
@@ -12,7 +11,7 @@ export function SideFilter() {
                   </button>
                 </h2>
                 <div id="accordion-flush-body-1" className="hidden" aria-labelledby="accordion-flush-heading-1">
-                <ul className="space-y-2 text-lg mt-3" aria-labelledby="dropdownDefault">
+                <ul className="space-y-2 text-lg mt-3 ml-2" aria-labelledby="dropdownDefault">
                               <li className="flex items-center">
                                 <input id="oil" type="checkbox" value=""
                                   className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2" />
@@ -96,5 +95,4 @@ export function SideFilter() {
                 </div>
               </div>      
             </div>
-          </div>
 }

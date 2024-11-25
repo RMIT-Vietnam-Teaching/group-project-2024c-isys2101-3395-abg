@@ -1,7 +1,7 @@
 
 export default function Pages() {
     return (
-        <section className="bg-brand-200 py-8 antialiased dark:bg-gray-900 md:py-16 rounded">
+        <section className="bg-brand-200 antialiased dark:bg-gray-900 md:my-4 rounded">
             <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
                 <h2 className="text-xl font-semibold text-brand-600 sm:text-2xl">Track the delivery of order #957684673</h2>
 
