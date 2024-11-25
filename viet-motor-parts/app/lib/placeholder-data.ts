@@ -14,21 +14,6 @@ const users = [
     },
 ];
 
-
-// Customers
-const customers = [
-    {
-        name: 'John Doe',
-        address: '123 Main St, Springfield',
-        phone_number: '1234567890',
-    },
-    {
-        name: 'Jane Smith',
-        address: '456 Elm St, Metropolis',
-        phone_number: '9876543210',
-    },
-];
-
 // Categories
 const categories = [
     {
@@ -79,6 +64,7 @@ const orders = [
         customer_name: 'John Doe', // Map this to the actual customer in the database
         phone_number: '1234567890',
         address: '123 Main St, Springfield',
+        email: 'johndoe@gmail.com',
         total_amount: 1045.98,
         order_status: 'Pending',
         payment_method: 'Cash',
@@ -100,6 +86,7 @@ const orders = [
         customer_name: 'Jane Smith', // Map this to the actual customer in the database
         phone_number: '9876543210',
         address: '456 Elm St, Metropolis',
+        email: 'janesmith@gmail.com',
         total_amount: 45.99,
         order_status: 'Delivered',
         payment_method: 'PayPal',
@@ -130,4 +117,4 @@ const invoices = [
 
 
 
-export { users, customers, categories, products, orders, invoices };
+export { users, categories, products, orders, invoices };
