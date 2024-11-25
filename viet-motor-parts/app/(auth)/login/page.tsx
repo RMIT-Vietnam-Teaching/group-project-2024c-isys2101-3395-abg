@@ -1,16 +1,64 @@
+"use client"; // This makes the component a Client Component
+
 import { Footer } from "@/app/components/Footer";
 import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Page() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+            });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                setError(data.message || "Failed to log in");
+                setSuccess("");
+            } else {
+                setSuccess("Login successful!");
+                setError("");
+    
+                // Save the token in localStorage
+                localStorage.setItem("token", data.token);
+    
+                // Redirect to orders page
+                window.location.href = "/orders";
+            }
+        } catch (err) {
+            console.error("Error logging in:", err);
+            setError("An unexpected error occurred. Please try again.");
+            setSuccess("");
+        }
+    };    
+
     return (
         <div className="grid grid-rows-3">
             <div className="flex items-center flex-col justify-center">
                 <Link href="/">
-                    <Image src="/logo/LogoWithName.png" alt="Viet Motor Parts Logo" width={200} height={200} className="mx-auto" />
+                    <Image
+                        src="/logo/LogoWithName.png"
+                        alt="Viet Motor Parts Logo"
+                        width={200}
+                        height={200}
+                        className="mx-auto"
+                    />
                 </Link>
             </div>
             <div className="mx-auto w-96 bg-brand-600 rounded-lg shadow-2xl">
@@ -19,32 +67,48 @@ export default function Page() {
                         Log in to Admin account
                     </h1>
 
-                    <form id="loginForm" className="space-y-4 md:space-y-6">
+                    <form id="loginForm" className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                         <div className="space-y-2">
-                            <Label htmlFor="username" className="text-white font-semibold">Username</Label>
-                            <Input type="text"
+                            <Label htmlFor="username" className="text-white font-semibold">
+                                Username
+                            </Label>
+                            <Input
+                                type="text"
                                 name="username"
                                 id="username"
                                 placeholder="e.g LazadaAdmin"
-                                required>
-                            </Input>
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="password" className="text-white font-semibold">Password</Label>
-                            <Input type="password"
+                            <Label htmlFor="password" className="text-white font-semibold">
+                                Password
+                            </Label>
+                            <Input
+                                type="password"
                                 name="password"
                                 id="password"
                                 placeholder="e.g r9mof6NlTd3AJ@3D"
-                                required>
-                            </Input>
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
                         </div>
                         <div>
-                            <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl my-auto">
+                            <Button
+                                type="submit"
+                                className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl my-auto"
+                            >
                                 Log in
                             </Button>
                         </div>
                     </form>
+
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                    {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
                 </div>
             </div>
         </div>
