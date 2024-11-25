@@ -1,21 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-export const verifyAdminToken = (req) => {
+export function verifyAdminToken(req) {
   const authHeader = req.headers.authorization;
 
+  // Ensure the Authorization header is present
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('Unauthorized');
+    throw new Error('Unauthorized access: Missing or invalid Authorization header');
   }
 
+  // Extract and verify the token
   const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded || !decoded.username) {
-      throw new Error('Invalid token');
-    }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    return decoded; // Return decoded token data
-  } catch (error) {
-    throw new Error('Unauthorized');
+  // Ensure the user is an admin
+  if (decoded.role !== 'admin') {
+    throw new Error('Access denied: Admin role required');
   }
-};
+
+  return decoded;
+}
