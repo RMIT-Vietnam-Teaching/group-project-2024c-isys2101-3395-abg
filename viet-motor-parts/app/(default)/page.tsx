@@ -1,6 +1,5 @@
 import { Metadata } from "next/types";
 import Hero from "@/app/components/Hero";
-import { ProductList } from "@/app/components/ProductList";
 import Button from "@/app/components/Button";
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default function Home() {
           <Button title="View All" link="/products" />
         </div>
       </div>
-      <ProductList className="py-5" />
+
     </div>
   );
 }

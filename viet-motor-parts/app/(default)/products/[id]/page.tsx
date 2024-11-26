@@ -1,7 +1,31 @@
 import { AmountSelector } from "@/app/components/AmountSelector";
 import Image from "next/image";
+import { Product } from "@/app/components/ProductCard";
+import { formatCurrency } from "@/lib/utils";
 
-export default function Page({ params }: { params: { id: string } }) {
+
+async function fetchProducts(id: string) {
+    const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+        cache: "no-store", // Avoid caching to ensure fresh data
+    });
+    const data = await res.json();
+    const product: Product = data.data;
+    return product;
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+    const res = await fetchProducts(params.id);
+
+    return {
+        title: `${res.name} | Viet Motor Parts`,
+        description: `${res.name} details`,
+    }
+}
+
+
+export default async function Page({ params }: { params: { id: string } }) {
+    const product = await fetchProducts(params.id);
+
     return (
         <div className="h-screen">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,19 +44,18 @@ export default function Page({ params }: { params: { id: string } }) {
                         </div>
                     </div>
                     <div className="md:flex-1 px-4">
-                        <h2 className="text-3xl font-bold text-brand-100 mb-2"> Product {params.id}</h2>
+                        <h2 className="text-3xl font-bold text-brand-100 mb-2">{product.name}</h2>
                         <p className="text-brand-200 text-base mb-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed
-                            ante justo. Integer euismod libero id mauris malesuada tincidunt.
+                            {product.brand}
                         </p>
                         <div className="flex mb-4">
                             <div className="mr-4">
                                 <span className="font-bold text-brand-600 text-lg">Price:</span>
-                                <span className="text-brand-200 text-lg font-extrabold"> $29.99</span>
+                                <span className="text-brand-200 text-lg font-extrabold"> {formatCurrency(product.price)}</span>
                             </div>
                             <div>
-                                <span className="font-bold text-brand-600 text-lg">Availability:</span>
-                                <span className="text-brand-200 text-lg font-extrabold"> In Stock</span>
+                                <span className="font-bold text-brand-600 text-lg">In Stock:</span>
+                                <span className="text-brand-200 text-lg font-extrabold"> {product.stock_quantity}</span>
                             </div>
                         </div>
                         <div className="mb-4">
@@ -46,12 +69,8 @@ export default function Page({ params }: { params: { id: string } }) {
                         </div>
                         <div>
                             <span className="font-bold text-brand-600 text-lg">Product Description:</span>
-                            <p className="text-brand-500 text-base mt-2">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                sed ante justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus commodo nulla ut
-                                lorem rhoncus aliquet. Duis dapibus augue vel ipsum pretium, et venenatis sem blandit. Quisque
-                                ut erat vitae nisi ultrices placerat non eget velit. Integer ornare mi sed ipsum lacinia, non
-                                sagittis mauris blandit. Morbi fermentum libero vel nisl suscipit, nec tincidunt mi consectetur.
+                            <p className="text-brand-100 text-base mt-2">
+                                {product.description}
                             </p>
                         </div>
                     </div>

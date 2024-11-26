@@ -3,14 +3,15 @@ import Link from 'next/link';
 import Button from './Button';
 import { formatCurrency } from '@/lib/utils';
 
-interface ProductCardProps {
-  id: string;
+export interface Product {
+  _id: string;
   name: string;
   price: number;
-  image: string;
+  image_base64: string;
   description: string;
   brand: string;
-  compatibleVehicles: Array<{
+  stock_quantity: number;
+  compatible_vehicles: Array<{
     make: string;
     model: string;
     year: number;
@@ -18,10 +19,10 @@ interface ProductCardProps {
 }
 
 
-export default function ProductCard({ id, name, price, image }: ProductCardProps) {
+export default function ProductCard({ _id, name, price }: Product) {
   return (
     <div className="bg-brand-500 w-[330px] rounded-2xl shadow-xl">
-      <Link href={`/products/${id}`}>
+      <Link href={`/products/${_id}`}>
         <Image
           className="rounded-t-lg"
           src="https://placehold.co/330x200/webP"
@@ -31,7 +32,7 @@ export default function ProductCard({ id, name, price, image }: ProductCardProps
         />
       </Link>
       <div className="flex flex-col justify-between gap-3 px-5 pt-3 pb-5">
-        <Link href={`/products/${id}`}>
+        <Link href={`/products/${_id}`}>
           <h5 className="text-xl font-semibold tracking-tight line-clamp-2" id="productName">
             {name}
           </h5>
