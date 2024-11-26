@@ -21,7 +21,7 @@ export default function Page() {
             <div className='container grid grid-rows-2 gap-5 mx-auto lg:gap-0 lg:grid-cols-9'>
                 <div className='lg:col-span-5'>
                     <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl">
-                        <CartProductList />
+                        <CartProductList /> {/* This is a placeholder for the CartProductList component */}
                     </div>
                 </div>
                 <div className='lg:col-span-3 lg:col-start-7'>

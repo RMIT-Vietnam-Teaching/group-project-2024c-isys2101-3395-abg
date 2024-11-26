@@ -1,7 +1,10 @@
+"use client"
+
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from './Button';
 import { formatCurrency } from '@/lib/utils';
+import AddToCart from './addToCart';
 
 export interface Product {
   _id: string;
@@ -41,7 +44,7 @@ export default function ProductCard({ _id, name, price }: Product) {
           <span className="text-2xl font-bold" id="price">
             {formatCurrency(price)}
           </span>
-          <Button title="Add to Cart" link="/cart" />
+          <AddToCart id={_id} name={name} price={price} amount={1} />
         </div>
       </div>
     </div>
