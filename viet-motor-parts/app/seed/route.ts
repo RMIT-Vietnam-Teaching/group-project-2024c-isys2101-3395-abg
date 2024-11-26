@@ -26,14 +26,22 @@ async function seedDatabase() {
 }
 
 async function seedCategories() {
-    for (const category of categories) {
-        const existing = await Category.findOne({ name: category.name });
-        if (!existing) {
-            await Category.create(category);
-            console.log(`Category "${category.name}" added.`);
-        } else {
-            console.log(`Category "${category.name}" already exists.`);
+    try {
+        await dbConnect();
+
+        for (const category of categories) {
+            const existingCategory = await Category.findOne({ name: category.name });
+            if (!existingCategory) {
+                await Category.create(category);
+                console.log(`Category "${category.name}" added.`);
+            } else {
+                console.log(`Category "${category.name}" already exists. Skipping.`);
+            }
         }
+
+        console.log('Category seeding completed.');
+    } catch (error) {
+        console.error('Error seeding categories:', error);
     }
 }
 
@@ -47,19 +55,37 @@ async function seedProducts() {
     });
 
     // Assign category_id to each product based on category_name
-    const updatedProducts = products.map((product) => ({
-        ...product,
-        category_id: categoryMap.get(product.category_name),
+    const updatedProducts = products.map((product) => {
+        const categoryId = categoryMap.get(product.category_name);
+        if (!categoryId) {
+            console.error(`Category "${product.category_name}" not found in the database for product "${product.name}".`);
+        }
+        return {
+            ...product,
+            category_id: categoryId || null, // Assign null if category is not found
+        };
+    });
+
+    // Separate valid products from those with missing categories
+    const validProducts = updatedProducts.filter((product) => product.category_id);
+
+    const operations = validProducts.map((product) => ({
+        updateOne: {
+            filter: { name: product.name },
+            update: { $set: product },
+            upsert: true, // Insert the product if it doesn't already exist
+        },
     }));
 
-    for (const product of updatedProducts) {
-        const existing = await Product.findOne({ name: product.name });
-        if (!existing) {
-            await Product.create(product);
-            console.log(`Product "${product.name}" added.`);
+    try {
+        if (operations.length > 0) {
+            const result = await Product.bulkWrite(operations);
+            console.log(`Products seeded successfully. Matched: ${result.matchedCount}, Inserted: ${result.upsertedCount}.`);
         } else {
-            console.log(`Product "${product.name}" already exists.`);
+            console.log('No valid products to seed.');
         }
+    } catch (error) {
+        console.error('Error seeding products:', error);
     }
 }
 

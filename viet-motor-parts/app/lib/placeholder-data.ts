@@ -24,6 +24,78 @@ const categories = [
         name: 'Motorbike Parts',
         description: 'Parts and accessories for motorbikes.',
     },
+    {
+        name: 'Suspension',
+        description: 'Shock absorbers, springs, and suspension kits.',
+    },
+    {
+        name: 'Brakes',
+        description: 'Brake pads, rotors, calipers, and brake fluids.',
+    },
+    {
+        name: 'Electrical Components',
+        description: 'Batteries, alternators, and wiring harnesses.',
+    },
+    {
+        name: 'Ignition System',
+        description: 'Spark plugs, ignition coils, and distributors.',
+    },
+    {
+        name: 'Exhaust System',
+        description: 'Mufflers, catalytic converters, and exhaust pipes.',
+    },
+    {
+        name: 'Cooling System',
+        description: 'Radiators, thermostats, and cooling fans.',
+    },
+    {
+        name: 'Lubricants and Fluids',
+        description: 'Engine oil, transmission fluid, and brake fluid.',
+    },
+    {
+        name: 'Tires and Wheels',
+        description: 'Motorbike tires, tubes, and alloy wheels.',
+    },
+    {
+        name: 'Transmission and Clutch',
+        description: 'Clutch plates, gearboxes, and shifters.',
+    },
+    {
+        name: 'Body Parts',
+        description: 'Fenders, fairings, and body panels.',
+    },
+    {
+        name: 'Lighting',
+        description: 'Headlights, taillights, and indicators.',
+    },
+    {
+        name: 'Accessories',
+        description: 'Helmets, covers, and storage solutions.',
+    },
+    {
+        name: 'Fuel System',
+        description: 'Fuel pumps, injectors, and carburetors.',
+    },
+    {
+        name: 'Steering and Controls',
+        description: 'Handlebars, grips, and steering stabilizers.',
+    },
+    {
+        name: 'Safety Gear',
+        description: 'Riding gloves, protective jackets, and knee pads.',
+    },
+    {
+        name: 'Performance Parts',
+        description: 'Aftermarket performance upgrades and tuning kits.',
+    },
+    {
+        name: 'Seats',
+        description: 'Custom seats, seat covers, and cushions.',
+    },
+    {
+        name: 'Navigation and Electronics',
+        description: 'GPS systems, speedometers, and dashboards.',
+    },
 ];
 
 // Products
@@ -52,6 +124,105 @@ const products = [
         compatible_vehicles: [
             { make: 'Kawasaki', model: 'Ninja 650', year: 2021 },
             { make: 'Suzuki', model: 'GSX250R', year: 2018 },
+        ],
+    },
+    {
+        name: 'Shock Absorber',
+        description: 'Premium shock absorber for smoother rides.',
+        brand: 'SmoothRide',
+        category_name: 'Suspension',
+        price: 75.99,
+        stock_quantity: 30,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_SHOCK_ABSORBER',
+        compatible_vehicles: [
+            { make: 'BMW', model: 'G310R', year: 2020 },
+            { make: 'Ducati', model: 'Scrambler', year: 2022 },
+        ],
+    },
+    {
+        name: 'Disc Rotor',
+        description: 'High-quality disc rotor for reliable braking.',
+        brand: 'BrakePro',
+        category_name: 'Brakes',
+        price: 60.00,
+        stock_quantity: 40,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_DISC_ROTOR',
+        compatible_vehicles: [
+            { make: 'Yamaha', model: 'MT-09', year: 2021 },
+            { make: 'Kawasaki', model: 'Z650', year: 2022 },
+        ],
+    },
+    {
+        name: 'Spark Plug',
+        description: 'Premium spark plug for efficient ignition.',
+        brand: 'AutoSpark',
+        category_name: 'Ignition System',
+        price: 15.99,
+        stock_quantity: 200,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_SPARK_PLUG',
+        compatible_vehicles: [
+            { make: 'Honda', model: 'CBR500R', year: 2019 },
+            { make: 'Suzuki', model: 'V-Strom 650', year: 2021 },
+        ],
+    },
+    {
+        name: 'Radiator',
+        description: 'Durable radiator for improved engine cooling.',
+        brand: 'CoolEngine',
+        category_name: 'Cooling System',
+        price: 120.99,
+        stock_quantity: 15,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_RADIATOR',
+        compatible_vehicles: [
+            { make: 'KTM', model: 'Duke 390', year: 2021 },
+            { make: 'Yamaha', model: 'YZF-R15', year: 2020 },
+        ],
+    },
+    {
+        name: 'Chain Lubricant',
+        description: 'High-quality chain lubricant for smoother performance.',
+        brand: 'LuboMax',
+        category_name: 'Lubricants and Fluids',
+        price: 12.49,
+        stock_quantity: 150,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_CHAIN_LUBRICANT',
+        compatible_vehicles: [],
+    },
+    {
+        name: 'Clutch Cable',
+        description: 'Durable clutch cable for smoother shifting.',
+        brand: 'ShiftEase',
+        category_name: 'Transmission and Clutch',
+        price: 19.99,
+        stock_quantity: 75,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_CLUTCH_CABLE',
+        compatible_vehicles: [
+            { make: 'KTM', model: 'Duke 390', year: 2021 },
+            { make: 'BMW', model: 'G310R', year: 2020 },
+        ],
+    },
+    {
+        name: 'Alloy Wheels',
+        description: 'Stylish and durable alloy wheels for motorbikes.',
+        brand: 'WheelPro',
+        category_name: 'Tires and Wheels',
+        price: 150.00,
+        stock_quantity: 20,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_ALLOY_WHEELS',
+        compatible_vehicles: [
+            { make: 'Honda', model: 'Rebel 500', year: 2021 },
+        ],
+    },
+    {
+        name: 'LED Headlight',
+        description: 'Bright and energy-efficient LED headlight.',
+        brand: 'BrightPath',
+        category_name: 'Lighting',
+        price: 45.99,
+        stock_quantity: 60,
+        image_base64: 'BASE64_IMAGE_STRING_FOR_LED_HEADLIGHT',
+        compatible_vehicles: [
+            { make: 'Yamaha', model: 'MT-03', year: 2020 },
         ],
     },
 ];
