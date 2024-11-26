@@ -32,7 +32,7 @@ export const useShoppingCart = () => {
                 );
             } else {
                 // Append the item if it doesn't exist
-                return [...prevCart, item];
+                return [...prevCart, { ...item }];
             }
         });
         localStorage.setItem('shoppingCart', JSON.stringify(cart));
