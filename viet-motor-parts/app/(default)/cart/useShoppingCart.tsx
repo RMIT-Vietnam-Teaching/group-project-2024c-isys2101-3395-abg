@@ -1,4 +1,3 @@
-import { set } from 'mongoose';
 import { useState, useEffect } from 'react';
 
 export type CartItem = {
@@ -9,58 +8,69 @@ export type CartItem = {
 };
 
 export const useShoppingCart = () => {
-    const [cart, setCart] = useState<CartItem[]>([]);
-
-
-    useEffect(() => {
+    const [cart, setCart] = useState<CartItem[]>(() => {
         if (typeof window !== 'undefined') {
-            setCart(JSON.parse(localStorage.getItem('shoppingCart') || '[]'));
+            const savedCart = localStorage.getItem('shoppingCart');
+            return savedCart ? JSON.parse(savedCart) : [];
         }
-    }, []);
+        return [];
+    });
 
-
+    const syncCartToLocalStorage = (updatedCart: CartItem[]) => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('shoppingCart', JSON.stringify(updatedCart));
+        }
+    };
 
     const addToCart = (item: CartItem) => {
         setCart((prevCart) => {
-            const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
-            if (existingItem) {
-                // Update the amount if the item exists
-                return prevCart.map((cartItem) =>
+            const updatedCart = prevCart.some((cartItem) => cartItem.id === item.id)
+                ? prevCart.map((cartItem) =>
                     cartItem.id === item.id
                         ? { ...cartItem, amount: cartItem.amount + 1 }
                         : cartItem
-                );
-            } else {
-                // Append the item if it doesn't exist
-                return [...prevCart, { ...item }];
-            }
+                )
+                : [...prevCart, item];
+            syncCartToLocalStorage(updatedCart);
+            return updatedCart;
         });
-        localStorage.setItem('shoppingCart', JSON.stringify(cart));
     };
 
     const removeFromCart = (id: string) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+        setCart((prevCart) => {
+            const updatedCart = prevCart.filter((item) => item.id !== id);
+            syncCartToLocalStorage(updatedCart);
+            return updatedCart;
+        });
     };
 
     const increaseAmount = (id: string) => {
-        setCart((prevCart) =>
-            prevCart.map((item) =>
+        setCart((prevCart) => {
+            const updatedCart = prevCart.map((item) =>
                 item.id === id ? { ...item, amount: item.amount + 1 } : item
-            )
-        );
+            );
+            syncCartToLocalStorage(updatedCart);
+            return updatedCart;
+        });
     };
 
     const decreaseAmount = (id: string) => {
-        setCart((prevCart) =>
-            prevCart
+        setCart((prevCart) => {
+            const updatedCart = prevCart
                 .map((item) =>
-                    item.id === id
-                        ? { ...item, amount: item.amount - 1 }
-                        : item
+                    item.id === id ? { ...item, amount: item.amount - 1 } : item
                 )
-                .filter((item) => item.amount > 0)
-        );
+                .filter((item) => item.amount > 0);
+            syncCartToLocalStorage(updatedCart);
+            return updatedCart;
+        });
     };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        }
+    }, [cart]);
 
     return {
         cart,
