@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 // Interface for Order
 export interface IOrder extends Document {
+  _id: mongoose.Types.ObjectId;
   customer_name: string;
   phone_number: string;
   address: string;

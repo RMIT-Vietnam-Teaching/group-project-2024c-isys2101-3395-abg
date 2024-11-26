@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 // Users
 const users = [
     {
@@ -105,7 +107,7 @@ const products = [
         description: 'High-performance oil filter for motorcycles.',
         brand: 'MotorGuard',
         category_name: 'Engine Parts', // Use this to map to the actual category during seeding
-        price: 25.99,
+        price: 260000,
         stock_quantity: 100,
         image_base64: 'BASE64_IMAGE_STRING_FOR_OIL_FILTER',
         compatible_vehicles: [
@@ -118,7 +120,7 @@ const products = [
         description: 'Durable rear brake pads for enhanced stopping power.',
         brand: 'BrakeMax',
         category_name: 'Motorbike Parts', // Use this to map to the actual category during seeding
-        price: 35.49,
+        price: 360000,
         stock_quantity: 50,
         image_base64: 'BASE64_IMAGE_STRING_FOR_BRAKE_PADS',
         compatible_vehicles: [
@@ -131,7 +133,7 @@ const products = [
         description: 'Premium shock absorber for smoother rides.',
         brand: 'SmoothRide',
         category_name: 'Suspension',
-        price: 75.99,
+        price: 750000,
         stock_quantity: 30,
         image_base64: 'BASE64_IMAGE_STRING_FOR_SHOCK_ABSORBER',
         compatible_vehicles: [
@@ -144,7 +146,7 @@ const products = [
         description: 'High-quality disc rotor for reliable braking.',
         brand: 'BrakePro',
         category_name: 'Brakes',
-        price: 60.00,
+        price: 600000,
         stock_quantity: 40,
         image_base64: 'BASE64_IMAGE_STRING_FOR_DISC_ROTOR',
         compatible_vehicles: [
@@ -157,7 +159,7 @@ const products = [
         description: 'Premium spark plug for efficient ignition.',
         brand: 'AutoSpark',
         category_name: 'Ignition System',
-        price: 15.99,
+        price: 160000,
         stock_quantity: 200,
         image_base64: 'BASE64_IMAGE_STRING_FOR_SPARK_PLUG',
         compatible_vehicles: [
@@ -170,7 +172,7 @@ const products = [
         description: 'Durable radiator for improved engine cooling.',
         brand: 'CoolEngine',
         category_name: 'Cooling System',
-        price: 120.99,
+        price: 121000,
         stock_quantity: 15,
         image_base64: 'BASE64_IMAGE_STRING_FOR_RADIATOR',
         compatible_vehicles: [
@@ -183,7 +185,7 @@ const products = [
         description: 'High-quality chain lubricant for smoother performance.',
         brand: 'LuboMax',
         category_name: 'Lubricants and Fluids',
-        price: 12.49,
+        price: 125000,
         stock_quantity: 150,
         image_base64: 'BASE64_IMAGE_STRING_FOR_CHAIN_LUBRICANT',
         compatible_vehicles: [],
@@ -193,7 +195,7 @@ const products = [
         description: 'Durable clutch cable for smoother shifting.',
         brand: 'ShiftEase',
         category_name: 'Transmission and Clutch',
-        price: 19.99,
+        price: 200000,
         stock_quantity: 75,
         image_base64: 'BASE64_IMAGE_STRING_FOR_CLUTCH_CABLE',
         compatible_vehicles: [
@@ -206,7 +208,7 @@ const products = [
         description: 'Stylish and durable alloy wheels for motorbikes.',
         brand: 'WheelPro',
         category_name: 'Tires and Wheels',
-        price: 150.00,
+        price: 1500000,
         stock_quantity: 20,
         image_base64: 'BASE64_IMAGE_STRING_FOR_ALLOY_WHEELS',
         compatible_vehicles: [
@@ -218,7 +220,7 @@ const products = [
         description: 'Bright and energy-efficient LED headlight.',
         brand: 'BrightPath',
         category_name: 'Lighting',
-        price: 45.99,
+        price: 450000,
         stock_quantity: 60,
         image_base64: 'BASE64_IMAGE_STRING_FOR_LED_HEADLIGHT',
         compatible_vehicles: [
@@ -232,11 +234,12 @@ const products = [
 // Orders
 const orders = [
     {
+        _id: new mongoose.Types.ObjectId(),
         customer_name: 'John Doe', // Map this to the actual customer in the database
         phone_number: '1234567890',
         address: '123 Main St, Springfield',
         email: 'johndoe@gmail.com',
-        total_amount: 1045.98,
+        total_amount: 0,
         order_status: 'Pending',
         payment_method: 'Cash',
         shipping_label: '12345-67890',
@@ -244,21 +247,20 @@ const orders = [
             {
                 product_name: 'Oil Filter', // Use product name to resolve `product_id`
                 quantity: 1,
-                price: 25.99,
             },
             {
                 product_name: 'Brake Pads - Rear', // Use product name to resolve `product_id`
                 quantity: 1,
-                price: 35.49,
             },
         ],
     },
     {
+        _id: new mongoose.Types.ObjectId(),
         customer_name: 'Jane Smith', // Map this to the actual customer in the database
         phone_number: '9876543210',
         address: '456 Elm St, Metropolis',
         email: 'janesmith@gmail.com',
-        total_amount: 45.99,
+        total_amount: 0,
         order_status: 'Delivered',
         payment_method: 'PayPal',
         shipping_label: '09876-54321',
@@ -266,7 +268,6 @@ const orders = [
             {
                 product_name: 'Brake Pads - Rear', // Use product name to resolve `product_id`
                 quantity: 1,
-                price: 35.49,
             },
         ],
     },
@@ -278,11 +279,11 @@ const orders = [
 const invoices = [
     {
         invoice_date: new Date('2023-11-01'),
-        total_amount: 1045.98,
+        order_id: orders[0]._id, // Will be resolved dynamically
     },
     {
         invoice_date: new Date('2023-10-25'),
-        total_amount: 45.99,
+        order_id: orders[1]._id, // Will be resolved dynamically
     },
 ];
 

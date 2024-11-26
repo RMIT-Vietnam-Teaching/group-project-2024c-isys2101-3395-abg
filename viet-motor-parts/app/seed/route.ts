@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import dbConnect from '../lib/db';
 import Category from '../lib/models/category';
 import Product from '../lib/models/product';
@@ -108,28 +109,52 @@ async function seedOrders() {
 
     // Create a map for products
     productsInDb.forEach((product) => {
-        productMap.set(product.name, product._id);
+        productMap.set(product.name, { price: product.price, id: product._id });
     });
 
     // Assign product_id to each order's order_details
-    const updatedOrders = orders.map((order) => ({
-        ...order,
-        order_details: order.order_details.map((detail) => ({
-            ...detail,
-            product_id: productMap.get(detail.product_name), // Map product name to product_id
-        })),
-    }));
+    const updatedOrders = orders.map((order) => {
+        const orderDetails = order.order_details.map((detail) => {
+            const product = productMap.get(detail.product_name);
+            if (!product) {
+                console.error(`Product "${detail.product_name}" not found in the database for order "${order.customer_name}".`);
+                return { ...detail, product_id: null, price: null };
+            }
+            return {
+                ...detail,
+                product_id: product.id,
+                price: product.price, // Assign the correct price dynamically
+            };
+        });
 
-    for (const order of updatedOrders) {
-        const existing = await Order.findOne({
+        // Calculate the total amount for the order
+        const totalAmount = orderDetails.reduce(
+            (sum, detail) => sum + detail.price * detail.quantity,
+            0
+        );
+
+        return {
+            ...order,
+            total_amount: totalAmount,
+            order_details: orderDetails,
+        };
+    });
+
+    const validOrders = updatedOrders.filter((order) =>
+        order.order_details.every((detail) => detail.product_id && detail.price !== null)
+    );
+
+    for (const order of validOrders) {
+        const existingOrder = await Order.findOne({
             phone_number: order.phone_number,
             total_amount: order.total_amount,
         });
-        if (!existing) {
+
+        if (!existingOrder) {
             await Order.create(order);
-            console.log(`Order for "${order.phone_number}" added.`);
+            console.log(`Order for "${order.customer_name}" added.`);
         } else {
-            console.log(`Order for "${order.phone_number}" already exists.`);
+            console.log(`Order for "${order.customer_name}" already exists.`);
         }
     }
 }
@@ -137,35 +162,38 @@ async function seedOrders() {
 
 
 async function seedInvoices() {
-    // Fetch all orders from the database
-    const ordersInDb = await Order.find({});
+    const ordersInDb = await Order.find({}); // Fetch all orders from the database
     const orderMap = new Map();
 
-    // Map orders by `total_amount` and `_id` (assuming `total_amount` is unique for this context)
+    // Map order IDs and their total amounts
     ordersInDb.forEach((order) => {
-        orderMap.set(order.total_amount, order._id);
+        orderMap.set(order._id.toString(), order.total_amount);
     });
 
-    // Dynamically assign `order_id` based on `total_amount` from the `invoices` array
     const updatedInvoices = invoices.map((invoice) => {
-        const orderId = orderMap.get(invoice.total_amount); // Resolve order_id by matching total_amount
-        if (!orderId) {
-            console.error(`No matching order found for invoice with total_amount: ${invoice.total_amount}`);
+        const matchingOrder = Array.from(orderMap.entries()).find(
+            ([orderId]) => invoice.order_id.toString() === orderId
+        );
+
+        if (!matchingOrder) {
+            console.error(`No matching order found for invoice with order ID "${invoice.order_id}".`);
+            return { ...invoice, order_id: null, total_amount: null };
         }
+
         return {
             ...invoice,
-            order_id: orderId, // Assign the resolved order_id
+            order_id: matchingOrder[0], // Resolve the order ID dynamically
+            total_amount: matchingOrder[1], // Fetch the total amount
         };
     });
 
-    // Insert invoices into the database
-    for (const invoice of updatedInvoices) {
-        if (!invoice.order_id) {
-            console.error(`Skipping invoice creation due to missing order_id: ${JSON.stringify(invoice)}`);
-            continue;
-        }
-        const existing = await Invoice.findOne({ order_id: invoice.order_id });
-        if (!existing) {
+    const validInvoices = updatedInvoices.filter(
+        (invoice) => invoice.order_id && invoice.total_amount !== null
+    );
+
+    for (const invoice of validInvoices) {
+        const existingInvoice = await Invoice.findOne({ order_id: invoice.order_id });
+        if (!existingInvoice) {
             await Invoice.create(invoice);
             console.log(`Invoice for order ID "${invoice.order_id}" added.`);
         } else {
@@ -174,6 +202,8 @@ async function seedInvoices() {
     }
 }
 
+
+  
 
 
 seedDatabase();
