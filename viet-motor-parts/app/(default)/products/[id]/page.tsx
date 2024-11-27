@@ -2,6 +2,7 @@ import { AmountSelector } from "@/app/components/AmountSelector";
 import Image from "next/image";
 import { Product } from "@/app/components/ProductCard";
 import { formatCurrency } from "@/lib/utils";
+import AddToCart from "@/app/components/addToCart";
 
 
 async function fetchProducts(id: string) {
@@ -36,7 +37,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         </div>
                         <div className="flex -mx-2 mb-4">
                             <div className="w-1/2 px-2">
-                                <button className="w-full bg-brand-600 text-white py-2 px-4 rounded-full font-bold hover:bg-brand-500">Add to Cart</button>
+                                <AddToCart id={product._id} name={product.name} price={product.price} amount={1} className="w-full bg-brand-600 text-white py-2 px-4 rounded-full font-bold hover:bg-brand-500" />
                             </div>
                             <div className="w-1/2 px-2">
                                 <button className="w-full bg-gray-200 dark:bg-gray-700 text-brand-600 py-2 px-4 rounded-full font-bold hover:bg-gray-300 dark:hover:bg-gray-600">Buy Now</button>

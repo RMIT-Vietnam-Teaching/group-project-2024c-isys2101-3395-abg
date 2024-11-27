@@ -34,6 +34,7 @@ export const useShoppingCart = () => {
             syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
+        window.location.reload();
     };
 
     const removeFromCart = (id: string) => {
@@ -42,6 +43,7 @@ export const useShoppingCart = () => {
             syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
+        window.location.reload();
     };
 
     const increaseAmount = (id: string) => {
@@ -52,6 +54,7 @@ export const useShoppingCart = () => {
             syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
+        window.location.reload();
     };
 
     const decreaseAmount = (id: string) => {
@@ -64,6 +67,7 @@ export const useShoppingCart = () => {
             syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
+        window.location.reload();
     };
 
     useEffect(() => {
@@ -72,11 +76,14 @@ export const useShoppingCart = () => {
         }
     }, [cart]);
 
+    const total = cart.reduce((acc, item) => acc + item.amount * item.price, 0);
+
     return {
         cart,
         addToCart,
         removeFromCart,
         increaseAmount,
         decreaseAmount,
+        total,
     };
 };
