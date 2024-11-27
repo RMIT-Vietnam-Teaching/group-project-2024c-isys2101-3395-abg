@@ -1,3 +1,4 @@
+import { Button } from "@/app/components/shadcn/button";
 import {
     Table,
     TableBody,
@@ -51,10 +52,18 @@ export default function Page({ params }: OrderPageProps) {
             : "";
     return (
         <div className="container mx-auto">
-            <h1 className="p-5 text-5xl font-bold text-center">Order #{params.id}</h1>
+            <div className="grid lg:grid-cols-3 items-center justify-center">
+                <h1 className="p-5 text-5xl font-extrabold text-center col-start-2">Order #{params.id}</h1>
+                <div className="flex justify-center">
+                    <Button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl" >
+                        Change Status
+                    </Button>
+                </div>
+
+            </div>
             <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
                 <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
-                    <p className="text-2xl font-extrabold">Order Information</p>
+                    <p className="text-2xl font-bold">Order Information</p>
                     <div className="flex justify-between">
                         <p className="font-semibold">Name:</p>
                         <p>Tôn Thất Hữu Luân</p>
