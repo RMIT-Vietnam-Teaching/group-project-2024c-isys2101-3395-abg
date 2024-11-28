@@ -14,9 +14,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
 
-    const res = await fetch(`http://localhost:3000/api/products?page=${page}`, {
-        cache: "no-store", // Avoid caching to ensure fresh data
-    });
+    const res = await fetch(`http://localhost:3000/api/products?page=${page}`);
     const data = await res.json();
     const products: Product[] = data.data;
 
@@ -41,7 +39,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
                 <section
                     className="grid items-center justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1440px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
                     {products.map((product: Product) => (
-                        <ProductCard key={product._id} _id={product._id} name={product.name} price={product.price} image_base64={product.image_base64 || ""} description={product.description} brand={product.brand} compatible_vehicles={product.compatible_vehicles} stock_quantity={product.stock_quantity} />
+                        <ProductCard key={product._id} _id={product._id} name={product.name} price={product.price} image_base64={product.image_base64 || ""} description={product.description} brand={product.brand} compatible_vehicles={product.compatible_vehicles} stock_quantity={product.stock_quantity} category_id={product.category_id}  />
                     ))}
                 </section>
                 <div>

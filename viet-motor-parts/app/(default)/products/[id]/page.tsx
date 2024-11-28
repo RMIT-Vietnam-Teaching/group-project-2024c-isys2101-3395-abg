@@ -5,10 +5,8 @@ import { formatCurrency } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
 
 
-async function fetchProducts(id: string) {
-    const res = await fetch(`http://localhost:3000/api/products/${id}`, {
-        cache: "no-store", // Avoid caching to ensure fresh data
-    });
+export async function fetchProducts(id: string) {
+    const res = await fetch(`http://localhost:3000/api/products/${id}`);
     const data = await res.json();
     const product: Product = data.data;
     return product;

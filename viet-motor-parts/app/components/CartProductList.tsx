@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useShoppingCart, CartItem } from "../(default)/cart/useShoppingCart";
 import { formatCurrency } from "@/lib/utils";
 
-export function CartProductList() {
-    const { cart, addToCart, removeFromCart, increaseAmount, decreaseAmount } = useShoppingCart();
+export default function CartProductList() {
+    const { cart, removeFromCart, increaseAmount, decreaseAmount } = useShoppingCart();
 
     return (
         <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
