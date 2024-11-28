@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 export async function GET(request) {
   await dbConnect();
 
-  const DEFAULT_LIMIT = 10;
+  const DEFAULT_LIMIT = 9;
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
