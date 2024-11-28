@@ -1,4 +1,4 @@
-import { SearchBarVehicles } from "../../components/SearchBarVehicles";
+import SearchBarVehicles from "@/app/components/SearchBarVehicles";
 import SearchBar from "../../components/SearchBar";
 import { Button } from "../../components/shadcn/button";
 import { Metadata } from "next";
