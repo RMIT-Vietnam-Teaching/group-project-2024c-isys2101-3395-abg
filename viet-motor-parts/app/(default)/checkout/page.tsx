@@ -4,6 +4,7 @@ import { Label } from "@/app/components/shadcn/label";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import { Metadata } from "next/types";
+import { CheckoutProductList } from "@/app/components/CheckoutProductList";
 export const metadata: Metadata = {
     title: "Checkout | Viet Motor Parts",
     description: "Checkout Page",
@@ -63,7 +64,7 @@ export default function Page() {
                 </div>
             </div>
             <div className="grid order-1 col-start-1 grid-rows-3 gap-5 lg:col-span-3 lg:col-start-7 lg:order-2">
-                <div className="row-span-2">Product List</div>
+                <div className="row-span-2"><CheckoutProductList/></div>
                 <div className="flex flex-col justify-end">
                     <OrderSummary /> {/* This is a placeholder for the OrderSummary component */}
                 </div>
