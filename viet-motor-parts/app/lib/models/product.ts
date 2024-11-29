@@ -9,11 +9,7 @@ export interface IProduct extends Document {
   price: number;
   stock_quantity: number;
   image_base64: string;
-  compatible_vehicles: Array<{
-    make: string;
-    model: string;
-    year: number;
-  }>;
+  compatible_vehicles: mongoose.Types.ObjectId[];
   created_at?: Date;
   updated_at?: Date;
 }
@@ -30,9 +26,8 @@ const productSchema: Schema<IProduct> = new mongoose.Schema(
     image_base64: { type: String, required: true },
     compatible_vehicles: [
       {
-        make: { type: String, required: true },
-        model: { type: String, required: true },
-        year: { type: Number, required: true, min: 1900, max: new Date().getFullYear() },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CompatibleVehicle',
       },
     ],
   },

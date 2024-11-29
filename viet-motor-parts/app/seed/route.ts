@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
 import dbConnect from '../lib/db';
 import Category from '../lib/models/category';
 import Product from '../lib/models/product';
 import User from '../lib/models/users';
 import Order from '../lib/models/order';
 import Invoice from '../lib/models/invoice';
+import CompatibleVehicle from '../lib/models/compatiblevehicle';
 
-import { users, categories, products, orders, invoices } from '../lib/placeholder-data';
+import { users, categories, products, orders, invoices, compatibleVehicles } from '../lib/placeholder-data';
 
 async function seedDatabase() {
     await dbConnect();
@@ -14,6 +14,7 @@ async function seedDatabase() {
 
     try {
         await seedCategories();
+        await seedCompatibleVehicles();
         await seedProducts();
         await seedUsers();
         await seedOrders();
@@ -46,24 +47,65 @@ async function seedCategories() {
     }
 }
 
+async function seedCompatibleVehicles() {
+    try {
+        for (const vehicle of compatibleVehicles) {
+            const existingVehicle = await CompatibleVehicle.findOne({
+                make: vehicle.make,
+                vehicleModel: vehicle.vehicleModel,
+                year: vehicle.year,
+            });
+            if (!existingVehicle) {
+                await CompatibleVehicle.create(vehicle);
+                console.log(`Compatible vehicle "${vehicle.make} ${vehicle.vehicleModel}" added.`);
+            } else {
+                console.log(`Compatible vehicle "${vehicle.make} ${vehicle.vehicleModel}" already exists. Skipping.`);
+            }
+        }
+    } catch (error) {
+        console.error('Error seeding compatible vehicles:', error);
+    }
+}
+
 async function seedProducts() {
     const categoriesInDb = await Category.find({});
+    const compatibleVehiclesInDb = await CompatibleVehicle.find({});
     const categoryMap = new Map();
+    const compatibleVehicleMap = new Map();
 
     // Create a map of category names to IDs
     categoriesInDb.forEach((category) => {
         categoryMap.set(category.name, category._id);
     });
 
-    // Assign category_id to each product based on category_name
+    // Create a map of compatible vehicles using make, model, and year as the key
+    compatibleVehiclesInDb.forEach((vehicle) => {
+        const key = `${vehicle.make}-${vehicle.vehicleModel}-${vehicle.year}`;
+        compatibleVehicleMap.set(key, vehicle._id);
+    });
+
+    // Assign category_id and compatible_vehicle IDs to each product
     const updatedProducts = products.map((product) => {
         const categoryId = categoryMap.get(product.category_name);
         if (!categoryId) {
             console.error(`Category "${product.category_name}" not found in the database for product "${product.name}".`);
         }
+
+        const compatibleVehicleIds = product.compatible_vehicles
+            .map((vehicle) => {
+                const key = `${vehicle.make}-${vehicle.vehicleModel}-${vehicle.year}`;
+                const vehicleId = compatibleVehicleMap.get(key);
+                if (!vehicleId) {
+                    console.error(`Compatible vehicle "${key}" not found for product "${product.name}".`);
+                }
+                return vehicleId;
+            })
+            .filter(Boolean); // Remove undefined/null IDs
+
         return {
             ...product,
             category_id: categoryId || null, // Assign null if category is not found
+            compatible_vehicles: compatibleVehicleIds, // Dynamically assign vehicle IDs
         };
     });
 
@@ -89,6 +131,7 @@ async function seedProducts() {
         console.error('Error seeding products:', error);
     }
 }
+
 
 
 async function seedUsers() {

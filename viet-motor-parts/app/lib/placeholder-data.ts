@@ -111,8 +111,8 @@ const products = [
         stock_quantity: 100,
         image_base64: 'BASE64_IMAGE_STRING_FOR_OIL_FILTER',
         compatible_vehicles: [
-            { make: 'Yamaha', model: 'YZF-R3', year: 2019 },
-            { make: 'Honda', model: 'CB500F', year: 2020 },
+            { make: 'Yamaha', vehicleModel: 'YZF-R3', year: 2019 },
+            { make: 'Honda', vehicleModel: 'CB500F', year: 2020 },
         ],
     },
     {
@@ -124,8 +124,8 @@ const products = [
         stock_quantity: 50,
         image_base64: 'BASE64_IMAGE_STRING_FOR_BRAKE_PADS',
         compatible_vehicles: [
-            { make: 'Kawasaki', model: 'Ninja 650', year: 2021 },
-            { make: 'Suzuki', model: 'GSX250R', year: 2018 },
+            { make: 'Kawasaki', vehicleModel: 'Ninja 650', year: 2021 },
+            { make: 'Suzuki', vehicleModel: 'GSX250R', year: 2018 },
         ],
     },
     {
@@ -137,8 +137,8 @@ const products = [
         stock_quantity: 30,
         image_base64: 'BASE64_IMAGE_STRING_FOR_SHOCK_ABSORBER',
         compatible_vehicles: [
-            { make: 'BMW', model: 'G310R', year: 2020 },
-            { make: 'Ducati', model: 'Scrambler', year: 2022 },
+            { make: 'BMW', vehicleModel: 'G310R', year: 2020 },
+            { make: 'Ducati', vehicleModel: 'Scrambler', year: 2022 },
         ],
     },
     {
@@ -150,8 +150,8 @@ const products = [
         stock_quantity: 40,
         image_base64: 'BASE64_IMAGE_STRING_FOR_DISC_ROTOR',
         compatible_vehicles: [
-            { make: 'Yamaha', model: 'MT-09', year: 2021 },
-            { make: 'Kawasaki', model: 'Z650', year: 2022 },
+            { make: 'Yamaha', vehicleModel: 'MT-09', year: 2021 },
+            { make: 'Kawasaki', vehicleModel: 'Z650', year: 2022 },
         ],
     },
     {
@@ -163,8 +163,8 @@ const products = [
         stock_quantity: 200,
         image_base64: 'BASE64_IMAGE_STRING_FOR_SPARK_PLUG',
         compatible_vehicles: [
-            { make: 'Honda', model: 'CBR500R', year: 2019 },
-            { make: 'Suzuki', model: 'V-Strom 650', year: 2021 },
+            { make: 'Honda', vehicleModel: 'CBR500R', year: 2019 },
+            { make: 'Suzuki', vehicleModel: 'V-Strom 650', year: 2021 },
         ],
     },
     {
@@ -176,8 +176,8 @@ const products = [
         stock_quantity: 15,
         image_base64: 'BASE64_IMAGE_STRING_FOR_RADIATOR',
         compatible_vehicles: [
-            { make: 'KTM', model: 'Duke 390', year: 2021 },
-            { make: 'Yamaha', model: 'YZF-R15', year: 2020 },
+            { make: 'KTM', vehicleModel: 'Duke 390', year: 2021 },
+            { make: 'Yamaha', vehicleModel: 'YZF-R15', year: 2020 },
         ],
     },
     {
@@ -188,7 +188,9 @@ const products = [
         price: 125000,
         stock_quantity: 150,
         image_base64: 'BASE64_IMAGE_STRING_FOR_CHAIN_LUBRICANT',
-        compatible_vehicles: [],
+        compatible_vehicles: [
+            { make: 'Honda', vehicleModel: 'Rebel 500', year: 2021 }
+        ],
     },
     {
         name: 'Clutch Cable',
@@ -199,8 +201,8 @@ const products = [
         stock_quantity: 75,
         image_base64: 'BASE64_IMAGE_STRING_FOR_CLUTCH_CABLE',
         compatible_vehicles: [
-            { make: 'KTM', model: 'Duke 390', year: 2021 },
-            { make: 'BMW', model: 'G310R', year: 2020 },
+            { make: 'KTM', vehicleModel: 'Duke 390', year: 2021 },
+            { make: 'BMW', vehicleModel: 'G310R', year: 2020 },
         ],
     },
     {
@@ -212,7 +214,7 @@ const products = [
         stock_quantity: 20,
         image_base64: 'BASE64_IMAGE_STRING_FOR_ALLOY_WHEELS',
         compatible_vehicles: [
-            { make: 'Honda', model: 'Rebel 500', year: 2021 },
+            { make: 'Honda', vehicleModel: 'Rebel 500', year: 2021 },
         ],
     },
     {
@@ -224,7 +226,7 @@ const products = [
         stock_quantity: 60,
         image_base64: 'BASE64_IMAGE_STRING_FOR_LED_HEADLIGHT',
         compatible_vehicles: [
-            { make: 'Yamaha', model: 'MT-03', year: 2020 },
+            { make: 'Yamaha', vehicleModel: 'MT-03', year: 2020 },
         ],
     },
 ];
@@ -287,6 +289,21 @@ const invoices = [
     },
 ];
 
+const compatibleVehicles = [
+    { make: 'Yamaha', vehicleModel: 'YZF-R3', year: 2019 },
+    { make: 'Honda', vehicleModel: 'CB500F', year: 2020 },
+    { make: 'Kawasaki', vehicleModel: 'Ninja 650', year: 2021 },
+    { make: 'Suzuki', vehicleModel: 'GSX250R', year: 2018 },
+    { make: 'BMW', vehicleModel: 'G310R', year: 2020 },
+    { make: 'Ducati', vehicleModel: 'Scrambler', year: 2022 },
+    { make: 'Yamaha', vehicleModel: 'MT-09', year: 2021 },
+    { make: 'Kawasaki', vehicleModel: 'Z650', year: 2022 },
+    { make: 'Honda', vehicleModel: 'CBR500R', year: 2019 },
+    { make: 'Suzuki', vehicleModel: 'V-Strom 650', year: 2021 },
+    { make: 'Yamaha', vehicleModel: 'MT-03', year: 2020 },
+    { make: 'Honda', vehicleModel: 'Rebel 500', year: 2021 },
+    { make: 'KTM', vehicleModel: 'Duke 390', year: 2021 },
+    { make: 'Yamaha', vehicleModel: 'YZF-R15', year: 2020 },
+];
 
-
-export { users, categories, products, orders, invoices };
+export { users, categories, products, orders, invoices, compatibleVehicles };
