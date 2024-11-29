@@ -30,10 +30,9 @@ export default function CompatibleVehicle() {
         setSuggestions({ vehicles: [] });
     };
 
-    console.log(selectedVehicles);
 
     return (
-        <div className="col-span-3 flex flex-col gap-2">
+        <div className="col-span-3 flex flex-col gap-2 justify-center">
             <div>
                 <Input className="text-black w-full bg-white placeholder:text-black" type="text" name="" id="" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search for compatible vehicles" />
             </div>

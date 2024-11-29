@@ -2,14 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../../comp
 import Button from "../../components/Button";
 import { Metadata } from "next/types";
 import { formatCurrency } from "@/lib/utils";
-import OrderSummary from "@/app/components/OrderSummary";
-import { CartProductList } from "@/app/components/CartProductList";
+import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
     title: "Shopping Cart | Viet Motor Parts",
     description: "Shopping Cart",
 };
 
+const CartProductList = dynamic(() => import("@/app/components/CartProductList"), { ssr: false });
+const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
 
 
 export default function Page() {

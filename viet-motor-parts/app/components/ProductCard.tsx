@@ -14,6 +14,7 @@ export interface Product {
   description: string;
   brand: string;
   stock_quantity: number;
+  category_id: string;
   compatible_vehicles: Array<{
     make: string;
     model: string;
