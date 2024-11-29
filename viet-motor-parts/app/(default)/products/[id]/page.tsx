@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             <label htmlFor="part-compatible" className="font-bold text-brand-100 text-lg">Part Compatibility Check:</label>
                             <input type="text" id="part-compatible" className="mt-2 bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500" placeholder="Input your motor model here..." />
                             <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12 rounded-2xl">
-                            <div className="flex flex-col md:flex-row items-center bg-brand-400 my-3 rounded p-3">
+                                <div className="flex flex-col md:flex-row items-center bg-brand-400 my-3 rounded p-3">
                                     <svg className="h-20 w-20 text-brand-100" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <circle cx="12" cy="12" r="9" />  <path d="M9 12l2 2l4 -4" /></svg>
                                     <div className="ml-3 text-center md:text-left">
                                         <h1 className="text-brand-100 text-xl md:text-2xl font-bold mb-2">Compatible!</h1>
@@ -83,7 +83,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         </div>
                         <div className="mb-4">
                             <label htmlFor="quantity-input" className="font-bold block mb-2 text-brand-100 text-lg">Choose quantity:</label>
-                            <AmountSelector />
+                            <AmountSelector initialQuantity={1} productID={product._id} />
                         </div>
                         <div>
                             <span className="font-bold text-brand-600 text-lg">Product Description:</span>

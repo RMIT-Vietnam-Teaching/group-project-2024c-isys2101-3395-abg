@@ -21,7 +21,7 @@ export default function CartProductList() {
                             <label htmlFor="counter-input" className="sr-only text-brand-100">Choose quantity:</label>
                             <div className="flex items-center justify-between md:order-3 md:justify-end">
                                 <div className="flex items-center">
-                                    {product.amount}
+                                    <AmountSelector initialQuantity={product.amount} productID={product.id} />
                                 </div>
                                 <div className="text-end md:order-4 md:w-32">
                                     <p className="text-base font-bold text-brand-100">{formatCurrency(product.price)}</p>
