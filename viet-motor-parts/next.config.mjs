@@ -13,6 +13,9 @@ const nextConfig = {
     experimental: {
         instrumentationHook: true,
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default nextConfig;

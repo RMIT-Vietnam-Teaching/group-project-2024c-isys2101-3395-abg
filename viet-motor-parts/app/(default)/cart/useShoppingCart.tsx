@@ -1,4 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export type CartItem = {
     id: string;
@@ -8,42 +11,46 @@ export type CartItem = {
 };
 
 export const useShoppingCart = () => {
-    const [cart, setCart] = useState<CartItem[]>(() => {
-        if (typeof window !== 'undefined') {
-            const savedCart = localStorage.getItem('shoppingCart');
-            return savedCart ? JSON.parse(savedCart) : [];
-        }
-        return [];
-    });
+    const initialCart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+    const [cart, setCart] = useState<CartItem[]>(initialCart);
+    const initialTotal = JSON.parse(localStorage.getItem('total') || '0');
+    const [total, setTotal] = useState<number>(initialTotal);
 
-    const syncCartToLocalStorage = (updatedCart: CartItem[]) => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('shoppingCart', JSON.stringify(updatedCart));
-        }
-    };
+    useEffect(() => {
+        localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        let newTotal = cart.reduce((acc, item) => acc + item.price * item.amount, 0);
+        setTotal(newTotal);
+        localStorage.setItem('total', JSON.stringify(newTotal));
+    }, [cart]);
+
 
     const addToCart = (item: CartItem) => {
-        setCart((prevCart) => {
-            const updatedCart = prevCart.some((cartItem) => cartItem.id === item.id)
-                ? prevCart.map((cartItem) =>
-                    cartItem.id === item.id
-                        ? { ...cartItem, amount: cartItem.amount + 1 }
-                        : cartItem
-                )
-                : [...prevCart, item];
-            syncCartToLocalStorage(updatedCart);
-            return updatedCart;
+        let newCart = [...cart];
+        let itemInCart = newCart.find((cartItem) => cartItem.id === item.id);
+        if (itemInCart) {
+            itemInCart.amount += item.amount;
+        } else {
+            itemInCart = { ...item };
+            newCart.push(itemInCart);
+        }
+        setCart(newCart);
+        toast.success(`${item.name} added to Cart`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored"
         });
-        window.location.reload();
     };
 
     const removeFromCart = (id: string) => {
         setCart((prevCart) => {
             const updatedCart = prevCart.filter((item) => item.id !== id);
-            syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
-        window.location.reload();
     };
 
     const increaseAmount = (id: string) => {
@@ -51,10 +58,8 @@ export const useShoppingCart = () => {
             const updatedCart = prevCart.map((item) =>
                 item.id === id ? { ...item, amount: item.amount + 1 } : item
             );
-            syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
-        window.location.reload();
     };
 
     const decreaseAmount = (id: string) => {
@@ -64,26 +69,17 @@ export const useShoppingCart = () => {
                     item.id === id ? { ...item, amount: item.amount - 1 } : item
                 )
                 .filter((item) => item.amount > 0);
-            syncCartToLocalStorage(updatedCart);
             return updatedCart;
         });
-        window.location.reload();
     };
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('shoppingCart', JSON.stringify(cart));
-        }
-    }, [cart]);
-
-    const total = cart.reduce((acc, item) => acc + item.amount * item.price, 0);
 
     return {
         cart,
+        total,
         addToCart,
         removeFromCart,
         increaseAmount,
         decreaseAmount,
-        total,
     };
 };

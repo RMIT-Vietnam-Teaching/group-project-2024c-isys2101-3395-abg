@@ -16,9 +16,10 @@ export default function CurrencyInputVietnam({ className, defaultValue }: Curren
         const rawValue = value === undefined ? 'undefined' : value;
         setRawValue(rawValue || ' ');
     };
+
     return (<div className="col-span-3">
-        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control ${className} w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="e.g 120,000đ" value={rawValue} />
-        <input type="number" name="price" min="0" value={rawValue} className="hidden" />
+        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="e.g 120,000đ" value={rawValue} />
+        <input id="price-real" type="number" name="price" min="0" value={rawValue} className="hidden" />
     </div>
     )
 }
