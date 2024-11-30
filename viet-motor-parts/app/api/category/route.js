@@ -4,42 +4,26 @@ import jwt from 'jsonwebtoken';
 
 export async function GET(request) {
     await dbConnect();
-
-    const DEFAULT_LIMIT = 9; // Default number of categories per page
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
-
+  
     try {
-        // Fetch paginated categories
-        const categories = await Category.find({})
-            .skip((page - 1) * limit)
-            .limit(limit);
-
-        // Total count for pagination metadata
-        const totalCount = await Category.countDocuments();
-
-        return new Response(
-            JSON.stringify({
-                success: true,
-                data: categories,
-                meta: {
-                    currentPage: page,
-                    totalPages: Math.ceil(totalCount / limit),
-                    totalCount,
-                    limit,
-                },
-            }),
-            { status: 200, headers: { 'Content-Type': 'application/json' } }
-        );
+      // Fetch all categories
+      const categories = await Category.find({});
+  
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: categories,
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
     } catch (error) {
-        console.error('Error fetching categories:', error);
-        return new Response(
-            JSON.stringify({ success: false, error: 'Failed to fetch categories' }),
-            { status: 500 }
-        );
+      console.error('Error fetching categories:', error);
+      return new Response(
+        JSON.stringify({ success: false, error: 'Failed to fetch categories' }),
+        { status: 500 }
+      );
     }
-}
+  }  
 
 export async function POST(request) {
     await dbConnect();
