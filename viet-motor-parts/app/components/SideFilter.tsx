@@ -16,7 +16,7 @@ export function SideFilter() {
 
   return (
     <div className="z-10 w-full p-3 bg-brand-100 rounded-lg shadow">
-      <h1 className="text-brand-500 text-xl font-bold mx-4">
+      <h1 className="text-brand-500 text-xl font-bold">
         <svg
           className="h-8 w-8 text-brand-400 inline-block"
           viewBox="0 0 24 24"
@@ -36,15 +36,13 @@ export function SideFilter() {
         <button
           type="button"
           onClick={() => toggleSection("category")}
-          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${
-            isOpen("category") ? "bg-white" : ""
-          }`}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("category") ? "bg-white" : ""
+            }`}
         >
           <h6 className="mx-3 text-xl font-medium">Category (Checkbox)</h6>
           <svg
-            className={`w-4 h-4 mx-3 transform ${
-              isOpen("category") ? "rotate-180" : ""
-            }`}
+            className={`w-4 h-4 mx-3 transform ${isOpen("category") ? "rotate-180" : ""
+              }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -85,15 +83,13 @@ export function SideFilter() {
         <button
           type="button"
           onClick={() => toggleSection("price")}
-          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${
-            isOpen("price") ? "bg-white" : ""
-          }`}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("price") ? "bg-white" : ""
+            }`}
         >
           <h6 className="mx-3 text-xl font-medium">Price (Input filter)</h6>
           <svg
-            className={`w-4 h-4 mx-3 transform ${
-              isOpen("price") ? "rotate-180" : ""
-            }`}
+            className={`w-4 h-4 mx-3 transform ${isOpen("price") ? "rotate-180" : ""
+              }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -135,15 +131,13 @@ export function SideFilter() {
         <button
           type="button"
           onClick={() => toggleSection("radio")}
-          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${
-            isOpen("radio") ? "bg-white" : ""
-          }`}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("radio") ? "bg-white" : ""
+            }`}
         >
           <h6 className="mx-3 text-xl font-medium">A Radio Filter</h6>
           <svg
-            className={`w-4 h-4 mx-3 transform ${
-              isOpen("radio") ? "rotate-180" : ""
-            }`}
+            className={`w-4 h-4 mx-3 transform ${isOpen("radio") ? "rotate-180" : ""
+              }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
