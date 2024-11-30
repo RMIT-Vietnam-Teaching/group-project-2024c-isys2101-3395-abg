@@ -32,16 +32,15 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className="h-[500px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4 relative overflow-hidden">
                         <Image src="/ProductPlaceholder.webp" alt="A random motor part" fill={true} />
                     </div>
-
                 </div>
                 <div className="flex flex-col gap-2 px-4">
-                    <div>
-                        <h2 className="text-5xl font-extrabold text-brand-100 mb-2">{product.name}</h2>
-                        <p className="text-brand-200 text-base mb-4">
+                    <div className="flex flex-col gap-3">
+                        <h2 className="text-5xl font-extrabold text-brand-100">{product.name}</h2>
+                        <p className="text-brand-200 text-base">
                             {product.brand}
                         </p>
                     </div>
-                    <div className="flex mb-4">
+                    <div className="flex">
                         <div className="mr-4">
                             <span className="font-bold text-brand-400 text-lg">Price:</span>
                             <span className="text-brand-200 text-lg font-extrabold"> {formatCurrency(product.price)}</span>
@@ -51,14 +50,14 @@ export default async function Page({ params }: { params: { id: string } }) {
                             <span className="text-brand-200 text-lg font-extrabold"> {product.stock_quantity}</span>
                         </div>
                     </div>
-                    <div className="flex mx-2 mb-4">
+                    <div className="flex">
                         <div className="w-1/2">
                             <AddToCart
                                 id={product._id}
                                 name={product.name}
                                 price={product.price}
                                 amount={1} // Default amount to 1 when adding to cart
-                                className="w-full bg-brand-600 text-white py-2 px-4 rounded-full font-bold hover:bg-brand-500"
+                                className="w-full  text-white py-2 px-4  font-bold"
                             />
                         </div>
                     </div>
@@ -68,7 +67,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             {product.description}
                         </p>
                     </div>
-                    <div className="mb-4" id="compatabilityCheck">
+                    <div className="" id="compatabilityCheck">
                         <label htmlFor="part-compatible" className="font-bold text-brand-100 text-lg">Part Compatibility Check:</label>
                         <input type="text" id="part-compatible" className="mt-2 bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500" placeholder="Input your motor model here..." />
                         <div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12 rounded-2xl">

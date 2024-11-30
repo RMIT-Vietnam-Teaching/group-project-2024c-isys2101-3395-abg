@@ -17,32 +17,14 @@ export function AmountSelector(props: AmountSelectorProps) {
     const handleIncrement = () => {
         setQuantity((prevQuantity) => prevQuantity + 1);
         // If product ID present in local storage, update the quantity
-        if (typeof window !== 'undefined') {
-            const cart = localStorage.getItem('shoppingCart');
-            const cartItems = cart ? JSON.parse(cart) : [];
-            cartItems.map((item: { id: string; amount: number; }) => {
-                if (item.id === props.productID) {
-                    increaseAmount(props.productID);
-                }
-            }
-            );
-        }
+        increaseAmount(props.productID);
     }
 
 
     const handleDecrement = () => {
         setQuantity((prevQuantity) => (prevQuantity > 0 ? prevQuantity - 1 : 1));
         // If product ID present in local storage, update the quantity
-        if (typeof window !== 'undefined') {
-            const cart = localStorage.getItem('shoppingCart');
-            const cartItems = cart ? JSON.parse(cart) : [];
-            cartItems.map((item: { id: string; amount: number; }) => {
-                if (item.id === props.productID) {
-                    decreaseAmount(props.productID);
-                }
-            }
-            );
-        }
+        decreaseAmount(props.productID);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

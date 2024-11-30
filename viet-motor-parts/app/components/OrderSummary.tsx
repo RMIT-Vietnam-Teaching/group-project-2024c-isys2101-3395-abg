@@ -3,11 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "./shadcn/card";
 import Button from "./Button";
 import { formatCurrency } from "@/lib/utils";
-import { useShoppingCart } from "../(default)/cart/useShoppingCart";
+import { CartItem, useShoppingCart } from "../(default)/cart/useShoppingCart";
+import { useEffect, useState } from "react";
 
 export default function OrderSummary() {
     const { total, cart } = useShoppingCart();
+
     const estimatedShipping = (cart.length > 0) ? 30000 : 0;
+
+
+
     return (
         <div>
             <Card className="mx-auto mb-5 text-white border-none shadow-xl lg:mb-0 bg-brand-500">
