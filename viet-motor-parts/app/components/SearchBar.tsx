@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search } from 'lucide-react';
 
 export default function SearchBar() {
+    const router = useRouter();
+
     // Mock database
     const mockDatabase = [
         { id: 1, name: "EBC Double-H Sintered Brake Pads - FA244HH", image: "/ProductPlaceholder.webp" },
@@ -46,6 +49,12 @@ export default function SearchBar() {
         }
     };
 
+    const handleProductClick = (name: string, id: number) => {
+        setQuery(name); // Fill the search bar with the product name
+        setFilteredResults([]); // Clear the dropdown
+        router.push(`/products/${id}`); // Navigate to the product detail page
+    };
+
     const maxResults = 5;
     const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
 
@@ -77,6 +86,7 @@ export default function SearchBar() {
                             <div
                                 key={item.id}
                                 className="p-4 bg-brand-500 border-b-2 border-brand-100 flex items-center gap-4"
+                                onClick={() => handleProductClick(item.name, item.id)} // Handle click to populate search bar
                             >
                                 <a href="#" className="h-12 w-12 shrink-0">
                                     <img
@@ -90,20 +100,12 @@ export default function SearchBar() {
                                 </a>
                             </div>
                         ))
-                    ) : (
-                        <div className="p-4 bg-brand-500 rounded-b">
-                            <div className="flex items-center gap-4">
-                                <a href="#" className="flex-1 text-brand-100">
-                                    No part with this name...
-                                </a>
-                            </div>
-                        </div>
-                    )}
+                    ) : null}
                     {/* Show "See all products" if there are more than 5 results */}
                     {filteredResults.length > maxResults && (
                         <div className="p-4 bg-brand-500 rounded-b">
                             <div className="flex items-center gap-4">
-                                <a href="#" className="flex-1 text-brand-100">
+                                <a href="/products" className="flex-1 text-brand-100">
                                     See all products...
                                 </a>
                             </div>
