@@ -18,6 +18,9 @@ export const useShoppingCart = () => {
 
     useEffect(() => {
         localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }, [cart]);
+
+    useEffect(() => {
         let newTotal = cart.reduce((acc, item) => acc + item.price * item.amount, 0);
         setTotal(newTotal);
         localStorage.setItem('total', JSON.stringify(newTotal));

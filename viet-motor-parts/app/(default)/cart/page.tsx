@@ -26,7 +26,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div className='lg:col-span-3 lg:col-start-7'>
-                    <OrderSummary /> {/* This is a placeholder for the OrderSummary component */}
+                    <OrderSummary location="cart" /> {/* This is a placeholder for the OrderSummary component */}
                 </div>
             </div>
         </div>
