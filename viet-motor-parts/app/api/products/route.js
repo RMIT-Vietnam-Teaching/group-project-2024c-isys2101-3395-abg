@@ -9,10 +9,13 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
+  const query = searchParams.get('query') || '';
 
   try {
     // Fetch paginated products
-    const products = await Product.find({})
+    const products = await Product.find({
+      name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
+    })
       .skip((page - 1) * limit)
       .limit(limit);
 
