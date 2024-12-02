@@ -82,12 +82,12 @@ export default function SearchBarCompatibility() {
             </div>
             {/* Dropdown suggestions */}
             {query && (
-                <div className="absolute w-full rounded-lg shadow-lg z-10">
+                <div className="w-full rounded-lg shadow-lg z-10">
                     {displayedResults.length > 0 ? (
                         displayedResults.map((item) => (
                             <div
                                 key={item.id}
-                                className="p-4 mt-3 bg-brand-600 border-b-2 border-brand-100 rounded flex items-center gap-4"
+                                className="p-3 mt-3 bg-brand-600 border-2 border-brand-100 rounded flex items-center gap-4"
                                 onClick={() => handleProductClick(item.name, item.id)}
                             >
                                 <a href="#" className="h-12 w-12 shrink-0">
