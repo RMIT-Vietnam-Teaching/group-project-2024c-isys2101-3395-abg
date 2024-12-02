@@ -29,6 +29,7 @@ export function CheckoutProductList() {
                         </div>
                     </div>
                 ))}
+                <input type="text" name="cartItems" hidden value={JSON.stringify(cart)} />
             </div>
         </div>
     )
