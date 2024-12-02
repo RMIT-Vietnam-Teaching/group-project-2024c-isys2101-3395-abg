@@ -4,11 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "./shadcn/c
 import Button from "./Button";
 import { formatCurrency } from "@/lib/utils";
 import { CartItem, useShoppingCart } from "../(default)/cart/useShoppingCart";
-import { useEffect, useState } from "react";
 
-export default function OrderSummary() {
+type OrderSummaryProps = {
+    location: 'cart' | 'checkout';
+};
+
+
+export default function OrderSummary(props: OrderSummaryProps) {
     const { total, cart } = useShoppingCart();
-
     const estimatedShipping = (cart.length > 0) ? 30000 : 0;
 
 
@@ -34,8 +37,8 @@ export default function OrderSummary() {
                     </div>
                 </CardContent>
                 <CardFooter className="flex flex-col items-start">
-                    <Button className="w-full" title="Checkout" link="/checkout">
-                    </Button>
+                    {props.location === 'cart' ? <Button className="w-full" title="Proceed to Checkout" link="/checkout" /> : null}
+                    {props.location === 'checkout' ? <Button className="w-full" title="Place Order" /> : null}
                 </CardFooter>
             </Card>
         </div>

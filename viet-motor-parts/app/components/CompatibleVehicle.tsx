@@ -58,6 +58,7 @@ export default function CompatibleVehicle() {
                         </span>
                     );
                 })}
+                <input type="text" name="compatibleVehicles" hidden value={JSON.stringify(selectedVehicles)} />
             </div>
         </div>
     );
