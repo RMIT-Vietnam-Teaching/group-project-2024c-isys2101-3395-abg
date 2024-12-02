@@ -28,11 +28,11 @@ export default function OrderSummary(props: OrderSummaryProps) {
                         <p className="">{formatCurrency(total)}</p>
                     </div>
                     <div className="flex justify-between">
-                        <p className="font-bold">Estimated Shipping:</p>
+                        <p className="font-bold">{props.location === 'cart' ? <span>Estimated</span> : null} Shipping:</p>
                         <p className="">{formatCurrency(estimatedShipping)}</p>
                     </div>
                     <div className="flex justify-between py-3">
-                        <p className="text-2xl font-bold">Estimated Total:</p>
+                        <p className="text-2xl font-bold">{props.location === 'cart' ? <span>Estimated</span> : null} Total:</p>
                         <p className="text-2xl">{formatCurrency(total + estimatedShipping)}</p>
                     </div>
                 </CardContent>
