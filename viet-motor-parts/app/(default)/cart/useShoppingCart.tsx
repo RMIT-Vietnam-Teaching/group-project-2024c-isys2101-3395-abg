@@ -11,9 +11,22 @@ export type CartItem = {
 };
 
 export const useShoppingCart = () => {
-    const initialCart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+
+    const initialCart = () => {
+        if (typeof window !== 'undefined') {
+            const cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+            return cart;
+        }
+    }
     const [cart, setCart] = useState<CartItem[]>(initialCart);
-    const initialTotal = JSON.parse(localStorage.getItem('total') || '0');
+
+    const initialTotal = () => {
+        if (typeof window !== 'undefined') {
+            const total = JSON.parse(localStorage.getItem('total') || '0');
+            return total;
+        }
+    }
+
     const [total, setTotal] = useState<number>(initialTotal);
 
     useEffect(() => {
