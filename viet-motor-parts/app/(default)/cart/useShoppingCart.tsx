@@ -1,5 +1,6 @@
 "use client";
 
+import { get } from 'http';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -62,10 +63,25 @@ export const useShoppingCart = () => {
         });
     };
 
+    const getItemById = (id: string) => {
+        return cart.find((item) => item.id === id);
+    };
+
     const removeFromCart = (id: string) => {
+        const item = getItemById(id);
         setCart((prevCart) => {
             const updatedCart = prevCart.filter((item) => item.id !== id);
             return updatedCart;
+        });
+        toast.success(`${item?.name} removed from Cart`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored"
         });
     };
 
@@ -75,6 +91,17 @@ export const useShoppingCart = () => {
                 item.id === id ? { ...item, amount: item.amount + 1 } : item
             );
             return updatedCart;
+        });
+        const item = getItemById(id);
+        toast.success(`${item?.name} amount increased`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored"
         });
     };
 
@@ -86,6 +113,17 @@ export const useShoppingCart = () => {
                 )
                 .filter((item) => item.amount > 0);
             return updatedCart;
+        });
+        const item = getItemById(id);
+        toast.success(`${item?.name} amount decreased`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored"
         });
     };
 
