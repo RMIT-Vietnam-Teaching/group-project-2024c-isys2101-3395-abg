@@ -6,8 +6,9 @@ import { Input } from "@/app/components/shadcn/input"
 import { Label } from "@/app/components/shadcn/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/shadcn/card"
 import { Alert, AlertDescription, AlertTitle } from "@/app/components/shadcn/alert"
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, ShoppingCartIcon } from 'lucide-react'
 import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam'
+import { LoanCalculationResult } from './page'
 
 interface CalculateLoanResult {
     error?: string
@@ -19,14 +20,18 @@ export function formatCurrency(value: number): string {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 };
 
-export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<CalculateLoanResult> }) {
-    const [result, setResult] = useState<CalculateLoanResult | null>(null)
-
-
+export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
+    const [result, setResult] = useState<LoanCalculationResult | null>(null);
 
     async function handleSubmit(formData: FormData) {
         const calculationResult = await calculateLoan(formData)
         setResult(calculationResult)
+    }
+
+    function importFromCart() {
+        const total = localStorage.getItem('total') || '';
+        document.querySelector("#price")?.setAttribute('value', total);
+        document.querySelector("#price-real")?.setAttribute('value', total);
     }
 
     return (
@@ -52,6 +57,7 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
                     <div className="space-y-2">
                         <Label htmlFor="loanTerm" className='font-semibold'>Total Amount (VNĐ)</Label>
                         <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' />
+                        <Button onClick={importFromCart} className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl font-bold"> <ShoppingCartIcon size={10} /> Import from Cart</Button>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="loanTerm" className='font-semibold'>Loan Term (max 72 months)</Label>

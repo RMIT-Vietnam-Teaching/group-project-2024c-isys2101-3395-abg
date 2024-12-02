@@ -64,9 +64,9 @@ export default function Page() {
                 </div>
             </div>
             <div className="grid order-1 col-start-1 grid-rows-3 gap-5 lg:col-span-3 lg:col-start-7 lg:order-2">
-                <div className="row-span-2"><CheckoutProductList/></div>
+                <div className="row-span-2"><CheckoutProductList /></div>
                 <div className="flex flex-col justify-end">
-                    <OrderSummary /> {/* This is a placeholder for the OrderSummary component */}
+                    <OrderSummary location="checkout" /> {/* This is a placeholder for the OrderSummary component */}
                 </div>
             </div>
         </div>

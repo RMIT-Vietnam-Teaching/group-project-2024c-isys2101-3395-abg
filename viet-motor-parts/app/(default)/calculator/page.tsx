@@ -6,8 +6,11 @@ export const metadata: Metadata = {
     title: "Interest Rate Calculator | Viet Motor Parts",
     description: "Viet Motor Part's Interest Rate Calculator",
 };
+export type LoanCalculationResult =
+    | { error: string; interestRate?: undefined; monthlyPayment?: undefined; totalPayment?: undefined; }
+    | { interestRate: string; monthlyPayment: string; totalPayment: string; error?: undefined; };
 
-export async function calculateLoan(formData: FormData) {
+export async function calculateLoan(formData: FormData): Promise<LoanCalculationResult> {
     'use server'
 
     const creditScore = Number(formData.get('creditScore'))

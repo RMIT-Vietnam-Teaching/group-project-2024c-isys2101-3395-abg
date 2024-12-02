@@ -2,14 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../../comp
 import Button from "../../components/Button";
 import { Metadata } from "next/types";
 import { formatCurrency } from "@/lib/utils";
-import OrderSummary from "@/app/components/OrderSummary";
-import { CartProductList } from "@/app/components/CartProductList";
+import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {
     title: "Shopping Cart | Viet Motor Parts",
     description: "Shopping Cart",
 };
 
+const CartProductList = dynamic(() => import("@/app/components/CartProductList"), { ssr: false });
+const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
 
 
 export default function Page() {
@@ -21,11 +22,11 @@ export default function Page() {
             <div className='container grid grid-rows-2 gap-5 mx-auto lg:gap-0 lg:grid-cols-9'>
                 <div className='lg:col-span-5'>
                     <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl">
-                        <CartProductList />
+                        <CartProductList /> {/* This is a placeholder for the CartProductList component */}
                     </div>
                 </div>
                 <div className='lg:col-span-3 lg:col-start-7'>
-                    <OrderSummary /> {/* This is a placeholder for the OrderSummary component */}
+                    <OrderSummary location="cart" /> {/* This is a placeholder for the OrderSummary component */}
                 </div>
             </div>
         </div>
