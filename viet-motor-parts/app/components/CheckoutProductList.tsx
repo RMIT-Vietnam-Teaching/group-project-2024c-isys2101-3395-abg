@@ -1,16 +1,17 @@
 "use client"
 
-import Image from "next/image";
 import { useShoppingCart, CartItem } from "../(default)/cart/useShoppingCart";
 import { formatCurrency } from "@/lib/utils";
 
-export function CheckoutProductList() {
+export default function CheckoutProductList() {
     const { cart } = useShoppingCart();
+
+
     return (
         <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
             <div className="space-y-6">
-                {cart.map((product: CartItem) => (
-                    <div className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                {cart && cart.map((product: CartItem) => (
+                    <div key={product.id} className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                         <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                             <a href={`/products/${product.id}`} className="shrink-0 md:order-1">
                                 <img className="h-20 w-20 dark:hidden" src="/ProductPlaceholder.webp" alt="A random motor part" />
