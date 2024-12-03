@@ -1,5 +1,6 @@
 import dbConnect from '@/app/lib/db';
 import Product from '@/app/lib/models/product';
+import Category from '@/app/lib/models/category';
 import jwt from 'jsonwebtoken';
 
 export async function GET(request) {
@@ -7,6 +8,7 @@ export async function GET(request) {
 
   const DEFAULT_LIMIT = 9;
   const { searchParams } = new URL(request.url);
+  const categoryName = searchParams.get('category');
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
   const query = searchParams.get('query') || '';
@@ -28,8 +30,22 @@ export async function GET(request) {
     }
 
     const sortOrder = order === 'asc' ? 1 : -1;
+
+    let categoryFilter = {};
+    if (categoryName) {
+      const category = await Category.findOne({ name: { $regex: categoryName, $options: 'i' } });
+      if (!category) {
+        return new Response(
+          JSON.stringify({ success: false, error: 'Category not found' }),
+          { status: 404 }
+        );
+      }
+      categoryFilter = { category_id: category._id };
+    }
+
     // Fetch paginated products
     const products = await Product.find({
+      ...categoryFilter,
       name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
     })
       .sort({ [sortBy]: sortOrder })
@@ -37,7 +53,10 @@ export async function GET(request) {
       .limit(limit);
 
     // Total count for pagination metadata
-    const totalCount = await Product.countDocuments();
+    const totalCount = await Product.countDocuments({
+      ...categoryFilter,
+      name: { $regex: query, $options: 'i' },
+    });
 
     return new Response(
       JSON.stringify({
