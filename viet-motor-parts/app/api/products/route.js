@@ -10,12 +10,29 @@ export async function GET(request) {
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
   const query = searchParams.get('query') || '';
+  const sortBy = searchParams.get('sortBy') || 'name';
+  const order = searchParams.get('order') || 'asc';
 
   try {
+    const validSortFields = ['name', 'price'];
+    const validOrders = ['asc', 'desc'];
+
+    if (!validSortFields.includes(sortBy) || !validOrders.includes(order)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Invalid sortBy or order parameter. Use "name" or "price" for sortBy and "asc" or "desc" for order.',
+        }),
+        { status: 400 }
+      );
+    }
+
+    const sortOrder = order === 'asc' ? 1 : -1;
     // Fetch paginated products
     const products = await Product.find({
       name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
     })
+      .sort({ [sortBy]: sortOrder })
       .skip((page - 1) * limit)
       .limit(limit);
 
