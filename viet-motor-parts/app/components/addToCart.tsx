@@ -2,7 +2,7 @@
 
 import { twMerge } from "tailwind-merge";
 import { useShoppingCart } from "../(default)/cart/useShoppingCart";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
 
 export default function AddToCart({ id, name, price, amount, className }: { id: string, name: string, price: number, amount: number, className?: string }) {
