@@ -3,14 +3,7 @@ import Image from "next/image";
 import { Product } from "@/app/components/ProductCard";
 import { formatCurrency } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
-
-
-export async function fetchProducts(id: string) {
-    const res = await fetch(`http://localhost:3000/api/products/${id}`);
-    const data = await res.json();
-    const product: Product = data.data;
-    return product;
-}
+import { fetchProducts } from "./fetchProducts";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
     const res = await fetchProducts(params.id);
