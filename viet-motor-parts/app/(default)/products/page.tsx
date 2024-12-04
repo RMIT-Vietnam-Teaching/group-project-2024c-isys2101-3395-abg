@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function Page({ searchParams }: { searchParams: Record<string, string> }) {
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
-    const query = searchParams.query || "";
+    let query = searchParams.query || "";
 
     // Construct API URL dynamically
     let apiUrl = `http://localhost:3000/api/products?page=${page}`;

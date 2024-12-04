@@ -4,11 +4,17 @@ import { Label } from "@/app/components/shadcn/label";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import { Metadata } from "next/types";
-import { CheckoutProductList } from "@/app/components/CheckoutProductList";
+import dynamic from "next/dynamic";
+import PaymentMethod from "./paymentMethod";
+import { calculateLoan } from "../calculator/page";
+import { Check } from "lucide-react";
+
 export const metadata: Metadata = {
     title: "Checkout | Viet Motor Parts",
     description: "Checkout Page",
 };
+
+const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 
 export default function Page() {
     return (
@@ -42,29 +48,12 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                <div className="bg-brand-600 rounded-xl">
-                    <h1 className="p-5 text-2xl font-bold">Payment Method</h1>
-                    <div className="flex flex-col gap-5 px-5">
-                        <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                            <input id="PayPal" type="radio" value="paypal" name="paymentMethod" className="w-4 h-4 accent-brand-200">
-                            </input>
-                            <label htmlFor="PayPal" className="w-full py-4 font-semibold text-white ms-2 text-md">PayPal</label>
-                        </div>
-                        <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                            <input id="CoD" type="radio" value="CoD" name="paymentMethod" className="w-4 h-4 accent-brand-200">
-                            </input>
-                            <label htmlFor="CoD" className="w-full py-4 font-semibold text-white ms-2 text-md">Cash on Delivery</label>
-                        </div>
-                        <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                            <input id="installment" type="radio" value="installment" name="paymentMethod" className="w-4 h-4 accent-brand-200">
-                            </input>
-                            <label htmlFor="installment" className="w-full py-4 font-semibold text-white ms-2 text-md">Buy Now, Pay Later</label>
-                        </div>
-                    </div>
-                </div>
+                <PaymentMethod calculateLoan={calculateLoan} />
             </div>
             <div className="grid order-1 col-start-1 grid-rows-3 gap-5 lg:col-span-3 lg:col-start-7 lg:order-2">
-                <div className="row-span-2"><CheckoutProductList /></div>
+                <div className="row-span-2">
+                    <CheckoutProductList />
+                </div>
                 <div className="flex flex-col justify-end">
                     <OrderSummary location="checkout" /> {/* This is a placeholder for the OrderSummary component */}
                 </div>

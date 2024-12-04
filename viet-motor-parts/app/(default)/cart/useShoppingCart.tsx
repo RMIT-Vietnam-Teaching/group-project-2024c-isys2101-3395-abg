@@ -1,8 +1,7 @@
 "use client";
 
-import { get } from 'http';
-import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from 'react'; 
+import { toast } from 'react-toastify'; 
 
 export type CartItem = {
     id: string;
