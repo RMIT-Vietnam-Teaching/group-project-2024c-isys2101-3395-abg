@@ -23,16 +23,16 @@ export async function POST(request) {
     const user = await User.findOne({ username });
     if (!user) {
       return new Response(
-        JSON.stringify({ message: 'Invalid username or password' }),
+        JSON.stringify({ message: 'Invalid username' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     // Verify the password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+    if (password !== user.password) { // replace to !isPasswordValid in the future
       return new Response(
-        JSON.stringify({ message: 'Invalid username or password' }),
+        JSON.stringify({ message: 'Invalid password' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
