@@ -6,121 +6,36 @@ import { Search } from "lucide-react";
 
 export default function SearchBar() {
   const router = useRouter();
-  // Mock database
-  const mockDatabase = [
-    {
-      id: 1,
-      name: "EBC Double-H Sintered Brake Pads - FA244HH",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 2,
-      name: "Yamaha YZF R15 Chain Sprocket Set",
-      image: "/ProductPlaceholder.webp",
-    },
-    { id: 3, name: "NGK Spark Plug CR7HSA", image: "/ProductPlaceholder.webp" },
-    {
-      id: 4,
-      name: "Mobil 1 Synthetic Motor Oil 10W-40",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 5,
-      name: "Michelin Pilot Road 4 Tires - Front",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 6,
-      name: "K&N High-Performance Air Filter - YA-1004",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 7,
-      name: "DID 520VX3 X-Ring Chain",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 8,
-      name: "Brembo Brake Disc - Rear",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 9,
-      name: "Bosch Ignition Coil for Motorcycles",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 10,
-      name: "Hella LED Fog Light Kit",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 11,
-      name: "ProTaper EVO Handlebars - Oversize",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 12,
-      name: "Yuasa YTX12-BS Maintenance-Free Battery",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 13,
-      name: "Pirelli Diablo Rosso III Tires - Rear",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 14,
-      name: "RK Chain 530XSOZ1 X-Ring",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 15,
-      name: "Shark Spartan GT Carbon Helmet",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 16,
-      name: "Scorpion EXO-R420 Full-Face Helmet",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 17,
-      name: "Shoei GT-Air II Helmet",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 18,
-      name: "Alpinestars SMX-6 V2 Riding Boots",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 19,
-      name: "Dainese Racing 3 Leather Jacket",
-      image: "/ProductPlaceholder.webp",
-    },
-    {
-      id: 20,
-      name: "Oxford Screamer Alarm Disc Lock",
-      image: "/ProductPlaceholder.webp",
-    },
-  ];
 
   const [query, setQuery] = useState("");
-  const [filteredResults, setFilteredResults] = useState<typeof mockDatabase>(
-    [],
-  );
+  const [filteredResults, setFilteredResults] = useState<
+    Array<{ id: string; name: string; image: string }>
+  >([]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
 
-    // Filter the mock database based on the query
     if (value.trim() !== "") {
-      const results = mockDatabase.filter((item) =>
-        item.name.toLowerCase().includes(value.toLowerCase()),
-      );
-      setFilteredResults(results);
+      try {
+        // Fetch products from the database using the query
+        const response = await fetch(`/api/products?query=${encodeURIComponent(value)}`);
+        const result = await response.json();
+
+        if (result.success) {
+          const products = result.data.map((product: any) => ({
+            id: product._id,
+            name: product.name,
+            image: "/ProductPlaceholder.webp", // Use placeholder image for now
+          }));
+          setFilteredResults(products);
+        } else {
+          setFilteredResults([]);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setFilteredResults([]);
+      }
     } else {
       setFilteredResults([]);
     }
