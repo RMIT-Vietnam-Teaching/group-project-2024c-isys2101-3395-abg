@@ -7,6 +7,7 @@ import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import PaymentMethod from "./paymentMethod";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -17,24 +18,22 @@ export default function CheckoutPage() {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const router = useRouter();
+
     const handleSubmit = async (formData: FormData) => {
-        // Get all Form Data
         const customer_name = formData.get("name") as string;
         const phone_number = formData.get("pnumber") as string;
-        const email = formData.get("email") as string;
-        const address = `${formData.get("address") as string}, ${formData.get("ward") as string}, ${formData.get("district") as string}, ${formData.get("city") as string}`;
+        const address = `${formData.get("address")}, ${formData.get("ward")}, ${formData.get("district")}, ${formData.get("city")}`;
         const additional_notes = formData.get("addNotes") as string;
         const payment_method = formData.get("paymentMethod") as string;
         const cartItems = formData.get("cartItems") as string;
-        const cartItemsArray = JSON.parse(cartItems);
-        const order_details = cartItemsArray.map((item: any) => {
-            return {
-                product_id: item.id,
-                quantity: item.amount,
-                price: item.price,
-            };
-        });
         const total_amount = formData.get("total") as string;
+
+        const order_details = JSON.parse(cartItems).map((item: any) => ({
+            product_id: item.id,
+            quantity: item.amount,
+            price: item.price,
+        }));
 
         setLoading(true);
         try {
@@ -46,36 +45,33 @@ export default function CheckoutPage() {
                 body: JSON.stringify({
                     customer_name,
                     phone_number,
-                    email,
                     address,
                     additional_notes,
-                    order_details, // Properly formatted order_details
+                    order_details,
                     total_amount,
-                    payment_method, // Already formatted
+                    payment_method,
                 }),
             });
 
             const data = await response.json();
             if (!response.ok) {
                 setError(data.error || "Failed to process your order.");
-                setSuccess("");
             } else {
-                setSuccess("Order placed successfully!");
-                setError("");
-                // Clear form and cart
-                (document.getElementById("checkout") as HTMLFormElement).reset();
-                // Reset to Default value
-                localStorage.setItem("shoppingCart", "[]");
-                localStorage.setItem("total", "0");
+                // Store phone_number in local storage or session
+                localStorage.setItem("phone_number", phone_number);
+
+                // Redirect to the order details page
+                router.push(`/orders/${data.data._id}`);
             }
         } catch (err) {
             console.error("Error placing order:", err);
             setError("An unexpected error occurred. Please try again.");
-            setSuccess("");
         } finally {
             setLoading(false);
         }
     };
+
+
     return (
         <div >
             <form id="checkout" action={handleSubmit} className="container grid min-h-screen grid-cols-1 gap-5 mx-auto my-5 lg:grid-cols-9">
