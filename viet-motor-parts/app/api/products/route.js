@@ -8,7 +8,7 @@ export async function GET(request) {
 
   const DEFAULT_LIMIT = 9;
   const { searchParams } = new URL(request.url);
-  const categoryNames = searchParams.get('category')?.split(',') || [];
+  const categoryIds = searchParams.get('category')?.split(',') || [];
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
   const query = searchParams.get('query') || '';
@@ -33,12 +33,7 @@ export async function GET(request) {
 
     const sortOrder = order === 'asc' ? 1 : -1;
 
-    let categoryFilter = {};
-    if (categoryNames.length > 0) {
-      const categories = await Category.find({ name: { $in: categoryNames.map(name => new RegExp(name, 'i')) } });
-      const categoryIds = categories.map(category => category._id);
-      categoryFilter = { category_id: { $in: categoryIds } };
-    }
+    const categoryFilter = categoryIds.length ? { category_id: { $in: categoryIds } } : {};
 
     const priceFilter = {};
     if (priceFrom && !isNaN(priceFrom)) {

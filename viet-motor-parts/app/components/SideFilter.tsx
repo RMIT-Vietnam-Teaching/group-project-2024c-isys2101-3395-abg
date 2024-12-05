@@ -144,13 +144,15 @@ export function SideFilter() {
         <button
           type="button"
           onClick={() => toggleSection("category")}
-          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("category") ? "bg-white" : ""
-            }`}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${
+            isOpen("category") ? "bg-white" : ""
+          }`}
         >
           <h6 className="mx-3 text-xl font-medium">Category</h6>
           <svg
-            className={`w-4 h-4 mx-3 transform ${isOpen("category") ? "rotate-180" : ""
-              }`}
+            className={`w-4 h-4 mx-3 transform ${
+              isOpen("category") ? "rotate-180" : ""
+            }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -167,17 +169,17 @@ export function SideFilter() {
         </button>
         {isOpen("category") && (
           <ul className="space-y-2 text-lg mt-3 ml-2">
-            {categories.map((category : Category) => (
+            {categories.map((category: Category) => (
               <li key={category._id} className="flex items-center">
                 <input
-                  id={category.name}
+                  id={category._id} // Use category ID for the input and label association
                   type="checkbox"
                   onChange={handleCategoryChange}
-                  value={category.name}
+                  value={category._id} // Use category ID as the value
                   className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
                 />
                 <label
-                  htmlFor={category.name}
+                  htmlFor={category._id} // Match label with the input ID (category ID)
                   className="ml-2 text-lg font-medium text-brand-400"
                 >
                   {category.name}
@@ -187,6 +189,7 @@ export function SideFilter() {
           </ul>
         )}
       </div>
+
 
       {/* Price Accordion */}
       <div className="my-3">
