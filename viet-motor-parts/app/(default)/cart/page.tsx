@@ -1,7 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../../components/shadcn/card";
-import Button from "../../components/Button";
 import { Metadata } from "next/types";
-import { formatCurrency } from "@/lib/utils";
 import dynamic from "next/dynamic";
 
 export const metadata: Metadata = {

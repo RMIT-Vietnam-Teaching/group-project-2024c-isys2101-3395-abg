@@ -41,5 +41,5 @@ const customerSchema: Schema<ICustomer> = new mongoose.Schema(
 );
 
 // Create and Export Customer Model
-const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', customerSchema);
+const Customer: Model<ICustomer> = mongoose.models.Customer || mongoose.model<ICustomer>('Customer', customerSchema);
 export default Customer;

@@ -2,117 +2,132 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
 export default function SearchBar() {
-    const router = useRouter();
+  const router = useRouter();
 
-    // Mock database
-    const mockDatabase = [
-        { id: 1, name: "EBC Double-H Sintered Brake Pads - FA244HH", image: "/ProductPlaceholder.webp" },
-        { id: 2, name: "Yamaha YZF R15 Chain Sprocket Set", image: "/ProductPlaceholder.webp" },
-        { id: 3, name: "NGK Spark Plug CR7HSA", image: "/ProductPlaceholder.webp" },
-        { id: 4, name: "Mobil 1 Synthetic Motor Oil 10W-40", image: "/ProductPlaceholder.webp" },
-        { id: 5, name: "Michelin Pilot Road 4 Tires - Front", image: "/ProductPlaceholder.webp" },
-        { id: 6, name: "K&N High-Performance Air Filter - YA-1004", image: "/ProductPlaceholder.webp" },
-        { id: 7, name: "DID 520VX3 X-Ring Chain", image: "/ProductPlaceholder.webp" },
-        { id: 8, name: "Brembo Brake Disc - Rear", image: "/ProductPlaceholder.webp" },
-        { id: 9, name: "Bosch Ignition Coil for Motorcycles", image: "/ProductPlaceholder.webp" },
-        { id: 10, name: "Hella LED Fog Light Kit", image: "/ProductPlaceholder.webp" },
-        { id: 11, name: "ProTaper EVO Handlebars - Oversize", image: "/ProductPlaceholder.webp" },
-        { id: 12, name: "Yuasa YTX12-BS Maintenance-Free Battery", image: "/ProductPlaceholder.webp" },
-        { id: 13, name: "Pirelli Diablo Rosso III Tires - Rear", image: "/ProductPlaceholder.webp" },
-        { id: 14, name: "RK Chain 530XSOZ1 X-Ring", image: "/ProductPlaceholder.webp" },
-        { id: 15, name: "Shark Spartan GT Carbon Helmet", image: "/ProductPlaceholder.webp" },
-        { id: 16, name: "Scorpion EXO-R420 Full-Face Helmet", image: "/ProductPlaceholder.webp" },
-        { id: 17, name: "Shoei GT-Air II Helmet", image: "/ProductPlaceholder.webp" },
-        { id: 18, name: "Alpinestars SMX-6 V2 Riding Boots", image: "/ProductPlaceholder.webp" },
-        { id: 19, name: "Dainese Racing 3 Leather Jacket", image: "/ProductPlaceholder.webp" },
-        { id: 20, name: "Oxford Screamer Alarm Disc Lock", image: "/ProductPlaceholder.webp" },
-    ];
+  const [query, setQuery] = useState("");
+  const [filteredResults, setFilteredResults] = useState<
+    Array<{ id: string; name: string; image: string }>
+  >([]);
 
-    const [query, setQuery] = useState("");
-    const [filteredResults, setFilteredResults] = useState<typeof mockDatabase>([]);
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setQuery(value);
+    if (value.trim() !== "") {
+      try {
+        // Fetch products from the database using the query
+        const response = await fetch(`/api/products?query=${encodeURIComponent(value)}`);
+        const result = await response.json();
 
-        // Filter the mock database based on the query
-        if (value.trim() !== "") {
-            const results = mockDatabase.filter((item) =>
-                item.name.toLowerCase().includes(value.toLowerCase())
-            );
-            setFilteredResults(results);
+        if (result.success) {
+          const products = result.data.map((product: any) => ({
+            id: product._id,
+            name: product.name,
+            image: "/ProductPlaceholder.webp", // Use placeholder image for now
+          }));
+          setFilteredResults(products);
         } else {
-            setFilteredResults([]);
+          setFilteredResults([]);
         }
-    };
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setFilteredResults([]);
+      }
+    } else {
+      setFilteredResults([]);
+    }
+  };
 
-    const handleProductClick = (name: string, id: number) => {
-        setQuery(name); // Fill the search bar with the product name
-        setFilteredResults([]); // Clear the dropdown
-        router.push(`/products/${id}`); // Navigate to the product detail page
-    };
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    const maxResults = 5;
-    const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
+    if (query.trim() === "") {
+      setFilteredResults([]);
+      return;
+    }
 
-    return (
+    // Update the URL with the query parameter and navigate
+    router.push(`/products?query=${encodeURIComponent(query)}`);
+  };
+
+  const maxResults = 5;
+  const displayedResults = filteredResults.slice(0, maxResults); // Limit to 5 results
+
+  return (
+    <div className="relative w-full">
+      <div className="w-full">
+        <label
+          htmlFor="default-search"
+          className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Search
+        </label>
         <div className="relative w-full">
-            <div className="w-full">
-                <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <div className="relative w-full">
-                    <input 
-                        type="search" 
-                        id="default-search" 
-                        value={query} 
-                        onChange={handleSearch} 
-                        name='searchQuery' 
-                        className="block w-full p-4 text-sm text-gray-800 focus:outline-none rounded-lg bg-gray-50" 
-                        placeholder="Search for products" 
-                        required 
-                    />
-                    <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-brand-400 hover:bg-brand-600 font-medium rounded-2xl text-sm px-4 pb-2 pt-1">
-                        <Search />
-                    </button>
-                </div>
-            </div>
-            {/* Dropdown suggestions */}
-            {query && (
-                <div className="absolute w-full rounded-lg shadow-lg z-10">
-                    {displayedResults.length > 0 ? (
-                        displayedResults.map((item) => (
-                            <div
-                                key={item.id}
-                                className="p-4 bg-brand-500 border-b-2 border-brand-100 flex items-center gap-4"
-                                onClick={() => handleProductClick(item.name, item.id)} // Handle click to populate search bar
-                            >
-                                <a href="#" className="h-12 w-12 shrink-0">
-                                    <img
-                                        className="h-full w-full rounded"
-                                        src={item.image}
-                                        alt={item.name}
-                                    />
-                                </a>
-                                <a href="#" className="flex-1 text-brand-100 hover:underline">
-                                    {item.name}
-                                </a>
-                            </div>
-                        ))
-                    ) : null}
-                    {/* Show "See all products" if there are more than 5 results */}
-                    {filteredResults.length > maxResults && (
-                        <div className="p-4 bg-brand-500 rounded-b">
-                            <div className="flex items-center gap-4">
-                                <a href="/products" className="flex-1 text-brand-100">
-                                    See all products...
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="search"
+              id="default-search"
+              value={query}
+              onChange={handleSearch}
+              name="searchQuery"
+              className="block w-full rounded-lg bg-gray-50 p-4 text-sm text-gray-800 focus:outline-none"
+              placeholder="Search for products"
+              required
+            />
+            <button
+              type="submit"
+              className="absolute bottom-2.5 end-2.5 rounded-2xl bg-brand-400 px-4 pb-2 pt-1 text-sm font-medium text-white hover:bg-brand-600"
+            >
+              <Search />
+            </button>
+          </form>
         </div>
-    )
+      </div>
+      {/* Dropdown suggestions */}
+      {query && (
+        <div className="absolute z-10 w-full rounded-lg shadow-lg">
+          {displayedResults.length > 0 ? (
+            displayedResults.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-4 border-b-2 border-brand-100 bg-brand-500 p-4"
+              >
+                <a href="#" className="h-12 w-12 shrink-0">
+                  <img
+                    className="h-full w-full rounded"
+                    src={item.image}
+                    alt={item.name}
+                  />
+                </a>
+                <a href="#" className="flex-1 text-brand-100 hover:underline">
+                  {item.name}
+                </a>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-b bg-brand-500 p-4">
+              <div className="flex items-center gap-4">
+                <a href="#" className="flex-1 text-brand-100">
+                  No part with this name...
+                </a>
+              </div>
+            </div>
+          )}
+          {/* Show "See all products" if there are more than 5 results */}
+          {filteredResults.length > maxResults && (
+            <div className="rounded-b bg-brand-500 p-4">
+              <div className="flex items-center gap-4">
+                <a href="#" className="flex-1 text-brand-100">
+                  See all products...
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

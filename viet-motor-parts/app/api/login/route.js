@@ -23,16 +23,16 @@ export async function POST(request) {
     const user = await User.findOne({ username });
     if (!user) {
       return new Response(
-        JSON.stringify({ message: 'Invalid username or password' }),
+        JSON.stringify({ message: 'Invalid username' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
     // Verify the password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+    if (password !== user.password) { // replace to !isPasswordValid in the future
       return new Response(
-        JSON.stringify({ message: 'Invalid username or password' }),
+        JSON.stringify({ message: 'Invalid password' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -41,7 +41,7 @@ export async function POST(request) {
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role }, // Payload
       process.env.JWT_SECRET, // Secret key
-      { expiresIn: '100h' } // Token expiry
+      { expiresIn: '365d' } // Token expiry
     );
 
     // Respond with the token

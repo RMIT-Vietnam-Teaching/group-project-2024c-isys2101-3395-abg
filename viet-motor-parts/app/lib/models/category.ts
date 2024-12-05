@@ -29,5 +29,5 @@ const categorySchema: Schema<ICategory> = new mongoose.Schema(
 );
 
 // Create and Export Category Model
-const Category: Model<ICategory> = mongoose.model<ICategory>('Category', categorySchema);
+const Category: Model<ICategory> = mongoose.models.Category || mongoose.model<ICategory>('Category', categorySchema);
 export default Category;
