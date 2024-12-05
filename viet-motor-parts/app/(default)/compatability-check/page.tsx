@@ -1,4 +1,4 @@
-import SearchBarVehicles from "@/app/components/SearchBarVehicles";
+import SearchBarCompatibility from "@/app/components/SearchBarCompatibility";
 import SearchBar from "../../components/SearchBar";
 import { Button } from "../../components/shadcn/button";
 import { Metadata } from "next";
@@ -13,20 +13,7 @@ export default function Page() {
         <form className="grid grid-cols-1 gap-6 md:grid-cols-7">
             {/* Left Section */}
             <div className="col-span-1 md:col-span-3">
-                <SearchBarVehicles />
-                <div className="p-4 bg-brand-500 mt-4 rounded-lg">
-                    <div className="flex items-center gap-4">
-                        <a href="#" className="flex-1 text-brand-100">No vehicle with this name...</a>
-                    </div>
-                </div>
-                <div className="p-4 bg-brand-500 mt-4 rounded">
-                    <div className="flex items-center gap-4">
-                        <a href="#" className="h-12 w-12 shrink-0">
-                            <img className="h-full w-full rounded" src="/ProductPlaceholder.webp" alt="A random motor" />
-                        </a>
-                        <p className="flex-1 text-brand-100">Honda Civic MK-9</p>
-                    </div>
-                </div>
+                <SearchBarCompatibility barType="vehicles"/>                
             </div>
 
             {/* Button Section */}
@@ -54,7 +41,7 @@ export default function Page() {
 
             {/* Right Section */}
             <div className="col-span-1 md:col-span-3">
-                <SearchBar />
+                <SearchBar/>
                 <div className="p-4 bg-brand-500 mt-4 rounded">
                     <div className="flex items-center gap-4">
                         <a href="#" className="flex-1 text-brand-100">No part with this name...</a>

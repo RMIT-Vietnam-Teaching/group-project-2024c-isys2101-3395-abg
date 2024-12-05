@@ -8,12 +8,14 @@ export async function GET(request) {
 
   const DEFAULT_LIMIT = 9;
   const { searchParams } = new URL(request.url);
-  const categoryName = searchParams.get('category');
+  const categoryNames = searchParams.get('category')?.split(',') || [];
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
   const query = searchParams.get('query') || '';
   const sortBy = searchParams.get('sortBy') || 'name';
   const order = searchParams.get('order') || 'asc';
+  const priceFrom = parseInt(searchParams.get('priceFrom') || '0', 10);
+  const priceTo = parseInt(searchParams.get('priceTo') || 'Infinity', 10);
 
   try {
     const validSortFields = ['name', 'price'];
@@ -32,20 +34,24 @@ export async function GET(request) {
     const sortOrder = order === 'asc' ? 1 : -1;
 
     let categoryFilter = {};
-    if (categoryName) {
-      const category = await Category.findOne({ name: { $regex: categoryName, $options: 'i' } });
-      if (!category) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Category not found' }),
-          { status: 404 }
-        );
-      }
-      categoryFilter = { category_id: category._id };
+    if (categoryNames.length > 0) {
+      const categories = await Category.find({ name: { $in: categoryNames.map(name => new RegExp(name, 'i')) } });
+      const categoryIds = categories.map(category => category._id);
+      categoryFilter = { category_id: { $in: categoryIds } };
+    }
+
+    const priceFilter = {};
+    if (priceFrom && !isNaN(priceFrom)) {
+      priceFilter.$gte = parseInt(priceFrom, 10);
+    }
+    if (priceTo && !isNaN(priceTo)) {
+      priceFilter.$lte = parseInt(priceTo, 10);
     }
 
     // Fetch paginated products
     const products = await Product.find({
       ...categoryFilter,
+      ...priceFilter,
       name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
     })
       .sort({ [sortBy]: sortOrder })
@@ -55,6 +61,7 @@ export async function GET(request) {
     // Total count for pagination metadata
     const totalCount = await Product.countDocuments({
       ...categoryFilter,
+      ...priceFilter,
       name: { $regex: query, $options: 'i' },
     });
 

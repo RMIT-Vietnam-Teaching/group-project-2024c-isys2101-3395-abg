@@ -14,11 +14,31 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
     let query = searchParams.query || "";
+    let category = searchParams.category || "";
+    let sortBy = searchParams.sortBy || "";
+    let order = searchParams.order || "";
+    let priceFrom = searchParams.priceFrom || "";
+    let priceTo = searchParams.priceTo || "";
 
     // Construct API URL dynamically
     let apiUrl = `http://localhost:3000/api/products?page=${page}`;
     if (query) {
         apiUrl += `&query=${encodeURIComponent(query)}`;
+    }
+    if (category) {
+        apiUrl += `&category=${encodeURIComponent(category)}`;
+    }
+    if (sortBy) {
+        apiUrl += `&sortBy=${encodeURIComponent(sortBy)}`;
+    }
+    if (order) {
+        apiUrl += `&order=${encodeURIComponent(order)}`;
+    }
+    if (priceFrom) {
+        apiUrl += `&priceFrom=${encodeURIComponent(priceFrom)}`;
+    }
+    if (priceTo) {
+        apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
     }
 
     const res = await fetch(apiUrl);
@@ -26,6 +46,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
     const products: Product[] = data.data;
 
     const totalPages = data.meta.totalPages;
+
     const prevPage = page - 1 > 0 ? page - 1 : 1;
     const nextPage = page + 1;
     const pageNumbers: Number[] = [];
@@ -35,6 +56,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
             pageNumbers.push(i);
         }
     }
+    
 
 
     return (
