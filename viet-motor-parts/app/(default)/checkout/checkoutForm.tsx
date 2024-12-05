@@ -7,8 +7,9 @@ import { Label } from "@/app/components/shadcn/label";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import PaymentMethod from "./paymentMethod"; // Import PaymentMethod
+import { LoanCalculationResult } from "../calculator/page";
 
-export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<any> }) {
+export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
