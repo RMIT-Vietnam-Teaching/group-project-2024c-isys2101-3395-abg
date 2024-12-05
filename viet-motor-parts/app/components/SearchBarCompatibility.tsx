@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Search } from 'lucide-react';
+import Product from "../lib/models/product"; //Conditional database
+// import CompatibleVehicle from "../lib/models/compatiblevehicles";
 
 // Mock database for motorbikes
     const mockDatabase = [
@@ -27,7 +29,11 @@ import { Search } from 'lucide-react';
         { id: 20, name: "Aprilia Tuono V4", image: "/BikePlaceholder.webp" },
     ];
 
-export default function SearchBarCompatibility() {
+    type OrderSummaryProps = {
+        barType: 'vehicles' | 'products';
+    };
+
+export default function SearchBarCompatibility(props: OrderSummaryProps) {
     const [query, setQuery] = useState("");
     const [filteredResults, setFilteredResults] = useState<typeof mockDatabase>([]);
 

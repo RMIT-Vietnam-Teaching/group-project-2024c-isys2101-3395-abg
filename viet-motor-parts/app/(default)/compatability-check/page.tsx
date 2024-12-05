@@ -13,7 +13,7 @@ export default function Page() {
         <form className="grid grid-cols-1 gap-6 md:grid-cols-7">
             {/* Left Section */}
             <div className="col-span-1 md:col-span-3">
-                <SearchBarCompatibility/>                
+                <SearchBarCompatibility barType="vehicles"/>                
             </div>
 
             {/* Button Section */}
