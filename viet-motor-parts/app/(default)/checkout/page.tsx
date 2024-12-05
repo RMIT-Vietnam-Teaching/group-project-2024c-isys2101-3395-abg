@@ -1,6 +1,5 @@
 import CheckoutForm from "./checkoutForm";
 import PaymentMethod from "./paymentMethod";
-import { calculateLoan } from "../calculator/page";
 import CheckoutProductList from "@/app/components/CheckoutProductList";
 import OrderSummary from "@/app/components/OrderSummary";
 
@@ -12,20 +11,17 @@ export default function Page() {
                 {/* Shipping Details */}
                 <div className="bg-brand-600 rounded-xl">
                     <h1 className="p-5 text-2xl font-bold">Shipping Details</h1>
-                    <CheckoutForm calculateLoan={calculateLoan} />
+                    <CheckoutForm/>
                 </div>
             </div>
 
             {/* Right Section: Product List and Order Summary */}
-            <div className="grid gap-5 lg:col-span-3">
-                {/* Product List */}
-                <div className="bg-brand-500 rounded-xl">
+            <div className="grid order-1 col-start-1 grid-rows-3 gap-5 lg:col-span-3 lg:col-start-7 lg:order-2">
+                <div className="row-span-2">
                     <CheckoutProductList />
                 </div>
-
-                {/* Order Summary */}
-                <div className="bg-brand-500 rounded-xl ">
-                    <OrderSummary location="checkout" />
+                <div className="flex flex-col justify-end">
+                    <OrderSummary location="checkout" /> {/* This is a placeholder for the OrderSummary component */}
                 </div>
             </div>
         </div>
