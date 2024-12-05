@@ -139,7 +139,7 @@ export default function CheckoutForm() {
                 />
             </div>
             {/* Integrate PaymentMethod */}
-            <PaymentMethod calculateLoan={calculateLoan} />
+
             <div>
                 <Button
                     type="submit"
