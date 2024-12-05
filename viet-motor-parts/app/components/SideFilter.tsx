@@ -4,6 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent } from "react";
 
+export type Category = {
+  _id: string;
+  name: string;
+}
+
 export function SideFilter() {
   const router = useRouter();
   const [categories, setCategories] = useState([]);
@@ -162,7 +167,7 @@ export function SideFilter() {
         </button>
         {isOpen("category") && (
           <ul className="space-y-2 text-lg mt-3 ml-2">
-            {categories.map((category) => (
+            {categories.map((category : Category) => (
               <li key={category._id} className="flex items-center">
                 <input
                   id={category.name}
