@@ -40,10 +40,10 @@ export default function OrderSummary(props: OrderSummaryProps) {
                         <p className="text-2xl">{clientTotal !== null && clientShipping !== null ? formatCurrency(clientTotal + clientShipping) : '...'}</p>
                     </div>
                 </CardContent>
-                <CardFooter className="flex flex-col items-start">
+                {/* <CardFooter className="flex flex-col items-start">
                     <Button className="w-full" title="Checkout" link="/checkout">
                     </Button>
-                </CardFooter>
+                </CardFooter> */}
             </Card>
         </div>
     );
