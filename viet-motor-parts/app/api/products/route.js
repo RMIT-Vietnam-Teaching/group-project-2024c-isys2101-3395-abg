@@ -40,12 +40,13 @@ export async function GET(request) {
       categoryFilter = { category_id: { $in: categoryIds } };
     }
 
-    const priceFilter = {
-      price: {
-        ...(priceFrom && { $gte: priceFrom }),
-        ...(priceTo && { $lte: priceTo }),
-      },
-    };
+    const priceFilter = {};
+    if (priceFrom && !isNaN(priceFrom)) {
+      priceFilter.$gte = parseInt(priceFrom, 10);
+    }
+    if (priceTo && !isNaN(priceTo)) {
+      priceFilter.$lte = parseInt(priceTo, 10);
+    }
 
     // Fetch paginated products
     const products = await Product.find({
