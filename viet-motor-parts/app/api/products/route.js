@@ -36,29 +36,35 @@ export async function GET(request) {
     const categoryFilter = categoryIds.length ? { category_id: { $in: categoryIds } } : {};
 
     const priceFilter = {};
-    if (priceFrom && !isNaN(priceFrom)) {
+    if (priceFrom && !priceTo && !isNaN(priceFrom)) {
       priceFilter.$gte = parseInt(priceFrom, 10);
-    }
-    if (priceTo && !isNaN(priceTo)) {
+    } else if (!priceFrom && priceTo && !isNaN(priceTo)) {
+      priceFilter.$lte = parseInt(priceFrom, 10);
+    } else if (!isNaN(priceFrom) && !isNaN(priceTo) && priceFrom < priceTo) {
+      priceFilter.$gte = parseInt(priceFrom, 10);
       priceFilter.$lte = parseInt(priceTo, 10);
+    } else if (!isNaN(priceTo) && !isNaN(priceFrom) && priceFrom > priceTo) {
+      priceFilter.$lte = parseInt(priceFrom, 10);
+      priceFilter.$gte = parseInt(priceTo, 10);
+    }
+
+    const filter = {
+      ...categoryFilter,
+      name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
+    };
+
+    if (Object.keys(priceFilter).length > 0) {
+      filter.price = priceFilter;
     }
 
     // Fetch paginated products
-    const products = await Product.find({
-      ...categoryFilter,
-      ...priceFilter,
-      name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
-    })
+    const products = await Product.find(filter)
       .sort({ [sortBy]: sortOrder })
       .skip((page - 1) * limit)
       .limit(limit);
 
     // Total count for pagination metadata
-    const totalCount = await Product.countDocuments({
-      ...categoryFilter,
-      ...priceFilter,
-      name: { $regex: query, $options: 'i' },
-    });
+    const totalCount = await Product.countDocuments(filter);
 
     return new Response(
       JSON.stringify({
