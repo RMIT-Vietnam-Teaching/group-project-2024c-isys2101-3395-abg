@@ -58,7 +58,11 @@ export default function CheckoutPage() {
                 setError(data.error || "Failed to process your order.");
             } else {
                 // Store phone_number in local storage or session
+                setSuccess("Order placed successfully")
+                setError("")
                 localStorage.setItem("phone_number", phone_number);
+                localStorage.setItem("shoppingCart", "[]")
+                localStorage.setItem("total", "0")
 
                 // Redirect to the order details page
                 router.push(`/orders/${data.data._id}`);
