@@ -15,12 +15,21 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function Page({ params }: { params: { id: string } }) {
   const product = await fetchProducts(params.id);
 
+  const base64Image = product.image_base64
+    ? `data:image/jpeg;base64,${product.image_base64}`
+    : "/ProductPlaceholder.webp";
+
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
       <div className="-mx-4 flex flex-col md:flex-row">
         <div className="px-4 md:flex-1">
           <div className="relative mb-4 h-[500px] overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700">
-            <Image src="/ProductPlaceholder.webp" alt="A random motor part" fill={true} />
+            <Image
+              src={base64Image} // Use Base64 image or fallback
+              alt={product.name || "Motor part image"}
+              fill={true}
+              className="object-cover"
+            />
           </div>
         </div>
         <div className="flex flex-col gap-2 px-4">
