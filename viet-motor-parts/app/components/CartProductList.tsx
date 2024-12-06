@@ -11,7 +11,7 @@ export default function CartProductList() {
     const { cart, removeFromCart } = useShoppingCart();
 
     return (
-        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl overflow-y-scroll">
             <div className="space-y-6">
                 {cart.map((product: CartItem) => (
                     <div key={product.id} className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">

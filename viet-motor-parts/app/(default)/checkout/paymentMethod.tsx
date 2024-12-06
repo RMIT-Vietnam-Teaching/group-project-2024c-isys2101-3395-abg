@@ -1,17 +1,16 @@
 "use client"
 
 import { useState } from 'react'
-import { LoanCalculationResult } from '../calculator/page';
+import { calculateLoan, LoanCalculationResult } from '../calculator/calculation';
 import { Label } from '@/app/components/shadcn/label';
 import { Input } from '@/app/components/shadcn/input';
 import { Button } from '@/app/components/shadcn/button';
-import { type } from 'os';
 import { Alert, AlertDescription, AlertTitle } from '@/app/components/shadcn/alert';
 import { AlertCircle } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 
-export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
+export default function PaymentMethod() {
     const total = () => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('total');

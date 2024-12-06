@@ -7,8 +7,9 @@ import { Label } from "@/app/components/shadcn/label";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import PaymentMethod from "./paymentMethod"; // Import PaymentMethod
+import { calculateLoan } from "../calculator/calculation";
 
-export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<any> }) {
+export default function CheckoutForm() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formDa
         const email = formData.get("email") as string;
         const address = formData.get("address") as string;
         const additional_notes = formData.get("addNotes") as string;
-    
+
         // Retrieve and format cart items
         let shoppingCart = [];
         try {
@@ -32,21 +33,21 @@ export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formDa
         } catch (error) {
             console.error("Error parsing shoppingCart from localStorage:", error);
         }
-    
+
         // Format order_details
         const order_details = shoppingCart.map((item: any) => ({
             product_id: item.id, // Match with `product_id` in the backend schema
             quantity: item.amount, // Match with `quantity` in the backend schema
             price: item.price,
         }));
-    
+
         const total_amount = JSON.parse(localStorage.getItem("total") || "0");
-    
+
         if (!order_details || order_details.length === 0) {
             setError("Your cart is empty.");
             return;
         }
-    
+
         setLoading(true);
         try {
             const response = await fetch("/api/orders", {
@@ -65,16 +66,16 @@ export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formDa
                     payment_method: paymentMethod, // Already formatted
                 }),
             });
-    
+
             const data = await response.json();
-    
+
             if (!response.ok) {
                 setError(data.error || "Failed to process your order.");
                 setSuccess("");
             } else {
                 setSuccess("Order placed successfully!");
                 setError("");
-    
+
                 // Clear form and cart
                 (document.getElementById("checkoutForm") as HTMLFormElement).reset();
                 localStorage.removeItem("shoppingCart");
@@ -88,8 +89,8 @@ export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formDa
             setLoading(false);
         }
     };
-    
-    
+
+
 
     return (
         <form
@@ -138,7 +139,7 @@ export default function CheckoutForm({ calculateLoan }: { calculateLoan: (formDa
                 />
             </div>
             {/* Integrate PaymentMethod */}
-            <PaymentMethod calculateLoan={calculateLoan} />
+
             <div>
                 <Button
                     type="submit"
