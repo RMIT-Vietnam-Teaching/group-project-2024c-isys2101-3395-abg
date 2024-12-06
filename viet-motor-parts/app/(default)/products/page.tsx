@@ -56,7 +56,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
             pageNumbers.push(i);
         }
     }
-    
+
 
 
     return (
@@ -65,9 +65,9 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
                 className="left-0 w-full rounded-lg bg-palette-3 md:max-lg:block lg:block lg:sticky top-10 h-5/6 lg:w-1/4 md:max-lg:center-and-half">
                 <SideFilter />
             </aside>
-            <div className="flex flex-col justify-center w-full xl:w-3/4">
+            <div className="flex flex-col justify-between w-full xl:w-3/4">
                 <section
-                    className="grid items-center justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1440px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
+                    className="grid justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1440px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
                     {products.map((product: Product) => (
                         <ProductCard key={product._id} _id={product._id} name={product.name} price={product.price} image_base64={product.image_base64 || ""} description={product.description} brand={product.brand} compatible_vehicles={product.compatible_vehicles} stock_quantity={product.stock_quantity} category_id={product.category_id} />
                     ))}
