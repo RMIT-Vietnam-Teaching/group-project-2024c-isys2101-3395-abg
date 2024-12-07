@@ -1,16 +1,16 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
-import { calculateLoan, LoanCalculationResult } from '../calculator/calculation';
+import { LoanCalculationResult } from '../calculator/calculation';
 import { Label } from '@/app/components/shadcn/label';
 import { Input } from '@/app/components/shadcn/input';
 import { Button } from '@/app/components/shadcn/button';
 import { Alert, AlertDescription, AlertTitle } from '@/app/components/shadcn/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, TriangleAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 
-export default function PaymentMethod() {
+export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
     const total = () => {
         if (typeof window !== 'undefined') {
             return localStorage.getItem('total');
@@ -19,7 +19,7 @@ export default function PaymentMethod() {
     const [result, setResult] = useState<LoanCalculationResult | null>(null);
     const [isInstallment, setIsInstallment] = useState(false);
 
-    async function handleSubmit(formData: FormData) {
+    async function handleCalculation(formData: FormData) {
         const calculationResult = await calculateLoan(formData)
         setResult(calculationResult)
     }
@@ -35,23 +35,23 @@ export default function PaymentMethod() {
             <h1 className="p-5 text-2xl font-bold">Payment Method</h1>
             <div className="flex flex-col gap-5 px-5">
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="PayPal" type="radio" value="Paypal" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange}>
+                    <input id="PayPal" type="radio" value="Paypal" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="PayPal" className="w-full py-4 font-semibold text-white ms-2 text-md">PayPal</label>
                 </div>
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="CoD" type="radio" value="Cash" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange}>
+                    <input id="CoD" type="radio" value="Cash" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="CoD" className="w-full py-4 font-semibold text-white ms-2 text-md">Cash on Delivery</label>
                 </div>
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="installment" type="radio" value="installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange}>
+                    <input id="installment" type="radio" value="installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="installment" className="w-full py-4 font-semibold text-white ms-2 text-md">Buy Now, Pay Later</label>
                 </div>
                 {isInstallment ?
                     <div>
-                        <form action={handleSubmit} className="space-y-4">
+                        <form action={handleCalculation} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="creditScore" className='font-semibold'>Credit Score (300-850)</Label>
                                 <Input
@@ -92,6 +92,11 @@ export default function PaymentMethod() {
                                 <p>Interest Rate: {result.interestRate}%</p>
                                 <p>Monthly Payment: {formatCurrency(Number(result.monthlyPayment))}</p>
                                 <p>Total Payment:  {formatCurrency(Number(result.totalPayment))}</p>
+                                <input type="text" id="installmentTotal" name="installmentTotal" value={result.totalPayment} form='checkout' hidden />
+                                <div role="alert" className="alert alert-warning">
+                                    <TriangleAlert />
+                                    <span>Your new total will be updated to the Total Payment above if you choose the Buy Now, Pay Later option</span>
+                                </div>
                             </div>
                         )}
                     </div>

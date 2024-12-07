@@ -30,7 +30,7 @@ export default function CheckoutProductList() {
                         </div>
                     </div>
                 ))}
-                <input type="text" name="cartItems" hidden value={JSON.stringify(cart)} />
+                <input type="text" name="cartItems" hidden value={JSON.stringify(cart)} form="checkout" />
             </div>
         </div>
     )

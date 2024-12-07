@@ -1,11 +1,10 @@
 "use client"
 
 import { AmountSelector } from "../components/AmountSelector";
-import Image from "next/image";
 import { useShoppingCart, CartItem } from "../(default)/cart/useShoppingCart";
 import { formatCurrency } from "@/lib/utils";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
+
 
 export default function CartProductList() {
     const { cart, removeFromCart } = useShoppingCart();
@@ -42,16 +41,6 @@ export default function CartProductList() {
                     </div>
                 ))}
             </div>
-            <ToastContainer position="bottom-right"
-                autoClose={5000}
-                hideProgressBar
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
         </div>
     );
 }
