@@ -1,7 +1,20 @@
 import { Product } from "@/app/components/ProductCard";
 
 export async function fetchProducts(id: string): Promise<Product> {
-    const res = await fetch(`http://localhost:3000/api/products/${id}`);
-    const data = await res.json();
-    return data.data;
+    try {
+        const res = await fetch(`http://localhost:3000/api/products/${id}`, {cache: "no-store"});
+        if (!res.ok) {
+            console.error(`Failed to fetch product with ID: ${id}, Status: ${res.status}`);
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        const data = await res.json();
+
+        // Debug log the data received
+        console.log(`Fetched product data for ID: ${id}`, data);
+
+        return data.data;
+    } catch (error) {
+        console.error(`Error fetching product with ID: ${id}`, error);
+        throw error;
+    }
 }
