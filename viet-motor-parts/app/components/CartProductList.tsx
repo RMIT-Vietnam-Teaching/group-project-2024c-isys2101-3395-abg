@@ -53,5 +53,5 @@ export default function CartProductList() {
                 pauseOnHover
                 theme="colored" />
         </div>
-    )
+    );
 }

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Search } from 'lucide-react';
+import Product from "../lib/models/product"; //Conditional database
+// import CompatibleVehicle from "../lib/models/compatiblevehicles";
 
-export default function SearchBarVehicles() {
-    // Mock database for motorbikes
+// Mock database for motorbikes
     const mockDatabase = [
         { id: 1, name: "Yamaha YZF-R1", image: "/BikePlaceholder.webp" },
         { id: 2, name: "Honda CBR1000RR-R Fireblade", image: "/BikePlaceholder.webp" },
@@ -28,7 +29,11 @@ export default function SearchBarVehicles() {
         { id: 20, name: "Aprilia Tuono V4", image: "/BikePlaceholder.webp" },
     ];
 
+    type OrderSummaryProps = {
+        barType: 'vehicles' | 'products';
+    };
 
+export default function SearchBarCompatibility(props: OrderSummaryProps) {
     const [query, setQuery] = useState("");
     const [filteredResults, setFilteredResults] = useState<typeof mockDatabase>([]);
 
@@ -46,6 +51,17 @@ export default function SearchBarVehicles() {
             setFilteredResults([]);
         }
     };
+
+    const handleProductClick = (name: string, id: number) => {
+        setQuery(name); // Fill the search bar with the product name
+        const product = filteredResults.find((item) => item.id === id);
+        if (product) {
+            setFilteredResults([product]);
+        } else {
+            console.error("Product not found in filtered results.");
+        }
+    };
+
 
     const maxResults = 5;
     const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
@@ -72,12 +88,13 @@ export default function SearchBarVehicles() {
             </div>
             {/* Dropdown suggestions */}
             {query && (
-                <div className="absolute w-full rounded-lg shadow-lg z-10">
+                <div className="w-full rounded-lg shadow-lg z-10">
                     {displayedResults.length > 0 ? (
                         displayedResults.map((item) => (
                             <div
                                 key={item.id}
-                                className="p-4 bg-brand-500 border-b-2 border-brand-100 flex items-center gap-4"
+                                className="p-3 mt-3 bg-brand-600 border-2 border-brand-100 rounded flex items-center gap-4"
+                                onClick={() => handleProductClick(item.name, item.id)}
                             >
                                 <a href="#" className="h-12 w-12 shrink-0">
                                     <img
@@ -92,20 +109,10 @@ export default function SearchBarVehicles() {
                             </div>
                         ))
                     ) : (
-                        <div className="p-4 bg-brand-500 rounded-b">
+                        <div className="p-4 mt-3 bg-brand-600 rounded-b">
                             <div className="flex items-center gap-4">
                                 <a href="#" className="flex-1 text-brand-100">
                                     No vechicle with this name...
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                    {/* Show "See all products" if there are more than 5 results */}
-                    {filteredResults.length > maxResults && (
-                        <div className="p-4 bg-brand-500 rounded-b">
-                            <div className="flex items-center gap-4">
-                                <a href="#" className="flex-1 text-brand-100">
-                                    See all vehicles...
                                 </a>
                             </div>
                         </div>
