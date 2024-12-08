@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent } from "react";
 
 export type Category = {
@@ -11,8 +11,9 @@ export type Category = {
 
 export function SideFilter() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string[]>(searchParams.get("category")?.split(",") || []);
   const [sortBy, setSortBy] = useState("name");
   const [order, setOrder] = useState("asc");
   const [priceFrom, setPriceFrom] = useState<number | null>(null);
@@ -44,10 +45,10 @@ export function SideFilter() {
     const params: Record<string, string | string[]> = {};
     if (priceFrom !== null) params.priceFrom = priceFrom.toString();
     else params.priceFrom = '';
-  
+
     if (priceTo !== null) params.priceTo = priceTo.toString();
     else params.priceTo = '';
-  
+
     updateQuery(params);
   }, [priceFrom, priceTo]);
 
@@ -142,15 +143,13 @@ export function SideFilter() {
         <button
           type="button"
           onClick={() => toggleSection("category")}
-          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${
-            isOpen("category") ? "bg-white" : ""
-          }`}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("category") ? "bg-white" : ""
+            }`}
         >
           <h6 className="mx-3 text-xl font-medium">Category</h6>
           <svg
-            className={`w-4 h-4 mx-3 transform ${
-              isOpen("category") ? "rotate-180" : ""
-            }`}
+            className={`w-4 h-4 mx-3 transform ${isOpen("category") ? "rotate-180" : ""
+              }`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -174,8 +173,8 @@ export function SideFilter() {
                   type="checkbox"
                   onChange={handleCategoryChange}
                   value={category._id} // Use category ID as the value
-                  checked={selectedCategory.includes(category._id)}
                   className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedCategory.includes(category._id)}
                 />
                 <label
                   htmlFor={category._id} // Match label with the input ID (category ID)
@@ -272,6 +271,40 @@ export function SideFilter() {
         </button>
         {isOpen("radio") && (
           <div className="flex flex-col m-3">
+            <div key="lowToHigh" className="flex items-center my-1">
+              <input
+                id="lowToHigh"
+                type="radio"
+                value="lowToHigh"
+                name="radio-filter"
+                onChange={handleSortChange}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "price" && order === "asc"}
+              />
+              <label
+                htmlFor="lowToHigh"
+                className="ml-2 text-lg font-medium text-brand-500"
+              >
+                Price (Low to High)
+              </label>
+            </div>
+            <div key="highToLow" className="flex items-center my-1">
+              <input
+                id="highToLow"
+                type="radio"
+                value="highToLow"
+                name="radio-filter"
+                onChange={handleSortChange}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "price" && order === "desc"}
+              />
+              <label
+                htmlFor="highToLow"
+                className="ml-2 text-lg font-medium text-brand-500"
+              >
+                Price (High to Low)
+              </label>
+            </div>
             <div key="aToZ" className="flex items-center my-1">
               <input
                 id="aToZ"
@@ -279,8 +312,8 @@ export function SideFilter() {
                 value="aToZ"
                 name="radio-filter"
                 onChange={handleSortChange}
-                checked={sortBy === "name" && order === "asc"}
                 className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "name" && order === "asc"}
               />
               <label
                 htmlFor="aToZ"
@@ -296,8 +329,8 @@ export function SideFilter() {
                 value="zToA"
                 name="radio-filter"
                 onChange={handleSortChange}
-                checked={sortBy === "name" && order === "desc"}
                 className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "name" && order === "desc"}
               />
               <label
                 htmlFor="zToA"

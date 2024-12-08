@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from "@/app/components/shadcn/alert"
 import { AlertCircle, ShoppingCartIcon } from 'lucide-react'
 import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam'
-import { LoanCalculationResult } from './page'
+import { LoanCalculationResult } from './calculation'
 
 interface CalculateLoanResult {
     error?: string

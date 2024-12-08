@@ -1,17 +1,16 @@
 "use client"
 
 import { AmountSelector } from "../components/AmountSelector";
-import Image from "next/image";
 import { useShoppingCart, CartItem } from "../(default)/cart/useShoppingCart";
 import { formatCurrency } from "@/lib/utils";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
+
 
 export default function CartProductList() {
     const { cart, removeFromCart } = useShoppingCart();
 
     return (
-        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl overflow-y-scroll">
             <div className="space-y-6">
                 {cart.map((product: CartItem) => (
                     <div key={product.id} className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
@@ -42,16 +41,6 @@ export default function CartProductList() {
                     </div>
                 ))}
             </div>
-            <ToastContainer position="bottom-right"
-                autoClose={5000}
-                hideProgressBar
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored" />
         </div>
     );
 }

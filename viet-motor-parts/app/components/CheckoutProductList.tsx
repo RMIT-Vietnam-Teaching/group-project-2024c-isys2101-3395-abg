@@ -8,7 +8,7 @@ export default function CheckoutProductList() {
 
 
     return (
-        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+        <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl overflow-y-scroll">
             <div className="space-y-6">
                 {cart && cart.map((product: CartItem) => (
                     <div key={product.id} className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
@@ -25,12 +25,12 @@ export default function CheckoutProductList() {
                                 </div>
                             </div>
                             <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                                <a href="/products/3" className="text-base font-medium text-brand-100 hover:underline">{product.name}</a>
+                                <a href={`/products/${product.id}`} className="text-base font-medium text-brand-100 hover:underline">{product.name}</a>
                             </div>
                         </div>
                     </div>
                 ))}
-                <input type="text" name="cartItems" hidden value={JSON.stringify(cart)} />
+                <input type="text" name="cartItems" hidden value={JSON.stringify(cart)} form="checkout" />
             </div>
         </div>
     )
