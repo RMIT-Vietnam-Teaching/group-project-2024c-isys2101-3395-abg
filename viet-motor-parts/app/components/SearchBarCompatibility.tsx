@@ -2,66 +2,70 @@
 
 import { useState } from "react";
 import { Search } from 'lucide-react';
-import Product from "../lib/models/product"; //Conditional database
-// import CompatibleVehicle from "../lib/models/compatiblevehicles";
+import { Product } from '@/app/components/ProductCard';
+import { useEffect } from "react";
 
-// Mock database for motorbikes
-    const mockDatabase = [
-        { id: 1, name: "Yamaha YZF-R1", image: "/BikePlaceholder.webp" },
-        { id: 2, name: "Honda CBR1000RR-R Fireblade", image: "/BikePlaceholder.webp" },
-        { id: 3, name: "Kawasaki Ninja ZX-10R", image: "/BikePlaceholder.webp" },
-        { id: 4, name: "Suzuki GSX-R1000", image: "/BikePlaceholder.webp" },
-        { id: 5, name: "Ducati Panigale V4", image: "/BikePlaceholder.webp" },
-        { id: 6, name: "BMW S1000RR", image: "/BikePlaceholder.webp" },
-        { id: 7, name: "Triumph Daytona Moto2 765", image: "/BikePlaceholder.webp" },
-        { id: 8, name: "KTM RC 8C", image: "/BikePlaceholder.webp" },
-        { id: 9, name: "MV Agusta F3 800", image: "/BikePlaceholder.webp" },
-        { id: 10, name: "Aprilia RSV4 Factory", image: "/BikePlaceholder.webp" },
-        { id: 11, name: "Yamaha MT-09", image: "/BikePlaceholder.webp" },
-        { id: 12, name: "Honda CB650R", image: "/BikePlaceholder.webp" },
-        { id: 13, name: "Kawasaki Z900", image: "/BikePlaceholder.webp" },
-        { id: 14, name: "Suzuki GSX-S750", image: "/BikePlaceholder.webp" },
-        { id: 15, name: "Ducati Monster", image: "/BikePlaceholder.webp" },
-        { id: 16, name: "BMW F900R", image: "/BikePlaceholder.webp" },
-        { id: 17, name: "Triumph Street Triple 765 RS", image: "/BikePlaceholder.webp" },
-        { id: 18, name: "KTM 790 Duke", image: "/BikePlaceholder.webp" },
-        { id: 19, name: "MV Agusta Brutale 800", image: "/BikePlaceholder.webp" },
-        { id: 20, name: "Aprilia Tuono V4", image: "/BikePlaceholder.webp" },
-    ];
-
-    type OrderSummaryProps = {
-        barType: 'vehicles' | 'products';
+    type SearchCompatibilityProps = {
+        barType: string;
+        onSelect: (item: Product | null) => void;
     };
 
-export default function SearchBarCompatibility(props: OrderSummaryProps) {
+    let apiUrlProducts = `http://localhost:3000/api/products`;
+    let apiUrlVehicles = `http://localhost:3000/api/products`; // Remember to change later
+
+export default function SearchBarCompatibility({barType, onSelect}: SearchCompatibilityProps) {
     const [query, setQuery] = useState("");
-    const [filteredResults, setFilteredResults] = useState<typeof mockDatabase>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [filteredResults, setFilteredResults] = useState<Product[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+        try {
+            if (barType == "vehicles"){
+                const res = await fetch(apiUrlVehicles);
+                const data = await res.json();
+                setProducts(data.data);
+            } else {
+                const res = await fetch(apiUrlProducts);
+                const data = await res.json();
+                setProducts(data.data);
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+        };
+        fetchProducts();
+    }, []);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
 
-        // Filter the mock database based on the query
+        // Filter the products based on the query
         if (value.trim() !== "") {
-            const results = mockDatabase.filter((item) =>
+            const results = products.filter((item) =>
                 item.name.toLowerCase().includes(value.toLowerCase())
             );
             setFilteredResults(results);
+            // Call onSelect with null if there are more than one filtered result
+            if (results.length !== 1) {
+                onSelect(null);
+            }
         } else {
-            setFilteredResults([]);
+        setFilteredResults([]);
         }
     };
 
-    const handleProductClick = (name: string, id: number) => {
+    const handleProductClick = (name: string, id: string) => {
         setQuery(name); // Fill the search bar with the product name
-        const product = filteredResults.find((item) => item.id === id);
+        const product = filteredResults.find((item) => item._id === id);
         if (product) {
             setFilteredResults([product]);
+            onSelect(product);
         } else {
-            console.error("Product not found in filtered results.");
+        console.error("Product not found in filtered results.");
         }
     };
-
 
     const maxResults = 5;
     const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
@@ -78,7 +82,7 @@ export default function SearchBarCompatibility(props: OrderSummaryProps) {
                         onChange={handleSearch} 
                         name='searchQuery' 
                         className="block w-full p-4 text-sm text-gray-800 focus:outline-none rounded-lg bg-gray-50" 
-                        placeholder="Search for vehicles" 
+                        placeholder= {barType == "vehicles" ? "Search for vechicles..." : "Search for products..."}
                         required 
                     />
                     <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-brand-400 hover:bg-brand-600 font-medium rounded-2xl text-sm px-4 pb-2 pt-1">
@@ -92,14 +96,14 @@ export default function SearchBarCompatibility(props: OrderSummaryProps) {
                     {displayedResults.length > 0 ? (
                         displayedResults.map((item) => (
                             <div
-                                key={item.id}
+                                key={item._id}
                                 className="p-3 mt-3 bg-brand-600 border-2 border-brand-100 rounded flex items-center gap-4"
-                                onClick={() => handleProductClick(item.name, item.id)}
+                                onClick={() => handleProductClick(item.name, item._id)}
                             >
                                 <a href="#" className="h-12 w-12 shrink-0">
                                     <img
                                         className="h-full w-full rounded"
-                                        src={item.image}
+                                        src="/BikePlaceholder.webp"
                                         alt={item.name}
                                     />
                                 </a>
@@ -112,7 +116,7 @@ export default function SearchBarCompatibility(props: OrderSummaryProps) {
                         <div className="p-4 mt-3 bg-brand-600 rounded-b">
                             <div className="flex items-center gap-4">
                                 <a href="#" className="flex-1 text-brand-100">
-                                    No vechicle with this name...
+                                    No {barType == "vehicles" ? "vehicle" : "product"} with this name...
                                 </a>
                             </div>
                         </div>
