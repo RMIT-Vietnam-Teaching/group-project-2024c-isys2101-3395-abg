@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getProductImage } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
 import { fetchProducts } from "./fetchProducts";
+
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
     const res = await fetchProducts(params.id);
@@ -12,13 +13,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     };
 }
 
+
 export default async function Page({ params }: { params: { id: string } }) {
     const product = await fetchProducts(params.id);
-
-    const base64Image = product.image_base64 && product.image_base64.startsWith("/9j/")
-    ? `data:image/jpeg;base64,${product.image_base64}`
-    : "/ProductPlaceholder.webp";
-
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -26,7 +23,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="px-4 md:flex-1">
                     <div className="relative mb-4 h-[500px] overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700">
                         <Image
-                            src={base64Image} // Use Base64 image or fallback
+                            src={getProductImage(product.image_base64)} // Use Base64 image or fallback
                             alt={product.name || "Motor part image"}
                             fill={true}
                             className="object-cover"
@@ -64,6 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 id={product._id}
                                 name={product.name}
                                 price={product.price}
+                                image_base64={product.image_base64}
                                 amount={1} // Default amount to 1 when adding to cart
                                 className="w-full px-4 py-2 font-bold text-white"
                             />

@@ -8,6 +8,7 @@ export type CartItem = {
     name: string;
     price: number;
     amount: number;
+    image_base64: string;
 };
 
 export const useShoppingCart = () => {

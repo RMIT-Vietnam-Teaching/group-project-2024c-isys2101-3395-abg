@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 };
 
 
+
+
 export default async function Page({ searchParams }: { searchParams: Record<string, string> }) {
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
@@ -41,7 +43,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
         apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
     }
 
-    const res = await fetch(apiUrl, { cache: "no-store" });
+    const res = await fetch(apiUrl, { next: { revalidate: 300 } });
     const data = await res.json();
     const products: Product[] = data.data;
 

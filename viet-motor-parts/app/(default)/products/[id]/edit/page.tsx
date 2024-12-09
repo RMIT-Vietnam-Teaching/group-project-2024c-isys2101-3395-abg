@@ -6,7 +6,17 @@ import { Label } from "@/app/components/shadcn/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/shadcn/select";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import { fetchProducts } from "../fetchProducts";
+import { Metadata } from "next";
 
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+    const res = await fetchProducts(params.id);
+
+    return {
+        title: `${res.name} Edit | Viet Motor Parts`,
+        description: `Edit ${res.name} details`,
+    };
+}
 
 
 

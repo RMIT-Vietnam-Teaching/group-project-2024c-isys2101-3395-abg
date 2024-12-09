@@ -271,6 +271,40 @@ export function SideFilter() {
         </button>
         {isOpen("radio") && (
           <div className="flex flex-col m-3">
+            <div key="lowToHigh" className="flex items-center my-1">
+              <input
+                id="lowToHigh"
+                type="radio"
+                value="lowToHigh"
+                name="radio-filter"
+                onChange={handleSortChange}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "price" && order === "asc"}
+              />
+              <label
+                htmlFor="lowToHigh"
+                className="ml-2 text-lg font-medium text-brand-500"
+              >
+                Price (Low to High)
+              </label>
+            </div>
+            <div key="highToLow" className="flex items-center my-1">
+              <input
+                id="highToLow"
+                type="radio"
+                value="highToLow"
+                name="radio-filter"
+                onChange={handleSortChange}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
+                checked={sortBy === "price" && order === "desc"}
+              />
+              <label
+                htmlFor="highToLow"
+                className="ml-2 text-lg font-medium text-brand-500"
+              >
+                Price (High to Low)
+              </label>
+            </div>
             <div key="aToZ" className="flex items-center my-1">
               <input
                 id="aToZ"
@@ -278,8 +312,8 @@ export function SideFilter() {
                 value="aToZ"
                 name="radio-filter"
                 onChange={handleSortChange}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
                 checked={sortBy === "name" && order === "asc"}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
               />
               <label
                 htmlFor="aToZ"
@@ -303,40 +337,6 @@ export function SideFilter() {
                 className="ml-2 text-lg font-medium text-brand-500"
               >
                 Alphabetical order (Z - A)
-              </label>
-            </div>
-            <div key="lowToHigh" className="flex items-center my-1">
-              <input
-                id="lowToHigh"
-                type="radio"
-                value="lowToHigh"
-                name="radio-filter"
-                onChange={handleSortChange}
-                checked={sortBy === "price" && order === "asc"}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
-              />
-              <label
-                htmlFor="lowToHigh"
-                className="ml-2 text-lg font-medium text-brand-500"
-              >
-                Price (Low to High)
-              </label>
-            </div>
-            <div key="highToLow" className="flex items-center my-1">
-              <input
-                id="highToLow"
-                type="radio"
-                value="highToLow"
-                name="radio-filter"
-                onChange={handleSortChange}
-                checked={sortBy === "price" && order === "desc"}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
-              />
-              <label
-                htmlFor="highToLow"
-                className="ml-2 text-lg font-medium text-brand-500"
-              >
-                Price (High to Low)
               </label>
             </div>
           </div>

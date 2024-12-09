@@ -1,7 +1,7 @@
 "use client"
 
 import { useShoppingCart, CartItem } from "../(default)/cart/useShoppingCart";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, getProductImage } from "@/lib/utils";
 
 export default function CheckoutProductList() {
     const { cart } = useShoppingCart();
@@ -14,7 +14,7 @@ export default function CheckoutProductList() {
                     <div key={product.id} className="rounded-lg border border-gray-200 bg-brand-600 p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                         <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                             <a href={`/products/${product.id}`} className="shrink-0 md:order-1">
-                                <img className="h-20 w-20 dark:hidden" src="/ProductPlaceholder.webp" alt="A random motor part" />
+                                <img className="h-20 w-20 dark:hidden" src={getProductImage(product.image_base64)} alt="A random motor part" />
                             </a>
                             <div className="flex items-center justify-between md:order-3 md:justify-end">
                                 <div className="flex items-center text-brand-100 font-semibold">
