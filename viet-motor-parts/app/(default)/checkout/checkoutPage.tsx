@@ -62,7 +62,7 @@ export default function CheckoutPage() {
                 setError("")
                 localStorage.setItem("shoppingCart", "[]")
                 localStorage.setItem("total", "0")
-                localStorage.setItem("orderID",data.data._id)
+                sessionStorage.setItem("orderID",data.data._id)
 
                 // Redirect to the order details page
                 router.push(`/checkout/success`);
