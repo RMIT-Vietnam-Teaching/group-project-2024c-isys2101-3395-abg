@@ -12,34 +12,37 @@ export type CartItem = {
 };
 
 export const useShoppingCart = () => {
-
+    // Initialize cart from localStorage or fallback to an empty array
     const initialCart = () => {
-        if (typeof window !== 'undefined') {
-            const cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
+        if (typeof window !== "undefined") {
+            const cart = JSON.parse(localStorage.getItem("shoppingCart") || "[]");
             return cart;
         }
-    }
+        return [];
+    };
+
     const [cart, setCart] = useState<CartItem[]>(initialCart);
 
+    // Initialize total from localStorage or fallback to 0
     const initialTotal = () => {
-        if (typeof window !== 'undefined') {
-            const total = JSON.parse(localStorage.getItem('total') || '0');
+        if (typeof window !== "undefined") {
+            const total = JSON.parse(localStorage.getItem("total") || "0");
             return total;
         }
-    }
+        return 0;
+    };
 
     const [total, setTotal] = useState<number>(initialTotal);
 
     useEffect(() => {
-        localStorage.setItem('shoppingCart', JSON.stringify(cart));
+        localStorage.setItem("shoppingCart", JSON.stringify(cart));
     }, [cart]);
 
     useEffect(() => {
         let newTotal = cart.reduce((acc, item) => acc + item.price * item.amount, 0);
         setTotal(newTotal);
-        localStorage.setItem('total', JSON.stringify(newTotal));
+        localStorage.setItem("total", JSON.stringify(newTotal));
     }, [cart]);
-
 
     const addToCart = (item: CartItem) => {
         let newCart = [...cart];
@@ -71,7 +74,7 @@ export const useShoppingCart = () => {
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored"
+            theme: "colored",
         });
     };
 
@@ -91,7 +94,7 @@ export const useShoppingCart = () => {
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored"
+            theme: "colored",
         });
     };
 

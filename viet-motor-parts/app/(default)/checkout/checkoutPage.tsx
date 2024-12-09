@@ -42,7 +42,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             quantity: item.amount,
             price: item.price
         }));
-
+    
         setLoading(true);
         try {
             const response = await fetch("/api/orders", {
@@ -60,19 +60,19 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
                     payment_method,
                 }),
             });
-
+    
             const data = await response.json();
             if (!response.ok) {
                 setError(data.error || "Failed to process your order.");
             } else {
-                // Store phone_number in local storage or session
-                setSuccess("Order placed successfully")
-                setError("")
-                localStorage.setItem("shoppingCart", "[]")
-                localStorage.setItem("total", "0")
-                localStorage.setItem("orderID", data.data._id)
-
-                // Redirect to the order details page
+                // Store orderID and reset local storage
+                setSuccess("Order placed successfully");
+                setError("");
+                localStorage.setItem("shoppingCart", "[]");
+                localStorage.setItem("total", "0");
+                sessionStorage.setItem("orderID", data.data._id);
+    
+                // Redirect to the order success page
                 router.push(`/checkout/success`);
             }
         } catch (err) {
@@ -82,6 +82,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             setLoading(false);
         }
     };
+    
 
 
     return (
