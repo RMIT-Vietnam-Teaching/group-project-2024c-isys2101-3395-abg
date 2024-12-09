@@ -6,7 +6,7 @@ export async function GET(request) {
   await dbConnect(); // Connect to the database
 
   const { searchParams } = new URL(request.url);
-  const name = searchParams.get('name');
+  const name = searchParams.get('name') || null;
 
   if (!name) {
     return new Response(
