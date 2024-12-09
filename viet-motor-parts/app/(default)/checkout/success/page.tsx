@@ -14,6 +14,8 @@ export const metadata: Metadata = {
 // If there is an order ID, display it to the user
 // If there is no order ID, display an error message and redirect user to the homepage
 
+
+
 export default function Page() {
     return (
         <div className="flex flex-col justify-center items-center container mx-auto gap-5">

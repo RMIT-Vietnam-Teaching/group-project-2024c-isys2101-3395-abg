@@ -60,12 +60,12 @@ export default function CheckoutPage() {
                 // Store phone_number in local storage or session
                 setSuccess("Order placed successfully")
                 setError("")
-                localStorage.setItem("phone_number", phone_number);
                 localStorage.setItem("shoppingCart", "[]")
                 localStorage.setItem("total", "0")
+                localStorage.setItem("orderID",data.data._id)
 
                 // Redirect to the order details page
-                router.push(`/orders/${data.data._id}`);
+                router.push(`/checkout/success`);
             }
         } catch (err) {
             console.error("Error placing order:", err);
