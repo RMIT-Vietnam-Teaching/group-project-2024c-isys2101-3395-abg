@@ -44,8 +44,25 @@ export const useShoppingCart = () => {
         localStorage.setItem("total", JSON.stringify(newTotal));
     }, [cart]);
 
+    const getItemById = (id: string) => {
+        return cart.find((item) => item.id === id);
+    };
+
+    const getCartFromStorage = (): CartItem[] => {
+        if (typeof window !== "undefined") {
+            return JSON.parse(localStorage.getItem("shoppingCart") || "[]");
+        }
+        return [];
+    };
+
+    const updateCartInStorage = (newCart: CartItem[]) => {
+        localStorage.setItem("shoppingCart", JSON.stringify(newCart));
+        setCart(newCart);
+    };
+
     const addToCart = (item: CartItem) => {
-        let newCart = [...cart];
+        const currentCart = getCartFromStorage();
+        let newCart = [...currentCart];
         let itemInCart = newCart.find((cartItem) => cartItem.id === item.id);
         if (itemInCart) {
             itemInCart.amount += item.amount;
@@ -53,11 +70,7 @@ export const useShoppingCart = () => {
             itemInCart = { ...item };
             newCart.push(itemInCart);
         }
-        setCart(newCart);
-    };
-
-    const getItemById = (id: string) => {
-        return cart.find((item) => item.id === id);
+        updateCartInStorage(newCart);
     };
 
     const removeFromCart = (id: string) => {
@@ -79,12 +92,11 @@ export const useShoppingCart = () => {
     };
 
     const increaseAmount = (id: string) => {
-        setCart((prevCart) => {
-            const updatedCart = prevCart.map((item) =>
-                item.id === id ? { ...item, amount: item.amount + 1 } : item
-            );
-            return updatedCart;
-        });
+        const currentCart = getCartFromStorage();
+        const updatedCart = currentCart.map((item) =>
+            item.id === id ? { ...item, amount: item.amount + 1 } : item
+        );
+        updateCartInStorage(updatedCart);
         const item = getItemById(id);
         toast.success(`${item?.name} amount increased`, {
             position: "bottom-right",
@@ -98,18 +110,18 @@ export const useShoppingCart = () => {
         });
     };
 
+
     const decreaseAmount = (id: string) => {
+        const currentCart = getCartFromStorage();
         const item = getItemById(id);
         if (item) {
             if (item.amount > 1) {
-                setCart((prevCart) => {
-                    const updatedCart = prevCart.map((cartItem) =>
-                        cartItem.id === id
-                            ? { ...cartItem, amount: cartItem.amount - 1 }
-                            : cartItem
-                    );
-                    return updatedCart;
-                });
+                const updatedCart = currentCart.map((cartItem) =>
+                    cartItem.id === id
+                        ? { ...cartItem, amount: cartItem.amount - 1 }
+                        : cartItem
+                );
+                updateCartInStorage(updatedCart);
                 toast.success(`${item.name} amount decreased`, {
                     position: "bottom-right",
                     autoClose: 3000,
@@ -127,10 +139,9 @@ export const useShoppingCart = () => {
     };
 
 
-
-
     return {
         cart,
+        getCartFromStorage,
         total,
         addToCart,
         removeFromCart,
