@@ -9,6 +9,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
+import { TriangleAlert } from "lucide-react";
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -137,10 +138,21 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
                     </div>
                     <div className="flex flex-col justify-end">
                         <OrderSummary location="checkout" disabled={loading} />
+                        {error &&
+                            <div role="alert" className="alert alert-warning">
+                                <TriangleAlert />
+                                {error}
+                            </div>
+                        }
+                        {success &&
+                            <div role="alert" className="alert alert-success">
+                                <TriangleAlert />
+                                {success}
+                            </div>
+                        }
                     </div>
                 </div>
-                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
+
             </div>
         </>
     );
