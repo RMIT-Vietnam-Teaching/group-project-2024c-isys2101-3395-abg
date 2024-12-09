@@ -29,7 +29,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         const payment_method = formData.get("paymentMethod") as string;
         const cartItems = formData.get("cartItems") as string;
         let total_amount;
-        if (payment_method === "installment") {
+        if (payment_method === "Installment") {
             total_amount = formData.get('installmentTotal');
         } else {
             total_amount = formData.get('total');
@@ -67,7 +67,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
                 setError("")
                 localStorage.setItem("shoppingCart", "[]")
                 localStorage.setItem("total", "0")
-                localStorage.setItem("orderID",data.data._id)
+                localStorage.setItem("orderID", data.data._id)
 
                 // Redirect to the order details page
                 router.push(`/checkout/success`);

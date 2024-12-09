@@ -25,7 +25,7 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
     }
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsInstallment(event.target.value === 'installment');
+        setIsInstallment(event.target.value === 'Installment');
     };
 
 
@@ -45,7 +45,7 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                     <label htmlFor="CoD" className="w-full py-4 font-semibold text-white ms-2 text-md">Cash on Delivery</label>
                 </div>
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="installment" type="radio" value="installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
+                    <input id="installment" type="radio" value="Installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="installment" className="w-full py-4 font-semibold text-white ms-2 text-md">Buy Now, Pay Later</label>
                 </div>
