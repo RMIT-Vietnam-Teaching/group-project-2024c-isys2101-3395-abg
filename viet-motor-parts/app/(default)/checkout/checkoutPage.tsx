@@ -26,15 +26,17 @@ export default function CheckoutPage() {
         const address = `${formData.get("address")}, ${formData.get("ward")}, ${formData.get("district")}, ${formData.get("city")}`;
         const additional_notes = formData.get("addNotes") as string;
         const payment_method = formData.get("paymentMethod") as string;
-        const cartItems = formData.get("cartItems") as string;
+        const cartItems = JSON.parse(localStorage.getItem("shoppingCart") || "[]");
         const total_amount = formData.get("total") as string;
-
-        const order_details = JSON.parse(cartItems).map((item: any) => ({
+    
+        // Enrich order_details with product_name
+        const order_details = cartItems.map((item: any) => ({
             product_id: item.id,
+            product_name: item.name, // Assuming `name` is included in the cartItems
             quantity: item.amount,
             price: item.price,
         }));
-
+    
         setLoading(true);
         try {
             const response = await fetch("/api/orders", {
@@ -52,19 +54,19 @@ export default function CheckoutPage() {
                     payment_method,
                 }),
             });
-
+    
             const data = await response.json();
             if (!response.ok) {
                 setError(data.error || "Failed to process your order.");
             } else {
-                // Store phone_number in local storage or session
-                setSuccess("Order placed successfully")
-                setError("")
-                localStorage.setItem("shoppingCart", "[]")
-                localStorage.setItem("total", "0")
-                sessionStorage.setItem("orderID",data.data._id)
-
-                // Redirect to the order details page
+                // Store orderID and reset local storage
+                setSuccess("Order placed successfully");
+                setError("");
+                localStorage.setItem("shoppingCart", "[]");
+                localStorage.setItem("total", "0");
+                sessionStorage.setItem("orderID", data.data._id);
+    
+                // Redirect to the order success page
                 router.push(`/checkout/success`);
             }
         } catch (err) {
@@ -74,6 +76,7 @@ export default function CheckoutPage() {
             setLoading(false);
         }
     };
+    
 
 
     return (
