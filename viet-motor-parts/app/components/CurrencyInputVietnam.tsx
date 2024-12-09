@@ -7,25 +7,24 @@ import { twMerge } from "tailwind-merge";
 interface CurrencyInputVietnamProps {
     className?: string;
     defaultValue?: number;
+    onChange?: (value: number) => void;
 }
 
-export default function CurrencyInputVietnam({ className, defaultValue }: CurrencyInputVietnamProps) {
+export default function CurrencyInputVietnam({ className, defaultValue, onChange, }: CurrencyInputVietnamProps) {
     const [rawValue, setRawValue] = useState<string | undefined>(defaultValue?.toString() || '');
 
-    const validateValue = (value: string | undefined): void => {
-        const rawValue = value === undefined ? 'undefined' : value;
-        setRawValue(rawValue || ' ');
+    const handleValueChange = (value: string | undefined): void => {
+        // Parse value into a numeric format
+        const numericValue = value ? parseInt(value.replace(/\D/g, ""), 10) : 0;
+        setRawValue(value || "");
+        if (onChange) {
+          onChange(numericValue); // Trigger parent onChange with numeric value
+        }
     };
 
-    const validateValueReal = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        e.preventDefault();
-        const value = e.target.value;
-        setRawValue(value);
-    }
-
     return (<div className="col-span-3">
-        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="e.g 120,000đ" value={rawValue} />
-        <input id="price-real" type="number" name="price" min="0" onChange={validateValueReal} value={rawValue} className="hidden" />
+        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={handleValueChange} placeholder="e.g 120,000đ" value={rawValue} />
+        <input id="price-real" type="number" name="price" min="0" value={rawValue?.replace(/\D/g, "") || 0} readOnly className="hidden" />
     </div>
     )
 }

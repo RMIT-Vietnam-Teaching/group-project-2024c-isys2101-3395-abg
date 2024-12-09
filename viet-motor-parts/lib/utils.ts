@@ -10,7 +10,7 @@ export function formatCurrency(value: number): string {
 };
 
 export function getProductImage(imageBase64: string) {
-  const isBase64JPEG = imageBase64 && imageBase64.startsWith("/9j/");
+  const isBase64JPEG = imageBase64 && !imageBase64.startsWith("BASE");
   return isBase64JPEG
       ? `data:image/jpeg;base64,${imageBase64}`
       : "/ProductPlaceholder.webp";
