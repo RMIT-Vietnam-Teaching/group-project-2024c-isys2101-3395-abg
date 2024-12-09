@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export type CartItem = {
@@ -12,57 +12,78 @@ export type CartItem = {
 
 export const useShoppingCart = () => {
     // Initialize cart from localStorage or fallback to an empty array
-    const [cart, setCart] = useState<CartItem[]>(
-        () => JSON.parse(localStorage.getItem("shoppingCart") || "[]")
-    );
+    const initialCart = () => {
+        if (typeof window !== "undefined") {
+            const cart = JSON.parse(localStorage.getItem("shoppingCart") || "[]");
+            return cart;
+        }
+        return [];
+    };
+
+    const [cart, setCart] = useState<CartItem[]>(initialCart);
 
     // Initialize total from localStorage or fallback to 0
-    const [total, setTotal] = useState<number>(
-        () => JSON.parse(localStorage.getItem("total") || "0")
-    );
+    const initialTotal = () => {
+        if (typeof window !== "undefined") {
+            const total = JSON.parse(localStorage.getItem("total") || "0");
+            return total;
+        }
+        return 0;
+    };
 
-    // Persist cart changes to localStorage and recalculate total
+    const [total, setTotal] = useState<number>(initialTotal);
+
     useEffect(() => {
         localStorage.setItem("shoppingCart", JSON.stringify(cart));
-        const newTotal = cart.reduce((acc, item) => acc + item.price * item.amount, 0);
+    }, [cart]);
+
+    useEffect(() => {
+        let newTotal = cart.reduce((acc, item) => acc + item.price * item.amount, 0);
         setTotal(newTotal);
         localStorage.setItem("total", JSON.stringify(newTotal));
     }, [cart]);
 
     const addToCart = (item: CartItem) => {
-        setCart((prevCart) => {
-            const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
-            if (existingItem) {
-                return prevCart.map((cartItem) =>
-                    cartItem.id === item.id
-                        ? { ...cartItem, amount: cartItem.amount + item.amount }
-                        : cartItem
-                );
-            } else {
-                return [...prevCart, item];
-            }
-        });
+        let newCart = [...cart];
+        let itemInCart = newCart.find((cartItem) => cartItem.id === item.id);
+        if (itemInCart) {
+            itemInCart.amount += item.amount;
+        } else {
+            itemInCart = { ...item };
+            newCart.push(itemInCart);
+        }
+        setCart(newCart);
         toast.success(`${item.name} added to Cart`, {
             position: "bottom-right",
             autoClose: 3000,
             hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
             theme: "colored",
         });
     };
 
+    const getItemById = (id: string) => {
+        return cart.find((item) => item.id === id);
+    };
+
     const removeFromCart = (id: string) => {
+        const item = getItemById(id);
         setCart((prevCart) => {
             const updatedCart = prevCart.filter((item) => item.id !== id);
-            const removedItem = prevCart.find((item) => item.id === id);
-            if (removedItem) {
-                toast.success(`${removedItem.name} removed from Cart`, {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    theme: "colored",
-                });
-            }
             return updatedCart;
+        });
+        toast.success(`${item?.name} removed from Cart`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
         });
     };
 
@@ -71,16 +92,18 @@ export const useShoppingCart = () => {
             const updatedCart = prevCart.map((item) =>
                 item.id === id ? { ...item, amount: item.amount + 1 } : item
             );
-            const item = updatedCart.find((item) => item.id === id);
-            if (item) {
-                toast.success(`${item.name} amount increased`, {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    theme: "colored",
-                });
-            }
             return updatedCart;
+        });
+        const item = getItemById(id);
+        toast.success(`${item?.name} amount increased`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
         });
     };
 
@@ -91,16 +114,18 @@ export const useShoppingCart = () => {
                     item.id === id ? { ...item, amount: item.amount - 1 } : item
                 )
                 .filter((item) => item.amount > 0);
-            const item = prevCart.find((item) => item.id === id);
-            if (item) {
-                toast.success(`${item.name} amount decreased`, {
-                    position: "bottom-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    theme: "colored",
-                });
-            }
             return updatedCart;
+        });
+        const item = getItemById(id);
+        toast.success(`${item?.name} amount decreased`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
         });
     };
 
