@@ -1,31 +1,56 @@
-"use client"
+"use client";
 
 import CurrencyInput from "react-currency-input-field";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { formatCurrency } from "@/lib/utils";
 
 interface CurrencyInputVietnamProps {
     className?: string;
     defaultValue?: number;
+    name: string;
 }
 
-export default function CurrencyInputVietnam({ className, defaultValue }: CurrencyInputVietnamProps) {
-    const [rawValue, setRawValue] = useState<string | undefined>(defaultValue?.toString() || '');
+export default function CurrencyInputVietnam({ className, defaultValue, name }: CurrencyInputVietnamProps) {
+    const [formattedValue, setFormattedValue] = useState<string | undefined>(
+        defaultValue ? formatCurrency(defaultValue) : ''
+    );
 
-    const validateValue = (value: string | undefined): void => {
-        const rawValue = value === undefined ? 'undefined' : value;
-        setRawValue(rawValue || ' ');
+    const handleValueChange = (value: string | undefined): void => {
+        setFormattedValue(value);
     };
 
-    const validateValueReal = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleRawValueChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         e.preventDefault();
         const value = e.target.value;
-        setRawValue(value);
-    }
+        setFormattedValue(formatCurrency(Number(value) || 0));
+    };
 
-    return (<div className="col-span-3">
-        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={validateValue} placeholder="e.g 120,000đ" value={rawValue} />
-        <input id="price-real" type="number" name="price" min="0" onChange={validateValueReal} value={rawValue} className="hidden" />
-    </div>
-    )
+
+    return (
+        <div className="col-span-3">
+            <CurrencyInput
+                id={name}
+                allowDecimals={false}
+                suffix="đ"
+                allowNegativeValue={false}
+                className={twMerge(
+                    `form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`,
+                    className
+                )}
+                onValueChange={handleValueChange}
+                placeholder="e.g 120,000đ"
+                value={formattedValue}
+            />
+            <input
+                id={`${name}-real`}
+                type="number"
+                name={name}
+                min="0"
+                onChange={handleRawValueChange}
+                value={formattedValue?.replace(/\D/g, '') || ''}
+                className="hidden"
+            />
+        </div>
+    );
 }

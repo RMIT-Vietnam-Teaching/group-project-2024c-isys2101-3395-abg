@@ -8,6 +8,7 @@ import { Button } from '@/app/components/shadcn/button';
 import { Alert, AlertDescription, AlertTitle } from '@/app/components/shadcn/alert';
 import { AlertCircle, TriangleAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam';
 
 
 export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
@@ -25,7 +26,12 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
     }
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsInstallment(event.target.value === 'Installment');
+        if (event.target.value === "Installment") {
+            setIsInstallment(true)
+        } else {
+            setIsInstallment(false)
+            setResult(null)
+        }
     };
 
 
@@ -53,16 +59,8 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                     <div>
                         <form action={handleCalculation} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="creditScore" className='font-semibold'>Credit Score (300-850)</Label>
-                                <Input
-                                    id="creditScore"
-                                    name="creditScore"
-                                    type="number"
-                                    placeholder="e.g 300, 450, 600, 750, 850"
-                                    min="300"
-                                    max="850"
-                                    required
-                                />
+                                <Label htmlFor="loanTerm" className='font-semibold'>Down Payment (VNĐ)</Label>
+                                <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='downPayment' />
                             </div>
                             <input type="number" id='price' name='price' hidden defaultValue={total() || ''} />
                             <div className="space-y-2">

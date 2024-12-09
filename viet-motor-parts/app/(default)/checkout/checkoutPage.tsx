@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
 import { TriangleAlert } from "lucide-react";
+import { CartItem } from "../cart/useShoppingCart";
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -35,10 +36,11 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         } else {
             total_amount = formData.get('total');
         }
-        const order_details = JSON.parse(cartItems).map((item: any) => ({
+        const order_details = JSON.parse(cartItems).map((item: CartItem) => ({
             product_id: item.id,
+            product_name: item.name,
             quantity: item.amount,
-            price: item.price,
+            price: item.price
         }));
 
         setLoading(true);

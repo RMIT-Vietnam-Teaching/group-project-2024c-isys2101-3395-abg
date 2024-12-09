@@ -59,7 +59,6 @@ export default function Page({ params }: OrderPageProps) {
                         Change Status
                     </Button>
                 </div>
-
             </div>
             <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
                 <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
