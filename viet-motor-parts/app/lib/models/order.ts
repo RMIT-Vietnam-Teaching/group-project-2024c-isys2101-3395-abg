@@ -8,8 +8,7 @@ export interface IOrder extends Document {
   address: string;
   total_amount: number;
   order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Canceled';
-  payment_method: 'Cash' | 'PayPal';
-  additional_notes?: string;
+  payment_method: 'Cash' | 'PayPal' | 'Installment';
   shipping_label?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
