@@ -15,9 +15,10 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function Page({ params }: { params: { id: string } }) {
     const product = await fetchProducts(params.id);
 
-    const base64Image = product.image_base64
-        ? `data:image/jpeg;base64,${product.image_base64}`
-        : "/ProductPlaceholder.webp";
+    const base64Image = product.image_base64 && product.image_base64.startsWith("/9j/")
+    ? `data:image/jpeg;base64,${product.image_base64}`
+    : "/ProductPlaceholder.webp";
+
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

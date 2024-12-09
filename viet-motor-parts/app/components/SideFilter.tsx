@@ -271,6 +271,7 @@ export function SideFilter() {
         </button>
         {isOpen("radio") && (
           <div className="flex flex-col m-3">
+<<<<<<<<< Temporary merge branch 1
             <div key="lowToHigh" className="flex items-center my-1">
               <input
                 id="lowToHigh"
@@ -305,6 +306,8 @@ export function SideFilter() {
                 Price (High to Low)
               </label>
             </div>
+=========
+>>>>>>>>> Temporary merge branch 2
             <div key="aToZ" className="flex items-center my-1">
               <input
                 id="aToZ"
@@ -312,6 +315,7 @@ export function SideFilter() {
                 value="aToZ"
                 name="radio-filter"
                 onChange={handleSortChange}
+                checked={sortBy === "name" && order === "asc"}
                 className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
                 checked={sortBy === "name" && order === "asc"}
               />

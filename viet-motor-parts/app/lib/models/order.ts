@@ -9,6 +9,7 @@ export interface IOrder extends Document {
   total_amount: number;
   order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Canceled';
   payment_method: 'Cash' | 'PayPal';
+  additional_notes?: string;
   shipping_label?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
@@ -35,8 +36,9 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     payment_method: {
       type: String,
       required: true,
-      enum: ['Cash', 'PayPal'],
+      enum: ['Cash', 'PayPal', 'Installment'],
     },
+    additional_notes: { type: String, default: null },
     shipping_label: { type: String, default: null },
     order_details: [
       {

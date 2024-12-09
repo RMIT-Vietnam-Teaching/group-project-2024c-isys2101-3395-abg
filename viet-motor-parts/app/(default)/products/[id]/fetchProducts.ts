@@ -9,9 +9,6 @@ export async function fetchProducts(id: string): Promise<Product> {
         }
         const data = await res.json();
 
-        // Debug log the data received
-        console.log(`Fetched product data for ID: ${id}`, data);
-
         return data.data;
     } catch (error) {
         console.error(`Error fetching product with ID: ${id}`, error);
