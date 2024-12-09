@@ -1,53 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function OrderTrackingVerify() {
+    const [isOrderIdValid, setIsOrderIdValid] = useState(false);
     const [orderId, setOrderId] = useState("");
-    const [phone, setPhone] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
 
     const handleOrderIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setOrderId(e.target.value);
-        setErrorMessage(""); // Clear error message on input change
-    };
-
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPhone(e.target.value);
-        setErrorMessage(""); // Clear error message on input change
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setErrorMessage(""); // Reset error message
-        setLoading(true);
-    
-        try {
-            const response = await fetch(`/api/orders/${orderId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    phone_number: phone, // Send phone number in headers for verification
-                },
-            });
-    
-            const data = await response.json();
-            if (!response.ok) {
-                setErrorMessage(data.error || "Invalid Order ID or Phone Number.");
-            } else {
-                // Redirect to the order details page with phone number as query parameter
-                router.push(`/orders/${orderId}?phone_number=${phone}`);
-            }
-        } catch (error) {
-            console.error("Error verifying order:", error);
-            setErrorMessage("An unexpected error occurred. Please try again.");
-        } finally {
-            setLoading(false);
+        const value = e.target.value;
+        setOrderId(value);
+        
+        // Validate order ID
+        if (value === "12345") {
+            setIsOrderIdValid(true);
+            setErrorMessage(""); // Clear error message if ID is valid
+        } else {
+            setIsOrderIdValid(false);
+            setErrorMessage("Invalid Order ID. Please try again.");
         }
-    };    
+    };
 
     return (
         <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -59,7 +31,7 @@ export default function OrderTrackingVerify() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-brand-600 py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form className="space-y-6" action="#" method="POST">
                         <div>
                             <label htmlFor="order-id" className="block text-sm font-semibold text-brand-100">
                                 Order ID
@@ -76,41 +48,37 @@ export default function OrderTrackingVerify() {
                                     placeholder="Enter your order ID"
                                 />
                             </div>
+                            {errorMessage && (
+                                <p className="mt-2 text-sm text-red-500">
+                                    {errorMessage}
+                                </p>
+                            )}
                         </div>
 
-                        <div>
-                            <label htmlFor="phone" className="block text-sm font-semibold text-brand-100">
-                                Phone Number
-                            </label>
-                            <div className="mt-1">
-                                <input
-                                    id="phone"
-                                    name="phone"
-                                    type="tel"
-                                    required
-                                    value={phone}
-                                    onChange={handlePhoneChange}
-                                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Enter your phone number"
-                                />
+                        {isOrderIdValid && (
+                            <div>
+                                <label htmlFor="phone" className="block text-sm font-semibold text-brand-100">
+                                    Phone Number
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        id="phone"
+                                        name="phone"
+                                        type="tel"
+                                        required
+                                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                        placeholder="Enter your phone number"
+                                    />
+                                </div>
                             </div>
-                        </div>
-
-                        {errorMessage && (
-                            <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
                         )}
 
                         <div>
                             <button
                                 type="submit"
-                                disabled={loading}
-                                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md ${
-                                    loading
-                                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                        : "bg-brand-300 text-white hover:bg-brand-100 hover:text-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                }`}
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-300 hover:bg-brand-100 hover:text-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                                {loading ? "Validating..." : "Submit"}
+                                Submit
                             </button>
                         </div>
                     </form>

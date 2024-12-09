@@ -46,9 +46,10 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
+
+    // Validate required fields in the order body
     const { customer_name, phone_number, address, order_details, total_amount, payment_method } = body;
 
-    // Validate required fields
     if (!customer_name || !phone_number || !address || !order_details || !total_amount || !payment_method) {
       return new Response(
         JSON.stringify({ success: false, error: 'Missing required order fields' }),
@@ -56,23 +57,8 @@ export async function POST(request) {
       );
     }
 
-    // Iterate through order_details and add product_name
-    const enrichedOrderDetails = order_details.map((item) => ({
-      product_id: item.product_id,
-      product_name: item.product_name, // Add product_name directly
-      quantity: item.quantity,
-      price: item.price,
-    }));
-
     // Create a new order
-    const newOrder = new Order({
-      customer_name,
-      phone_number,
-      address,
-      total_amount,
-      payment_method,
-      order_details: enrichedOrderDetails, // Include enriched details
-    });
+    const newOrder = new Order(body);
     const savedOrder = await newOrder.save();
 
     return new Response(
@@ -87,4 +73,3 @@ export async function POST(request) {
     );
   }
 }
-
