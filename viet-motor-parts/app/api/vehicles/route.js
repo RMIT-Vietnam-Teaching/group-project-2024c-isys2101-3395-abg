@@ -6,28 +6,29 @@ export async function GET(request) {
   await dbConnect(); // Connect to the database
 
   const { searchParams } = new URL(request.url);
-  const name = searchParams.get('name') || null;
-
-  if (!name) {
-    return new Response(
-      JSON.stringify({ success: false, error: 'Vehicle name is required' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+  const name = searchParams.get('name');
 
   try {
-    const vehicles = await CompatibleVehicle.find({
-      $or: [
-        { make: new RegExp(name, 'i') }, // Case-insensitive search in "make"
-        { vehicleModel: new RegExp(name, 'i') }, // Case-insensitive search in "vehicleModel"
-      ],
-    });
+    let vehicles;
 
-    if (vehicles.length === 0) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'No matching vehicles found' }),
-        { status: 404, headers: { 'Content-Type': 'application/json' } }
-      );
+    if (name) {
+      // If 'name' is provided, perform a case-insensitive search
+      vehicles = await CompatibleVehicle.find({
+        $or: [
+          { make: new RegExp(name, 'i') }, // Case-insensitive search in "make"
+          { vehicleModel: new RegExp(name, 'i') }, // Case-insensitive search in "vehicleModel"
+        ],
+      });
+
+      if (vehicles.length === 0) {
+        return new Response(
+          JSON.stringify({ success: false, error: 'No matching vehicles found' }),
+          { status: 404, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    } else {
+      // If no 'name', return all records
+      vehicles = await CompatibleVehicle.find({});
     }
 
     return new Response(
