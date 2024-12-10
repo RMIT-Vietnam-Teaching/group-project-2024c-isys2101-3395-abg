@@ -9,7 +9,6 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
-import { TriangleAlert } from "lucide-react";
 import { CartItem } from "../cart/useShoppingCart";
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
@@ -31,12 +30,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
     const additional_notes = formData.get("addNotes") as string;
     const payment_method = formData.get("paymentMethod") as string;
     const cartItems = formData.get("cartItems") as string;
-    let total_amount;
-    if (payment_method === "Installment") {
-      total_amount = formData.get('installmentTotal');
-    } else {
-      total_amount = formData.get('total');
-    }
+    const total_amount = payment_method === "Installment" ? (formData.get("installmentTotal") as string) : (formData.get("total") as string);
     const order_details = JSON.parse(cartItems).map((item: CartItem) => ({
       product_id: item.id,
       product_name: item.name,
@@ -84,6 +78,8 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             total_amount,
             address,
             order_details,
+            additional_notes,
+            phone_number,
           }),
         });
 
@@ -96,17 +92,17 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       } catch (emailError) {
         console.error("Error sending confirmation email:", emailError);
       }
-      {
-        // Store orderID and reset local storage
-        setSuccess("Order placed successfully");
-        setError("");
-        localStorage.setItem("shoppingCart", "[]");
-        localStorage.setItem("total", "0");
-        sessionStorage.setItem("orderID", data.data._id);
 
-        // Redirect to the order success page
-        router.push(`/checkout/success`);
-      }
+      // Store orderID and reset local storage
+      setSuccess("Order placed successfully");
+      setError("");
+      localStorage.setItem("shoppingCart", "[]");
+      localStorage.setItem("total", "0");
+      sessionStorage.setItem("orderID", data.data._id);
+
+      // Redirect to the order success page
+      router.push(`/checkout/success`);
+
     } catch (err) {
       console.error("Error placing order:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -118,46 +114,51 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
 
 
   return (
-    <div >
-      <form id="checkout" action={handleSubmit} className="container grid min-h-screen grid-cols-1 gap-5 mx-auto my-5 lg:grid-cols-9">
+    <>
+      <form id="checkout" action={handleSubmit}></form>
+      <div className="container grid min-h-screen grid-cols-1 gap-5 mx-auto my-5 lg:grid-cols-9">
         <div className="grid gap-5 lg:col-span-6">
-          <div className="bg-brand-600 rounded-xl p-5">
-            <h1 className="p-5 text-2xl font-bold">Shipping Details</h1>
-            <div className="space-y-2">
-              <Label htmlFor="name" className="font-bold">Name</Label>
-              <Input type="text" id="name" name="name" required className="w-full p-2 shadow-2xl" placeholder="e.g Nguyễn Văn A" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="pnumber" className="font-bold">Phone Number</Label>
-              <Input
-                type="text"
-                id="pnumber"
-                name="pnumber"
-                required
-                pattern="^0[3|5|7|8|9]\\d{8}$"
-                className="w-full p-2"
-                placeholder="e.g 0376543210"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email" className="font-bold">Email</Label>
-              <Input type="email" id="email" name="email" required className="w-full p-2" placeholder="e.g ABG@hotmail.com" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address" className="font-bold">Address</Label>
-              <Input type="text" id="address" name="address" required className="w-full p-2" placeholder="e.g. 702 Nguyễn Văn Linh" />
-            </div>
-            <div className="space-y-2">
-              <VietnameseAddressInput />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="addNotes" className="font-bold">Additional Notes</Label>
-              <Textarea
-                id="addNotes"
-                name="addNotes"
-                className="w-full p-2 overflow-y-scroll border-none resize-y max-h-24 bg-brand-500 placeholder:text-slate-300"
-                placeholder="e.g. No need to call before delivering"
-              />
+          <div className="bg-brand-600 rounded-xl p-5 flex flex-col">
+            <div className="">
+              <h1 className="p-5 text-2xl font-bold">Shipping Details</h1>
+              <div className="space-y-2">
+                <Label htmlFor="name" className="font-bold">Name</Label>
+                <Input type="text" id="name" name="name" required className="w-full p-2 shadow-2xl" placeholder="e.g Nguyễn Văn A" form="checkout" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="pnumber" className="font-bold">Phone Number</Label>
+                <Input
+                  type="text"
+                  id="pnumber"
+                  name="pnumber"
+                  required
+                  pattern="^0[3|5|7|8|9]\\d{8}$"
+                  className="w-full p-2"
+                  placeholder="e.g 0376543210"
+                  form="checkout"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-bold">Email</Label>
+                <Input type="email" id="email" name="email" required className="w-full p-2" placeholder="e.g ABG@hotmail.com" form="checkout" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="address" className="font-bold">Address</Label>
+                <Input type="text" id="address" name="address" required className="w-full p-2" placeholder="e.g. 702 Nguyễn Văn Linh" form="checkout" />
+              </div>
+              <div className="space-y-2">
+                <VietnameseAddressInput />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="addNotes" className="font-bold">Additional Notes</Label>
+                <Textarea
+                  id="addNotes"
+                  name="addNotes"
+                  className="w-full p-2 overflow-y-scroll border-none resize-y max-h-24 bg-brand-500 placeholder:text-slate-300"
+                  placeholder="e.g. No need to call before delivering"
+                  form="checkout"
+                />
+              </div>
             </div>
             <PaymentMethod calculateLoan={calculateLoan} />
           </div>
@@ -172,7 +173,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         </div>
         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         {success && <p className="text-green-500 text-sm mt-2">{success}</p>}
-      </form>
-    </div>
+      </div>
+    </>
   );
 }
