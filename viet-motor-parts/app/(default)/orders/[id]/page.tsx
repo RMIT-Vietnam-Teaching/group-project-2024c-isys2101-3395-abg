@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -41,47 +41,16 @@ const STATUSES = [
   { key: "Delivered", label: "Delivered" },
 ];
 
-export default function Page({ params }: { params: { id: string } }) {
-  const [order, setOrder] = useState<Order | null>(null);
-  const searchParams = useSearchParams();
-  const phoneNumber = searchParams.get("phone_number");
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      if (!phoneNumber) {
-        console.error("Phone number is missing");
-        router.push("/error");
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/orders/${params.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            phone_number: phoneNumber,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch order details");
-        }
-
-        const data = await response.json();
-        setOrder(data.data);
-      } catch (error) {
-        console.error("Error fetching order details:", error);
-        router.push("/error");
-      }
-    };
-
-    fetchOrderDetails();
-  }, [params.id, phoneNumber, router]);
-
-  if (!order) {
-    return <div>Loading...</div>;
+export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
+  const phoneNumber = searchParams.phone_number || "";
+  const response = await fetch(`http://localhost:3000/api/orders/${params.id}`, {
+    headers: {phone_number: phoneNumber}
+  });
+  if (!response.ok) {
+    redirect('/error');
   }
+  const data = await response.json();
+  const order:Order = data.data;
 
   const STATUS = order.order_status || "Confirmed";
 

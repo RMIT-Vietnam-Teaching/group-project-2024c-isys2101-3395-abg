@@ -22,6 +22,7 @@ export default function CheckoutPage() {
 
     const handleSubmit = async (formData: FormData) => {
         const customer_name = formData.get("name") as string;
+        const email = formData.get("email") as string;
         const phone_number = formData.get("pnumber") as string;
         const address = `${formData.get("address")}, ${formData.get("ward")}, ${formData.get("district")}, ${formData.get("city")}`;
         const additional_notes = formData.get("addNotes") as string;
@@ -46,6 +47,7 @@ export default function CheckoutPage() {
                 },
                 body: JSON.stringify({
                     customer_name,
+                    email,
                     phone_number,
                     address,
                     additional_notes,
