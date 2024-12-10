@@ -78,11 +78,10 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                             <Button type="submit" className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl ">Calculate</Button>
                         </form>
                         {result?.error && (
-                            <Alert variant="destructive" className="mb-4">
-                                <AlertCircle className="w-4 h-4" />
-                                <AlertTitle>Error</AlertTitle>
-                                <AlertDescription>{result.error}</AlertDescription>
-                            </Alert>
+                            <div role="alert" className="alert alert-error">
+                                <CircleXIcon />
+                                <span>{result.error}</span>
+                            </div>
                         )}
                         {result?.interestRate && result?.monthlyPayment && (
                             <div className="w-full space-y-2">
