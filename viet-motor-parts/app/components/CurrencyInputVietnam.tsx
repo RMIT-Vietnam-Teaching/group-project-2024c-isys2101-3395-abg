@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
 import CurrencyInput from "react-currency-input-field";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { formatCurrency } from "@/lib/utils";
 
 interface CurrencyInputVietnamProps {
     className?: string;

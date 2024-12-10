@@ -13,6 +13,7 @@ export interface IOrder extends Document {
   shipping_label?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
+    product_name: string; // Add product_name here
     quantity: number;
     price: number;
   }>;
@@ -30,8 +31,8 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ['Pending', 'Confirmed', 'Shipping', 'Delivered', 'Canceled'],
-      default: 'Pending',
+      enum: ['Confirmed', 'Shipping', 'Delivered', 'Canceled'],
+      default: 'Confirmed',
     },
     payment_method: {
       type: String,
@@ -43,6 +44,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_details: [
       {
         product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+        product_name: { type: String, required: true }, // Add product_name field here
         quantity: { type: Number, required: true, min: 1 },
         price: { type: Number, required: true, min: 0 },
       },

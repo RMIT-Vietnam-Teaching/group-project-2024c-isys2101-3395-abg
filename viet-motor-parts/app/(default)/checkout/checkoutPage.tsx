@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
 import { TriangleAlert } from "lucide-react";
+import { CartItem } from "../cart/useShoppingCart";
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -35,12 +36,13 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         } else {
             total_amount = formData.get('total');
         }
-        const order_details = JSON.parse(cartItems).map((item: any) => ({
+        const order_details = JSON.parse(cartItems).map((item: CartItem) => ({
             product_id: item.id,
+            product_name: item.name,
             quantity: item.amount,
-            price: item.price,
+            price: item.price
         }));
-
+    
         setLoading(true);
         try {
             const response = await fetch("/api/orders", {
@@ -58,19 +60,19 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
                     payment_method,
                 }),
             });
-
+    
             const data = await response.json();
             if (!response.ok) {
                 setError(data.error || "Failed to process your order.");
             } else {
-                // Store phone_number in local storage or session
-                setSuccess("Order placed successfully")
-                setError("")
-                localStorage.setItem("shoppingCart", "[]")
-                localStorage.setItem("total", "0")
-                localStorage.setItem("orderID", data.data._id)
-
-                // Redirect to the order details page
+                // Store orderID and reset local storage
+                setSuccess("Order placed successfully");
+                setError("");
+                localStorage.setItem("shoppingCart", "[]");
+                localStorage.setItem("total", "0");
+                sessionStorage.setItem("orderID", data.data._id);
+    
+                // Redirect to the order success page
                 router.push(`/checkout/success`);
             }
         } catch (err) {
@@ -80,6 +82,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             setLoading(false);
         }
     };
+    
 
 
     return (

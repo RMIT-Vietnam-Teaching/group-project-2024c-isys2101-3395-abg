@@ -30,34 +30,26 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
 
     function importFromCart() {
         const total = localStorage.getItem('total') || '';
-        document.querySelector("#price")?.setAttribute('value', total);
-        document.querySelector("#price-real")?.setAttribute('value', total);
+        document.getElementById("price")?.setAttribute('value', total);
+        document.getElementById("price-real")?.setAttribute('value', total);
     }
 
     return (
         <Card className="w-full max-w-md mx-auto text-white border-none shadow-xl bg-brand-600">
             <CardHeader>
-                <CardTitle className='text-center lg:text-left'>Credit Score Calculator</CardTitle>
-                <CardDescription className='text-white'>Calculate your interest rate and monthly payment based on your credit score and loan term</CardDescription>
+                <CardTitle className='text-center lg:text-left'>Interest Rate Calculator</CardTitle>
+                <CardDescription className='text-white'>Calculate your interest rate and monthly payment based on your down payment and loan term</CardDescription>
             </CardHeader>
             <CardContent>
                 <form action={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="creditScore" className='font-semibold'>Credit Score (300-850)</Label>
-                        <Input
-                            id="creditScore"
-                            name="creditScore"
-                            type="number"
-                            placeholder="e.g 300, 450, 600, 750, 850"
-                            min="300"
-                            max="850"
-                            required
-                        />
+                        <Label htmlFor="loanTerm" className='font-semibold'>Total Amount (VNĐ)</Label>
+                        <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='price' />
+                        <Button type='button' onClick={importFromCart} className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl font-bold"> <ShoppingCartIcon size={10} /> Import from Cart</Button>
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="loanTerm" className='font-semibold'>Total Amount (VNĐ)</Label>
-                        <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' />
-                        <Button onClick={importFromCart} className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl font-bold"> <ShoppingCartIcon size={10} /> Import from Cart</Button>
+                        <Label htmlFor="loanTerm" className='font-semibold'>Down Payment (VNĐ)</Label>
+                        <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='downPayment' />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="loanTerm" className='font-semibold'>Loan Term (max 72 months)</Label>

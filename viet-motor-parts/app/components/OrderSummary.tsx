@@ -14,7 +14,7 @@ type OrderSummaryProps = {
 
 export default function OrderSummary(props: OrderSummaryProps) {
     const router = useRouter();
-    const { cart, total } = useShoppingCart();
+    const { cart, total, getCartFromStorage } = useShoppingCart();
     const [clientSubTotal, setClientSubTotal] = useState<number>(0);
     const [clientShipping, setClientShipping] = useState<number>(0);
     const [clientTotal, setClientTotal] = useState<number>(0);
@@ -32,7 +32,8 @@ export default function OrderSummary(props: OrderSummaryProps) {
     }, [clientSubTotal, clientShipping]);
 
     const handleClick = () => {
-        if (cart && cart.length > 0) {
+        const currentCart = getCartFromStorage();
+        if (currentCart && currentCart.length > 0) {
             router.push('/checkout');
         } else {
             toast.error("Your Cart is Empty!", {
