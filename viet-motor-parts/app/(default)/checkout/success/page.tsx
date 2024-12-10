@@ -31,7 +31,7 @@ export default function Page() {
                 <div role="alert" className="alert alert-warning">
                     <TriangleAlert />
                     <span>Copy your Order ID now or check your email for it. <br />
-                        You will lose access to this page after this session</span>
+                        You will lose access to the ID after this session</span>
                 </div>
             </div>
             <Button title="Track Order" link="/orders" />

@@ -6,7 +6,7 @@ import { Input } from "@/app/components/shadcn/input"
 import { Label } from "@/app/components/shadcn/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/shadcn/card"
 import { Alert, AlertDescription, AlertTitle } from "@/app/components/shadcn/alert"
-import { AlertCircle, ShoppingCartIcon } from 'lucide-react'
+import { AlertCircle, CircleXIcon, ShoppingCartIcon } from 'lucide-react'
 import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam'
 import { LoanCalculationResult } from './calculation'
 
@@ -68,11 +68,10 @@ export default function CreditScoreForm({ calculateLoan }: { calculateLoan: (for
             </CardContent>
             <CardFooter className="flex flex-col items-start">
                 {result?.error && (
-                    <Alert variant="destructive" className="mb-4">
-                        <AlertCircle className="w-4 h-4" />
-                        <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>{result.error}</AlertDescription>
-                    </Alert>
+                    <div role="alert" className="alert alert-error">
+                        <CircleXIcon />
+                        <span>{result.error}</span>
+                    </div>
                 )}
                 {result?.interestRate && result?.monthlyPayment && (
                     <div className="w-full space-y-2">

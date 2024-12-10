@@ -1,6 +1,6 @@
 import { Product } from "@/app/components/ProductCard";
 
-export async function fetchProducts(id: string): Promise<Product> {
+export async function fetchProductbyID(id: string): Promise<Product> {
     try {
         const res = await fetch(`http://localhost:3000/api/products/${id}`, { next: { revalidate: 300 } });
         if (!res.ok) {

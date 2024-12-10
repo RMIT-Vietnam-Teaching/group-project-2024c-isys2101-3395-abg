@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { formatCurrency, getProductImage } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
-import { fetchProducts } from "./fetchProducts";
+import { fetchProductbyID } from "./fetchProductbyID";
 
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-    const res = await fetchProducts(params.id);
+    const res = await fetchProductbyID(params.id);
 
     return {
         title: `${res.name} | Viet Motor Parts`,
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 
 export default async function Page({ params }: { params: { id: string } }) {
-    const product = await fetchProducts(params.id);
+    const product = await fetchProductbyID(params.id);
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

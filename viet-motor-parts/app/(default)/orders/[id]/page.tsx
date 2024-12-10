@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -14,23 +10,14 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 import Link from "next/link";
+import fetchOrderbyID, { OrderDetail } from "./fetchOrderbyID";
 
-interface OrderDetail {
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    price: number;
-}
+export async function generateMetadata({ params }: { params: { id: string } }) {
 
-interface Order {
-    _id: string;
-    customer_name: string;
-    phone_number: string;
-    address: string;
-    total_amount: number;
-    order_status: string;
-    created_at: string;
-    order_details: OrderDetail[];
+  return {
+    title: `Order ${params.id} | Viet Motor Parts`,
+    description: `Order ${params.id} details`,
+  };
 }
 
 const STATUSES = [
@@ -41,79 +28,42 @@ const STATUSES = [
   { key: "Delivered", label: "Delivered" },
 ];
 
-export default function Page({ params }: { params: { id: string } }) {
-  const [order, setOrder] = useState<Order | null>(null);
-  const searchParams = useSearchParams();
-  const phoneNumber = searchParams.get("phone_number");
-  const router = useRouter();
+export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
+  const phoneNumber = searchParams.phone_number || "";
+  const order = await fetchOrderbyID(params.id, phoneNumber);
 
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      if (!phoneNumber) {
-        console.error("Phone number is missing");
-        router.push("/error");
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/orders/${params.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            phone_number: phoneNumber,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch order details");
-        }
-
-        const data = await response.json();
-        setOrder(data.data);
-      } catch (error) {
-        console.error("Error fetching order details:", error);
-        router.push("/error");
-      }
-    };
-
-    fetchOrderDetails();
-  }, [params.id, phoneNumber, router]);
-
-  if (!order) {
-    return <div>Loading...</div>;
-  }
 
   const STATUS = order.order_status || "Confirmed";
 
   const getStatusClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >=
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "bg-green-500 border-none shadow-xl timeline-start timeline-box"
       : "border-none shadow-xl timeline-start timeline-box bg-brand-600";
 
   const getCircleClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >=
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "w-5 h-5 text-green-500"
       : "";
 
   const getLineClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "bg-green-500"
       : "";
 
   return (
     <div className="container mx-auto">
-      <div className="grid lg:grid-cols-3 items-center justify-center">
+      <div className="grid  items-center justify-center">
         <h1 className="p-5 text-5xl font-extrabold text-center col-start-2">
-          Order #{order._id}
+          #{order._id}
         </h1>
-        <div className="flex justify-center">
-          <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-            Change Status
-          </button>
-        </div>
+      </div>
+      <div className="flex justify-center">
+        <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
+          Change Status
+        </button>
       </div>
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
         <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">

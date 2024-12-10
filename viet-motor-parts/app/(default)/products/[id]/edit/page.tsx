@@ -5,7 +5,7 @@ import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/shadcn/select";
 import { Textarea } from "@/app/components/shadcn/textarea";
-import { fetchProducts } from "../fetchProducts";
+import { fetchProducts } from "../fetchProductbyID";
 import { Metadata } from "next";
 
 
