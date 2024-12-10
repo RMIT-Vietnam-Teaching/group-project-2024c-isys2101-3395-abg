@@ -1,128 +1,151 @@
 "use client";
 
-import { useState } from "react";
-import { Search } from 'lucide-react';
-import { Product } from '@/app/components/ProductCard';
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Search } from "lucide-react";
+import { Product } from "@/app/components/ProductCard";
 
-    type SearchCompatibilityProps = {
-        barType: string;
-        onSelect: (item: Product | null) => void;
+const apiUrls = {
+  vehicles: `http://localhost:3000/api/vehicles`, // Adjust API for vehicles
+  products: `http://localhost:3000/api/products`,
+};
+
+type SearchCompatibilityProps = {
+  barType: keyof typeof apiUrls; // Restrict barType to "vehicles" or "products"
+  onSelect: (item: Product | CompatibleVehicle | null) => void;
+};
+
+export type CompatibleVehicle = {
+  _id: string;
+  make: string;
+  vehicleModel: string;
+  year: number;
+};
+
+export default function SearchBarCompatibility({
+  barType,
+  onSelect,
+}: SearchCompatibilityProps) {
+  const [query, setQuery] = useState("");
+  const [items, setItems] = useState<(Product | CompatibleVehicle)[]>([]);
+  const [filteredResults, setFilteredResults] = useState<
+    (Product | CompatibleVehicle)[]
+  >([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const res = await fetch(apiUrls[barType]);
+        const data = await res.json();
+        setItems(data.data);
+      } catch (error) {
+        console.error(`Error fetching ${barType}:`, error);
+      }
     };
+    fetchItems();
+  }, [barType]);
 
-    let apiUrlProducts = `http://localhost:3000/api/products`;
-    let apiUrlVehicles = `http://localhost:3000/api/products`; // Remember to change later
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
 
-export default function SearchBarCompatibility({barType, onSelect}: SearchCompatibilityProps) {
-    const [query, setQuery] = useState("");
-    const [products, setProducts] = useState<Product[]>([]);
-    const [filteredResults, setFilteredResults] = useState<Product[]>([]);
+    if (value.trim() !== "") {
+      const results = items.filter((item) =>
+        barType === "vehicles"
+          ? `${(item as CompatibleVehicle).make} ${(item as CompatibleVehicle).vehicleModel}`
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : (item as Product).name?.toLowerCase().includes(value.toLowerCase()),
+      );
+      setFilteredResults(results);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-        try {
-            if (barType == "vehicles"){
-                const res = await fetch(apiUrlVehicles);
-                const data = await res.json();
-                setProducts(data.data);
-            } else {
-                const res = await fetch(apiUrlProducts);
-                const data = await res.json();
-                setProducts(data.data);
-            }
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-        };
-        fetchProducts();
-    }, []);
+      // Call onSelect with null if multiple or no results
+      if (results.length !== 1) {
+        onSelect(null);
+      }
+    } else {
+      setFilteredResults([]);
+    }
+  };
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setQuery(value);
+  const handleItemClick = (id: string) => {
+    const selectedItem = filteredResults.find((item) => item._id === id);
+    if (selectedItem) {
+      onSelect(selectedItem);
+    } else {
+      console.error(`${barType} not found in filtered results.`);
+    }
+  };
 
-        // Filter the products based on the query
-        if (value.trim() !== "") {
-            const results = products.filter((item) =>
-                item.name.toLowerCase().includes(value.toLowerCase())
-            );
-            setFilteredResults(results);
-            // Call onSelect with null if there are more than one filtered result
-            if (results.length !== 1) {
-                onSelect(null);
-            }
-        } else {
-        setFilteredResults([]);
-        }
-    };
+  const maxResults = 5;
+  const displayedResults = filteredResults.slice(0, maxResults);
 
-    const handleProductClick = (name: string, id: string) => {
-        setQuery(name); // Fill the search bar with the product name
-        const product = filteredResults.find((item) => item._id === id);
-        if (product) {
-            setFilteredResults([product]);
-            onSelect(product);
-        } else {
-        console.error("Product not found in filtered results.");
-        }
-    };
-
-    const maxResults = 5;
-    const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
-
-    return (
+  return (
+    <div className="relative w-full">
+      <div className="w-full">
+        <label
+          htmlFor={`${barType}-search`}
+          className="sr-only mb-2 text-sm font-medium text-gray-900"
+        >
+          Search
+        </label>
         <div className="relative w-full">
-            <div className="w-full">
-                <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <div className="relative w-full">
-                    <input 
-                        type="search" 
-                        id="default-search" 
-                        value={query} 
-                        onChange={handleSearch} 
-                        name='searchQuery' 
-                        className="block w-full p-4 text-sm text-gray-800 focus:outline-none rounded-lg bg-gray-50" 
-                        placeholder= {barType == "vehicles" ? "Search for vechicles..." : "Search for products..."}
-                        required 
-                    />
-                    <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-brand-400 hover:bg-brand-600 font-medium rounded-2xl text-sm px-4 pb-2 pt-1">
-                        <Search />
-                    </button>
-                </div>
-            </div>
-            {/* Dropdown suggestions */}
-            {query && (
-                <div className="w-full rounded-lg shadow-lg z-10">
-                    {displayedResults.length > 0 ? (
-                        displayedResults.map((item) => (
-                            <div
-                                key={item._id}
-                                className="p-3 mt-3 bg-brand-600 border-2 border-brand-100 rounded flex items-center gap-4"
-                                onClick={() => handleProductClick(item.name, item._id)}
-                            >
-                                <a href="#" className="h-12 w-12 shrink-0">
-                                    <img
-                                        className="h-full w-full rounded"
-                                        src="/BikePlaceholder.webp"
-                                        alt={item.name}
-                                    />
-                                </a>
-                                <a href="#" className="flex-1 text-brand-100 hover:underline">
-                                    {item.name}
-                                </a>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="p-4 mt-3 bg-brand-600 rounded-b">
-                            <div className="flex items-center gap-4">
-                                <a href="#" className="flex-1 text-brand-100">
-                                    No {barType == "vehicles" ? "vehicle" : "product"} with this name...
-                                </a>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
+          <input
+            type="search"
+            id={`${barType}-search`}
+            value={query}
+            onChange={handleSearch}
+            name={`${barType}Query`}
+            className="block w-full rounded-lg bg-gray-50 p-4 text-sm text-gray-800 focus:outline-none"
+            placeholder={`Search for ${barType}...`}
+            required
+          />
+          <button
+            type="button"
+            className="absolute bottom-2.5 end-2.5 rounded-2xl bg-brand-400 px-4 pb-2 pt-1 text-sm font-medium text-white hover:bg-brand-600"
+          >
+            <Search />
+          </button>
         </div>
-    )
+      </div>
+      {/* Dropdown suggestions */}
+      {query && (
+        <div className="z-10 w-full rounded-lg shadow-lg">
+          {displayedResults.length > 0 ? (
+            displayedResults.map((item) => (
+              <div
+                key={item._id}
+                className="mt-3 flex items-center gap-4 rounded border-2 border-brand-100 bg-brand-600 p-3"
+                onClick={() => handleItemClick(item._id)}
+              >
+                <a href="#" className="h-12 w-12 shrink-0">
+                  <img
+                    className="h-full w-full rounded"
+                    src="/BikePlaceholder.webp"
+                    alt={
+                      barType === "vehicles"
+                        ? (item as CompatibleVehicle).vehicleModel
+                        : (item as Product).name
+                    }
+                  />
+                </a>
+                <a href="#" className="flex-1 text-brand-100 hover:underline">
+                  {barType === "vehicles"
+                    ? `${(item as CompatibleVehicle).make} ${(item as CompatibleVehicle).vehicleModel}`
+                    : (item as Product).name}
+                </a>
+              </div>
+            ))
+          ) : (
+            <div className="mt-3 rounded-b bg-brand-600 p-4">
+              <div className="flex items-center gap-4">
+                <a href="#" className="flex-1 text-brand-100">
+                  No {barType === "vehicles" ? "vehicle" : "product"} found...
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

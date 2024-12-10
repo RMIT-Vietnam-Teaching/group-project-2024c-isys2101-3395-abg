@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { Product } from '@/app/components/ProductCard';
 import SearchBarCompatibility from "@/app/components/SearchBarCompatibility";
+import { CompatibleVehicle } from "@/app/components/SearchBarCompatibility";
 
 export default function CompatabilityCheckPage(){
-    const [selectedVehicle, setSelectedVehicle] = useState<Product | null>();
-    const [selectedProduct, setSelectedProduct] = useState<Product | null>();
+    const [selectedVehicle, setSelectedVehicle] = useState<CompatibleVehicle | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isCompatible, setIsCompatible] = useState<boolean | null>(null);
 
     const handleCheckCompatibility = () => {
@@ -21,7 +22,7 @@ export default function CompatabilityCheckPage(){
     <form className="grid grid-cols-1 gap-6 md:grid-cols-7">
         {/* Left Section */}
         <div className="col-span-1 md:col-span-3">
-            <SearchBarCompatibility barType="vehicles" onSelect={setSelectedVehicle}/>                
+            <SearchBarCompatibility barType="vehicles" onSelect={(item) => setSelectedVehicle(item as CompatibleVehicle)}/>                
         </div>
 
         {/* Button Section */}
@@ -51,7 +52,7 @@ export default function CompatabilityCheckPage(){
 
         {/* Right Section */}
         <div className="col-span-1 md:col-span-3">
-            <SearchBarCompatibility barType="products" onSelect={setSelectedProduct}/>                
+            <SearchBarCompatibility barType="products" onSelect={(item) => setSelectedProduct(item as Product)}/>                
         </div>
         {isCompatible !== null && (
         isCompatible ? 

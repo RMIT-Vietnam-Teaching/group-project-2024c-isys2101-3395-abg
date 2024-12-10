@@ -55,6 +55,7 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
     try {
       const updatedProduct = await updateProducts(product._id, formData);
       alert("Product updated successfully!");
+      window.location.href = `/products/${product._id}`;
     } catch (error) {
       console.error("Error updating product:", error);
       alert("Failed to update product.");
