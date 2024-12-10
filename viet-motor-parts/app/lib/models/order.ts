@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IOrder extends Document {
   _id: mongoose.Types.ObjectId;
   customer_name: string;
+  email: string;
   phone_number: string;
   address: string;
   total_amount: number;
@@ -11,6 +12,7 @@ export interface IOrder extends Document {
   payment_method: 'Cash' | 'PayPal' | 'Installment';
   additional_notes?: string;
   shipping_label?: string;
+  additional_notes?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
     product_name: string; // Add product_name here
@@ -25,9 +27,11 @@ export interface IOrder extends Document {
 const orderSchema: Schema<IOrder> = new mongoose.Schema(
   {
     customer_name: { type: String, required: true, minLength: 5 },
+    email: { type: String, required: true }, // Email field added
     phone_number: { type: String, required: true },
     address: { type: String, required: true },
     total_amount: { type: Number, required: true, min: 0 },
+    additional_notes: { type: String, default: null }, // Notes field added
     order_status: {
       type: String,
       required: true,
