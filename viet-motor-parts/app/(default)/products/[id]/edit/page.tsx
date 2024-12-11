@@ -5,12 +5,12 @@ import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/shadcn/select";
 import { Textarea } from "@/app/components/shadcn/textarea";
-import { fetchProducts } from "../fetchProductbyID";
+import { fetchProductbyID } from "../fetchProductbyID";
 import { Metadata } from "next";
 
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-    const res = await fetchProducts(params.id);
+    const res = await fetchProductbyID(params.id);
 
     return {
         title: `${res.name} Edit | Viet Motor Parts`,
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 
 export default async function Page({ params }: { params: { id: string } }) {
-    const product = await fetchProducts(params.id);
+    const product = await fetchProductbyID(params.id);
     return (
         <div className="container mx-auto flex flex-col justify-center gap-10">
             <h1 className="text-center text-5xl font-bold">{product.name}</h1>
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <Label htmlFor="price" className="text-left lg:text-right font-bold">
                             Price (VNĐ)
                         </Label>
-                        <CurrencyInputVietnam defaultValue={product.price} />
+                        <CurrencyInputVietnam name="price" defaultValue={product.price} />
                     </div>
                     <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
                         <Label htmlFor="image" className="text-left lg:text-right font-bold">
