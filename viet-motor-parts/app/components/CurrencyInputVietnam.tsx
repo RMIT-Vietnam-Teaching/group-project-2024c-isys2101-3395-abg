@@ -8,49 +8,24 @@ import { formatCurrency } from "@/lib/utils";
 interface CurrencyInputVietnamProps {
     className?: string;
     defaultValue?: number;
-    name: string;
+    onChange?: (value: number) => void;
 }
 
-export default function CurrencyInputVietnam({ className, defaultValue, name }: CurrencyInputVietnamProps) {
-    const [formattedValue, setFormattedValue] = useState<string | undefined>(
-        defaultValue ? formatCurrency(defaultValue) : ''
-    );
+export default function CurrencyInputVietnam({ className, defaultValue, onChange, }: CurrencyInputVietnamProps) {
+    const [rawValue, setRawValue] = useState<string | undefined>(defaultValue?.toString() || '');
 
     const handleValueChange = (value: string | undefined): void => {
-        setFormattedValue(value);
+        // Parse value into a numeric format
+        const numericValue = value ? parseInt(value.replace(/\D/g, ""), 10) : 0;
+        setRawValue(value || "");
+        if (onChange) {
+          onChange(numericValue); // Trigger parent onChange with numeric value
+        }
     };
 
-    const handleRawValueChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        e.preventDefault();
-        const value = e.target.value;
-        setFormattedValue(formatCurrency(Number(value) || 0));
-    };
-
-
-    return (
-        <div className="col-span-3">
-            <CurrencyInput
-                id={name}
-                allowDecimals={false}
-                suffix="đ"
-                allowNegativeValue={false}
-                className={twMerge(
-                    `form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`,
-                    className
-                )}
-                onValueChange={handleValueChange}
-                placeholder="e.g 120,000đ"
-                value={formattedValue}
-            />
-            <input
-                id={`${name}-real`}
-                type="number"
-                name={name}
-                min="0"
-                onChange={handleRawValueChange}
-                value={formattedValue?.replace(/\D/g, '') || ''}
-                className="hidden"
-            />
-        </div>
-    );
+    return (<div className="col-span-3">
+        <CurrencyInput id="price" allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={handleValueChange} placeholder="e.g 120,000đ" value={rawValue} />
+        <input id="price-real" type="number" name="price" min="0" value={rawValue?.replace(/\D/g, "") || 0} readOnly className="hidden" />
+    </div>
+    )
 }

@@ -1,6 +1,8 @@
 import dbConnect from '@/app/lib/db';
 import Product from '@/app/lib/models/product';
 import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request, { params }) {
   await dbConnect();
@@ -82,6 +84,8 @@ export async function PATCH(request, { params }) {
         { status: 404 }
       );
     }
+
+    revalidatePath(`/products/${id}`);
 
     return new Response(
       JSON.stringify({ success: true, data: updatedProduct }),

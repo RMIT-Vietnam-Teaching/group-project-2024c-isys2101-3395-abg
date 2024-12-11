@@ -3,7 +3,7 @@ import { Product } from "../page";
 
 export async function fetchProductbyID(id: string): Promise<Product> {
     try {
-        const res = await fetch(`http://localhost:3000/api/products/${id}`, { next: { revalidate: 300 } });
+        const res = await fetch(`http://localhost:3000/api/products/${id}`, { cache: "no-store"});
         if (!res.ok) {
             console.error(`Failed to fetch product with ID: ${id}, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);

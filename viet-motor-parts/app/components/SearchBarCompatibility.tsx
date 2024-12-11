@@ -1,74 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from 'lucide-react';
-import { Product } from '@/app/components/ProductCard';
-import { useEffect } from "react";
+import { Product } from "./CompatibilityCheckPage";
 
-    type SearchCompatibilityProps = {
-        barType: string;
-        onSelect: (item: Product | null) => void;
-    };
+type SearchCompatibilityProps = {
+    barType: string;
+    onSelect: (item: Product | CompatibleVehicle | null) => void;
+};
 
-    let apiUrlProducts = `http://localhost:3000/api/products`;
-    let apiUrlVehicles = `http://localhost:3000/api/products`; // Remember to change later
+export interface CompatibleVehicle {
+    _id: string;
+    make: string;
+    vehicleModel: string;
+    year: number;
+    name: string; // Computed property
+}
 
-export default function SearchBarCompatibility({barType, onSelect}: SearchCompatibilityProps) {
+let apiUrlProducts = `http://localhost:3000/api/products`;
+let apiUrlVehicles = `http://localhost:3000/api/vehicles`;
+
+export default function SearchBarCompatibility({ barType, onSelect }: SearchCompatibilityProps) {
     const [query, setQuery] = useState("");
-    const [products, setProducts] = useState<Product[]>([]);
-    const [filteredResults, setFilteredResults] = useState<Product[]>([]);
+    const [items, setItems] = useState<(Product | CompatibleVehicle)[]>([]);
+    const [filteredItems, setFilteredItems] = useState<(Product | CompatibleVehicle)[]>([]);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-        try {
-            if (barType == "vehicles"){
-                const res = await fetch(apiUrlVehicles);
+        const fetchItems = async () => {
+            try {
+                const res = await fetch(barType === "vehicles" ? apiUrlVehicles : apiUrlProducts);
                 const data = await res.json();
-                setProducts(data.data);
-            } else {
-                const res = await fetch(apiUrlProducts);
-                const data = await res.json();
-                setProducts(data.data);
+                if (barType === "vehicles") {
+                    const vehicles = data.data.map((vehicle: any) => ({
+                        ...vehicle,
+                        name: `${vehicle.make} ${vehicle.vehicleModel} ${vehicle.year}`
+                    }));
+                    setItems(vehicles);
+                } else {
+                    setItems(data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching products/vehicles:', error);
             }
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
         };
-        fetchProducts();
-    }, []);
+        fetchItems();
+    }, [barType]);
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
-
-        // Filter the products based on the query
+        // Filter the items based on the query
         if (value.trim() !== "") {
-            const results = products.filter((item) =>
+            const results = items.filter((item) =>
                 item.name.toLowerCase().includes(value.toLowerCase())
             );
-            setFilteredResults(results);
+            setFilteredItems(results);
             // Call onSelect with null if there are more than one filtered result
             if (results.length !== 1) {
                 onSelect(null);
             }
         } else {
-        setFilteredResults([]);
+            setFilteredItems([]);
+            onSelect(null);
         }
-    };
+      };
 
-    const handleProductClick = (name: string, id: string) => {
-        setQuery(name); // Fill the search bar with the product name
-        const product = filteredResults.find((item) => item._id === id);
-        if (product) {
-            setFilteredResults([product]);
-            onSelect(product);
+    const handleItemClick = (name: string, id: string) => {
+        setQuery(name); // Fill the search bar with the item name
+        const item = filteredItems.find((item) => item._id === id);
+        if (item) {
+            setFilteredItems([item]);
+            onSelect(item);
         } else {
-        console.error("Product not found in filtered results.");
+            console.error("Item not found in filtered results.");
         }
     };
 
     const maxResults = 5;
-    const displayedResults = filteredResults.slice(0, maxResults);  // Limit to 5 results
+    const displayedResults = filteredItems.slice(0, maxResults);  // Limit to 5 results
 
     return (
         <div className="relative w-full">
@@ -82,7 +91,7 @@ export default function SearchBarCompatibility({barType, onSelect}: SearchCompat
                         onChange={handleSearch} 
                         name='searchQuery' 
                         className="block w-full p-4 text-sm text-gray-800 focus:outline-none rounded-lg bg-gray-50" 
-                        placeholder= {barType == "vehicles" ? "Search for vechicles..." : "Search for products..."}
+                        placeholder={barType === "vehicles" ? "Search for vehicles..." : "Search for products..."}
                         required 
                     />
                     <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-brand-400 hover:bg-brand-600 font-medium rounded-2xl text-sm px-4 pb-2 pt-1">
@@ -98,7 +107,7 @@ export default function SearchBarCompatibility({barType, onSelect}: SearchCompat
                             <div
                                 key={item._id}
                                 className="p-3 mt-3 bg-brand-600 border-2 border-brand-100 rounded flex items-center gap-4"
-                                onClick={() => handleProductClick(item.name, item._id)}
+                                onClick={() => handleItemClick(item.name, item._id)}
                             >
                                 <a href="#" className="h-12 w-12 shrink-0">
                                     <img
@@ -116,7 +125,7 @@ export default function SearchBarCompatibility({barType, onSelect}: SearchCompat
                         <div className="p-4 mt-3 bg-brand-600 rounded-b">
                             <div className="flex items-center gap-4">
                                 <a href="#" className="flex-1 text-brand-100">
-                                    No {barType == "vehicles" ? "vehicle" : "product"} with this name...
+                                    No {barType === "vehicles" ? "vehicle" : "product"} with this name...
                                 </a>
                             </div>
                         </div>
@@ -124,5 +133,5 @@ export default function SearchBarCompatibility({barType, onSelect}: SearchCompat
                 </div>
             )}
         </div>
-    )
+    );
 }
