@@ -3,10 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "./shadcn/card";
 import { formatCurrency } from "@/lib/utils";
 import { useShoppingCart } from "../(default)/cart/useShoppingCart";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { get } from "http";
+
 
 type OrderSummaryProps = {
     location: 'cart' | 'checkout';

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Search } from 'lucide-react';
-import { Product } from "./CompatibilityCheckPage";
+import { Product } from "../(default)/products/page";
+
 
 type SearchCompatibilityProps = {
     barType: string;

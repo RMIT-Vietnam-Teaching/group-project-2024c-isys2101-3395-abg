@@ -9,9 +9,10 @@ interface CurrencyInputVietnamProps {
     className?: string;
     defaultValue?: number;
     onChange?: (value: number) => void;
+    name: string;
 }
 
-export default function CurrencyInputVietnam({ className, defaultValue, onChange, }: CurrencyInputVietnamProps) {
+export default function CurrencyInputVietnam({ className, defaultValue, onChange, name }: CurrencyInputVietnamProps) {
     const [rawValue, setRawValue] = useState<string | undefined>(defaultValue?.toString() || '');
 
     const handleValueChange = (value: string | undefined): void => {

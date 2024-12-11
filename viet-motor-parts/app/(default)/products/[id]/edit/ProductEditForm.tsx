@@ -8,10 +8,10 @@ import { Button } from "@/app/components/shadcn/button";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
-import { fetchCategories } from "../fetchCategories";
 import { updateProducts } from "../updateProducts";
-import { Category } from "@/app/components/SideFilter";
-import { Product } from "@/app/components/ProductCard";
+import { Product } from "../../page";
+import { Category } from "@/app/(default)/categories/page";
+import { fetchCategories } from "@/app/(default)/categories/fetchCategories";
 
 type ProductEditFormProps = {
   product: Product;
@@ -122,6 +122,7 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
         <CurrencyInputVietnam
           defaultValue={formData.price}
           onChange={handlePriceChange}
+          name="price"
         />
       </div>
 
