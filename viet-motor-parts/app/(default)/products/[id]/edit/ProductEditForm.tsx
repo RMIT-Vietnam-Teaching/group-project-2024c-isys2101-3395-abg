@@ -12,12 +12,14 @@ import { updateProducts } from "../updateProducts";
 import { Product } from "../../page";
 import { Category } from "@/app/(default)/categories/page";
 import { fetchCategories } from "@/app/(default)/categories/fetchCategories";
+import { Vehicle } from "@/app/(default)/vehicles/fetchVehicles";
 
 type ProductEditFormProps = {
   product: Product;
+  compatibleVehicles: Vehicle[];
 };
 
-export default function ProductEditForm({ product }: ProductEditFormProps) {
+export default function ProductEditForm({ product, compatibleVehicles }: ProductEditFormProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     name: product.name,
@@ -127,13 +129,13 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
-          <Label htmlFor="image" className="text-left lg:text-right font-bold">
-            Image
-          </Label>
-          <ImageInput defaultBase64={formData.image_base64} onImageChange={handleImageChange} />
-        </div>
+        <Label htmlFor="image" className="text-left lg:text-right font-bold">
+          Image
+        </Label>
+        <ImageInput defaultBase64={formData.image_base64} onImageChange={handleImageChange} />
+      </div>
 
-      
+
       <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
         <Label htmlFor="quantity" className="text-left lg:text-right font-bold">
           Stock Quantity
@@ -170,7 +172,7 @@ export default function ProductEditForm({ product }: ProductEditFormProps) {
         <Label htmlFor="compatibleVehicles" className="text-left lg:text-right font-bold">
           Compatible Vehicles
         </Label>
-        <CompatibleVehicle/>
+        <CompatibleVehicle vehicles={compatibleVehicles} />
       </div>
       <div className="flex justify-end">
         <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">

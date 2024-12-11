@@ -5,30 +5,21 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent } from "react";
 import { Category } from "../(default)/categories/page";
 
+interface SideFilterProps {
+  categories: Category[];
+}
 
-export function SideFilter() {
+
+export function SideFilter(props: SideFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(props.categories || []);
   const [selectedCategory, setSelectedCategory] = useState<string[]>(searchParams.get("category")?.split(",") || []);
   const [sortBy, setSortBy] = useState("name");
   const [order, setOrder] = useState("asc");
   const [priceFrom, setPriceFrom] = useState<number | null>(null);
   const [priceTo, setPriceTo] = useState<number | null>(null);
 
-  useEffect(() => {
-    // Fetch categories from API
-    async function fetchCategories() {
-      try {
-        const response = await fetch("http://localhost:3000/api/category");
-        const result = await response.json();
-        if (result.success) setCategories(result.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     updateQuery({ category: selectedCategory });
