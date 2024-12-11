@@ -90,7 +90,7 @@ export default function CompatibleVehicle() {
                     type="text"
                     name="compatibleVehicles"
                     hidden
-                    value={JSON.stringify(selectedVehicles)}
+                    value={JSON.stringify(selectedVehicles.map(v => v._id))}
                 />
             </div>
         </div>
