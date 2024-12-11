@@ -1,4 +1,5 @@
-import { Product } from "@/app/components/ProductCard";
+import { Product } from "../page";
+
 
 export async function fetchProductbyID(id: string): Promise<Product> {
     try {

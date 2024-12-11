@@ -3,22 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { formatCurrency, getProductImage } from '@/lib/utils';
 import AddToCart from './addToCart';
+import { Product } from '../(default)/products/page';
 
-export interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  image_base64: string;
-  description: string;
-  brand: string;
-  stock_quantity: number;
-  category_id: string;
-  compatible_vehicles: Array<{
-    make: string;
-    model: string;
-    year: number;
-  }>;
-}
+
+
 
 
 export default function ProductCard({ _id, name, price, image_base64 }: Product) {

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Product } from '@/app/components/ProductCard';
 import SearchBarCompatibility from "@/app/components/SearchBarCompatibility";
+import { Product } from "../(default)/products/page";
+
 
 export default function CompatabilityCheckPage(){
     const [selectedVehicle, setSelectedVehicle] = useState<Product | null>();

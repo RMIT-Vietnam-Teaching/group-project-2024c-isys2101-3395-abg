@@ -7,11 +7,15 @@ import { Vehicle } from "../(default)/vehicles/fetchVehicles";
 
 
 
-export default function CompatibleVehicle() {
+interface CompatibleVehicleProps {
+    vehicles?: Vehicle[];
+}
+
+export default function CompatibleVehicle(props: CompatibleVehicleProps) {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [suggestions, setSuggestions] = useState<Vehicle[]>([]);
-    const [selectedVehicles, setSelectedVehicles] = useState<Vehicle[]>([]);
-    const [selectedVehicleSet, setSelectedVehicleSet] = useState<Set<string>>(new Set());
+    const [selectedVehicles, setSelectedVehicles] = useState<Vehicle[]>(props.vehicles || []);
+    const [selectedVehicleSet, setSelectedVehicleSet] = useState<Set<string>>(new Set(props.vehicles?.map(v => v._id)) || new Set());
 
     const fetchSuggestions = async () => {
         if (searchTerm.trim() === '') {

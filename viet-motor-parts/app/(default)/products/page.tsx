@@ -1,8 +1,19 @@
 import ProductCard from '@/app/components/ProductCard';
 import { SideFilter } from '@/app/components/SideFilter';
 import { Metadata } from "next/types";
-import { Product } from '@/app/components/ProductCard';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/app/components/shadcn/pagination';
+
+export interface Product {
+    _id: string;
+    name: string;
+    price: number;
+    image_base64: string;
+    description: string;
+    brand: string;
+    stock_quantity: number;
+    category_id: string;
+    compatible_vehicles: string[];
+}
 
 export const metadata: Metadata = {
     title: "Products | Viet Motor Parts",
