@@ -1,8 +1,13 @@
 "use server"
 
-export type LoanCalculationResult =
-    | { error: string; interestRate?: undefined; monthlyPayment?: undefined; totalPayment?: undefined; }
-    | { interestRate: string; monthlyPayment: string; totalPayment: string; error?: undefined; };
+export type LoanCalculationResult = {
+    interestRate?: string;
+    monthlyPayment?: string;
+    totalPayment?: string;
+    loanTerm?: string;
+    downPayment?: string;
+    error?: string;
+}
 
     export async function calculateLoan(formData: FormData): Promise<LoanCalculationResult> {
         const totalPrice = Number(formData.get('price'));
@@ -26,12 +31,14 @@ export type LoanCalculationResult =
         const numberOfPayments = loanTerm;
         const loanAmount = totalPrice - downPayment;
         const monthlyPayment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-        const totalPayment = monthlyPayment * numberOfPayments;
+        const totalPayment = monthlyPayment * numberOfPayments + downPayment;
     
         return {
             interestRate: interestRate.toFixed(2),
             monthlyPayment: monthlyPayment.toFixed(2),
-            totalPayment: totalPayment.toFixed(2)
+            totalPayment: totalPayment.toFixed(2),
+            loanTerm: loanTerm.toFixed(2),
+            downPayment: downPayment.toFixed(2),
         };
     }
 

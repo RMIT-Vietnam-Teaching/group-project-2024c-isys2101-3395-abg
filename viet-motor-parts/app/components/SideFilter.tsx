@@ -3,11 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent } from "react";
+import { Category } from "../(default)/categories/page";
 
-export type Category = {
-  _id: string;
-  name: string;
-}
 
 export function SideFilter() {
   const router = useRouter();

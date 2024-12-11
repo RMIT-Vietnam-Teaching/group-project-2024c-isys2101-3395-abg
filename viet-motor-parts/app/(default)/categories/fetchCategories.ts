@@ -1,4 +1,5 @@
-import { Category } from "@/app/components/SideFilter";
+import { Category } from "./page";
+
 
 export async function fetchCategories(): Promise<Category[]> {
     try {

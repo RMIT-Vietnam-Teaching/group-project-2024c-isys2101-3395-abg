@@ -90,6 +90,10 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                                 <p>Monthly Payment: {formatCurrency(Number(result.monthlyPayment))}</p>
                                 <p>Total Payment:  {formatCurrency(Number(result.totalPayment))}</p>
                                 <input type="text" id="installmentTotal" name="installmentTotal" value={Math.round(Number(result.totalPayment))} form='checkout' hidden />
+                                <input type="text" id="interestRate" name="interestRate" value={Number(result.interestRate)} form='checkout' hidden />
+                                <input type="text" id="monthlyPayment" name="monthlyPayment" value={Math.round(Number(result.monthlyPayment))} form='checkout' hidden />
+                                <input type="text" id="downPayment" name="downPayment" form='checkout' value={Math.round(Number(result.downPayment))} hidden />
+                                <input type="text" id="loanTerm" name="loanTerm" form='checkout' value={Math.round(Number(result.loanTerm))} hidden />
                                 <div role="alert" className="alert alert-warning">
                                     <TriangleAlert />
                                     <span>Your new total will be updated to the Total Payment above if you choose the Buy Now, Pay Later option</span>

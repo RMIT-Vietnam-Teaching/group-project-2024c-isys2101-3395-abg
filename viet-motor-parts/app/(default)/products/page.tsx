@@ -43,7 +43,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
         apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
     }
 
-    const res = await fetch(apiUrl, { next: { revalidate: 300 } });
+    const res = await fetch(apiUrl, { cache: "no-store" });
     const data = await res.json();
     const products: Product[] = data.data;
 

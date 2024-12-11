@@ -1,8 +1,6 @@
-"use client"
 
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from './Button';
 import { formatCurrency, getProductImage } from '@/lib/utils';
 import AddToCart from './addToCart';
 

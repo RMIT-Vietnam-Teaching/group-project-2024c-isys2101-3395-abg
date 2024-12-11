@@ -3,13 +3,9 @@
 import { useEffect, useState } from "react";
 import { Input } from "./shadcn/input";
 import { X } from "lucide-react";
+import { Vehicle } from "../(default)/vehicles/fetchVehicles";
 
-type Vehicle = {
-    _id: string;
-    make: string;
-    vehicleModel: string;
-    year: number;
-};
+
 
 export default function CompatibleVehicle() {
     const [searchTerm, setSearchTerm] = useState<string>('');
