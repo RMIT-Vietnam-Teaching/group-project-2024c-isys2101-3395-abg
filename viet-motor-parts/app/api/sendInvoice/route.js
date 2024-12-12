@@ -4,7 +4,7 @@ import { generateEmail } from "./generateEmail";
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { email, customer_name, order_id, order_date, total_amount, address, order_details, additional_notes, phone_number } = body;
+        const { email, customer_name, order_id, order_date, total_amount, address, order_details, additional_notes, phone_number, payment_method, installment_details } = body;
 
         // Validate the required fields
         if (!email || !customer_name || !order_id) {
@@ -24,7 +24,7 @@ export async function POST(request) {
         });
 
         // Build order details for the email
-        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate : order_date, additionalNotes: additional_notes });
+        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate: order_date, additionalNotes: additional_notes });
 
 
         const mailOptions = {

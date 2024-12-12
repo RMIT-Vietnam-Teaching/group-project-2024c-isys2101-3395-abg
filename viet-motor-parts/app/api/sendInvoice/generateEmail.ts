@@ -10,6 +10,13 @@ export function generateEmail(data: {
     orderDetails: { product_name: string; quantity: number; price: string }[];
     totalAmount: string;
     additionalNotes?: string;
+    payment_method: string;
+    installment_details?: {
+        down_payment: number;
+        loan_term: number;
+        monthly_payment: number;
+        interest_rate: number;
+    };
 }): string {
     const { orderId, customerName, phoneNumber, address, orderDetails, totalAmount, orderDate, additionalNotes } = data;
 
@@ -40,7 +47,7 @@ return `
                 <p style="font-size: 18px; font-weight: bold; margin: 5px 0;">Order ID: <span
                         style="font-weight: normal;">${orderId}</span></p>
                 <p style="font-size: 18px; font-weight: bold; margin: 5px 0;">Order Date: <span
-                        style="font-weight: normal;">${new Date(orderDate).toLocaleDateString()}</span></p>
+                        style="font-weight: normal;">${new Date(orderDate).toLocaleDateString("en-GB")}</span></p>
             </div>
             <div style="padding: 10px 20px;">
                 <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Thank you for your purchase!</h2>
