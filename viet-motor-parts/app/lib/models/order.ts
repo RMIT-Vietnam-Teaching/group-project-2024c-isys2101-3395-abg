@@ -40,8 +40,8 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ['Confirmed', 'Shipping', 'Delivered', 'Canceled'],
-      default: 'Confirmed',
+      enum: ['Pending','Confirmed', 'Shipping', 'Delivered', 'Canceled'],
+      default: 'Pending',
     },
     payment_method: {
       type: String,

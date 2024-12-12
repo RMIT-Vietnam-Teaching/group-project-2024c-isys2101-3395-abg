@@ -55,6 +55,7 @@ export async function POST(request) {
       order_details,
       total_amount,
       payment_method,
+      installment_details,
       additional_notes,
     } = body;
 
@@ -82,8 +83,7 @@ export async function POST(request) {
       price: item.price,
     }));
 
-    // Create a new order
-    const newOrder = new Order({
+    const newOrderConstructor = {
       customer_name,
       email,
       phone_number,
@@ -92,7 +92,15 @@ export async function POST(request) {
       payment_method,
       additional_notes, // Add additional_notes field
       order_details: enrichedOrderDetails, // Include enriched details
-    });
+    }
+
+    // Add installment_details if available
+    if (payment_method === 'Installment' && installment_details) {
+      newOrderConstructor.installment_details = installment_details;
+    }
+
+    // Create a new order
+    const newOrder = new Order(newOrderConstructor);
     const savedOrder = await newOrder.save();
     console.log("Saved order:", savedOrder);
 

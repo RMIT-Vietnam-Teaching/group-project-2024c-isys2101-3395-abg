@@ -38,6 +38,16 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       quantity: item.amount,
       price: item.price
     }));
+    let installment_details;
+    if (payment_method === "Installment") {
+      installment_details = {
+        down_payment: parseFloat(formData.get("downPayment") as string),
+        loan_term: parseInt(formData.get("loanTerm") as string, 10),
+        monthly_payment: parseFloat(formData.get("monthlyPayment") as string),
+        interest_rate: parseFloat(formData.get("interestRate") as string),
+      };
+    }
+
 
     setLoading(true);
     try {
@@ -55,6 +65,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
           order_details,
           total_amount,
           payment_method,
+          ...(installment_details && { installment_details }),
         }),
       });
 
@@ -65,34 +76,34 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       }
 
       // Send confirmation email
-      try {
-        const emailResponse = await fetch("/api/sendInvoice", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            customer_name,
-            order_id: data.data._id,
-            order_date: data.data.created_at,
-            total_amount,
-            address,
-            order_details,
-            additional_notes,
-            phone_number,
-          }),
-        });
+      // try {
+      //   const emailResponse = await fetch("/api/sendInvoice", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       email,
+      //       customer_name,
+      //       order_id: data.data._id,
+      //       order_date: data.data.created_at,
+      //       total_amount,
+      //       address,
+      //       order_details,
+      //       additional_notes,
+      //       phone_number,
+      //     }),
+      //   });
 
-        const emailData = await emailResponse.json();
-        if (!emailResponse.ok) {
-          console.error("Failed to send confirmation email:", emailData.error);
-        } else {
-          console.log("Confirmation email sent successfully");
-        }
-      } catch (emailError) {
-        console.error("Error sending confirmation email:", emailError);
-      }
+      //   const emailData = await emailResponse.json();
+      //   if (!emailResponse.ok) {
+      //     console.error("Failed to send confirmation email:", emailData.error);
+      //   } else {
+      //     console.log("Confirmation email sent successfully");
+      //   }
+      // } catch (emailError) {
+      //   console.error("Error sending confirmation email:", emailError);
+      // }
 
       // Store orderID and reset local storage
       setSuccess("Order placed successfully");
