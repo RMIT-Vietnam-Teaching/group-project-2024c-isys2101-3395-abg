@@ -12,13 +12,18 @@ export interface IOrder extends Document {
   payment_method: 'Cash' | 'PayPal' | 'Installment';
   additional_notes?: string;
   shipping_label?: string;
-  additional_notes?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
     product_name: string; // Add product_name here
     quantity: number;
     price: number;
   }>;
+  installment_details?: {
+    down_payment: number;
+    loan_term: number;
+    monthly_payment: number;
+    interest_rate: number;
+  };
   created_at?: Date;
   updated_at?: Date;
 }
@@ -43,7 +48,6 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       required: true,
       enum: ['Cash', 'PayPal', 'Installment'],
     },
-    additional_notes: { type: String, default: null },
     shipping_label: { type: String, default: null },
     order_details: [
       {
@@ -53,6 +57,12 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
         price: { type: Number, required: true, min: 0 },
       },
     ],
+    installment_details: {
+      down_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      loan_term: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 1 },
+      monthly_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      interest_rate: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+    },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
