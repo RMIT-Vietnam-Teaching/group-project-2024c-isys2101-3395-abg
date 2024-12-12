@@ -186,7 +186,7 @@ return `
                         href="mailto:viet.motor24@gmail.com"
                         style="font-weight: bold; color: white; text-decoration: underline;">contact our support team</a>.
                 </p>
-                <p style="font-size: 12px; margin: 5px 0;">© 2023 ABG Group. All rights reserved.</p>
+                <p style="font-size: 12px; margin: 5px 0;">© ${new Date().getFullYear()} ABG Group. All rights reserved.</p>
             </div>
         </div>
     </body>
