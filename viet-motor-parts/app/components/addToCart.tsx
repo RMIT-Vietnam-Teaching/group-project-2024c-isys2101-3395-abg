@@ -6,11 +6,11 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.min.css';
 
 
-export default function AddToCart({ id, name, price, amount, className }: { id: string, name: string, price: number, amount: number, className?: string }) {
+export default function AddToCart({ id, name, price, amount, className, image_base64 }: { id: string, name: string, price: number, amount: number, className?: string, image_base64: string }) {
     const { addToCart } = useShoppingCart();
 
     const handleAddToCart = () => {
-        addToCart({ id, name, price, amount });
+        addToCart({ id, name, price, amount, image_base64 });
         toast.success(`${name} added to Cart`, {
             position: "bottom-right",
             autoClose: 3000,

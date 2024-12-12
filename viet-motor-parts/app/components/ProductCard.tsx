@@ -1,35 +1,19 @@
-"use client"
-
+import useSWR from 'swr';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from './Button';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, getProductImage } from '@/lib/utils';
 import AddToCart from './addToCart';
-
-export interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  image_base64: string;
-  description: string;
-  brand: string;
-  stock_quantity: number;
-  category_id: string;
-  compatible_vehicles: Array<{
-    make: string;
-    model: string;
-    year: number;
-  }>;
-}
+import { Product } from '../(default)/products/page';
 
 
-export default function ProductCard({ _id, name, price }: Product) {
+export default function ProductCard({ _id, name, price, image_base64 }: Product) {
+
   return (
     <div className="bg-brand-500 w-[330px] rounded-2xl shadow-xl">
       <Link href={`/products/${_id}`}>
         <Image
           className="rounded-t-lg"
-          src="https://placehold.co/330x200/webP"
+          src={getProductImage(image_base64)}
           alt="product image"
           width={330}
           height={200}
@@ -45,7 +29,13 @@ export default function ProductCard({ _id, name, price }: Product) {
           <span className="text-2xl font-bold" id="price">
             {formatCurrency(price)}
           </span>
-          <AddToCart id={_id} name={name} price={price} amount={1} />
+          <AddToCart
+            id={_id}
+            name={name}
+            price={price}
+            image_base64={image_base64}
+            amount={1}
+          />
         </div>
       </div>
     </div>

@@ -1,13 +1,27 @@
 import ProductCard from '@/app/components/ProductCard';
 import { SideFilter } from '@/app/components/SideFilter';
 import { Metadata } from "next/types";
-import { Product } from '@/app/components/ProductCard';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/app/components/shadcn/pagination';
+import { fetchCategories } from '../categories/fetchCategories';
+
+export interface Product {
+    _id: string;
+    name: string;
+    price: number;
+    image_base64: string;
+    description: string;
+    brand: string;
+    stock_quantity: number;
+    category_id: string;
+    compatible_vehicles: string[];
+}
 
 export const metadata: Metadata = {
     title: "Products | Viet Motor Parts",
     description: "All Products of Viet Motor Parts",
 };
+
+
 
 
 export default async function Page({ searchParams }: { searchParams: Record<string, string> }) {
@@ -44,6 +58,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
     const res = await fetch(apiUrl, { cache: "no-store" });
     const data = await res.json();
     const products: Product[] = data.data;
+    const categories = await fetchCategories();
 
     const totalPages = data.meta.totalPages;
 
@@ -63,7 +78,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
         <section className="flex flex-col w-full gap-10 pb-10 my-5 content lg:flex-row px-7">
             <aside
                 className="left-0 w-full rounded-lg bg-palette-3 md:max-lg:block lg:block lg:sticky top-10 h-5/6 lg:w-1/4 md:max-lg:center-and-half">
-                <SideFilter />
+                <SideFilter categories={categories} />
             </aside>
             <div className="flex flex-col justify-between w-full xl:w-3/4">
                 <section

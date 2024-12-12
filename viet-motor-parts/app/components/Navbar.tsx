@@ -17,7 +17,7 @@ export function Navbar() {
             className="menu dropdown-content mt-3 grid w-screen gap-2 rounded-box bg-brand-600 shadow"
           >
             <li>
-              <Link href="/products">Products</Link>
+              <Link href="/products?page=1">Products</Link>
             </li>
             <li>
               Tools
@@ -47,7 +47,7 @@ export function Navbar() {
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link href="/products">Products</Link>
+              <Link href="/products?page=1">Products</Link>
 
             </li>
             <li>

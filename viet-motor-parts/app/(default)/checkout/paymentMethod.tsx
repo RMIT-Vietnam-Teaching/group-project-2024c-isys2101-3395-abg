@@ -6,8 +6,9 @@ import { Label } from '@/app/components/shadcn/label';
 import { Input } from '@/app/components/shadcn/input';
 import { Button } from '@/app/components/shadcn/button';
 import { Alert, AlertDescription, AlertTitle } from '@/app/components/shadcn/alert';
-import { AlertCircle, TriangleAlert } from 'lucide-react';
+import { AlertCircle, CircleXIcon, TriangleAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam';
 
 
 export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formData: FormData) => Promise<LoanCalculationResult> }) {
@@ -25,7 +26,12 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
     }
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsInstallment(event.target.value === 'installment');
+        if (event.target.value === "Installment") {
+            setIsInstallment(true)
+        } else {
+            setIsInstallment(false)
+            setResult(null)
+        }
     };
 
 
@@ -45,7 +51,7 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                     <label htmlFor="CoD" className="w-full py-4 font-semibold text-white ms-2 text-md">Cash on Delivery</label>
                 </div>
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="installment" type="radio" value="installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
+                    <input id="installment" type="radio" value="Installment" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="installment" className="w-full py-4 font-semibold text-white ms-2 text-md">Buy Now, Pay Later</label>
                 </div>
@@ -53,16 +59,8 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                     <div>
                         <form action={handleCalculation} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="creditScore" className='font-semibold'>Credit Score (300-850)</Label>
-                                <Input
-                                    id="creditScore"
-                                    name="creditScore"
-                                    type="number"
-                                    placeholder="e.g 300, 450, 600, 750, 850"
-                                    min="300"
-                                    max="850"
-                                    required
-                                />
+                                <Label htmlFor="loanTerm" className='font-semibold'>Down Payment (VNĐ)</Label>
+                                <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='downPayment' />
                             </div>
                             <input type="number" id='price' name='price' hidden defaultValue={total() || ''} />
                             <div className="space-y-2">
@@ -80,11 +78,10 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                             <Button type="submit" className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl ">Calculate</Button>
                         </form>
                         {result?.error && (
-                            <Alert variant="destructive" className="mb-4">
-                                <AlertCircle className="w-4 h-4" />
-                                <AlertTitle>Error</AlertTitle>
-                                <AlertDescription>{result.error}</AlertDescription>
-                            </Alert>
+                            <div role="alert" className="alert alert-error">
+                                <CircleXIcon />
+                                <span>{result.error}</span>
+                            </div>
                         )}
                         {result?.interestRate && result?.monthlyPayment && (
                             <div className="w-full space-y-2">
@@ -92,7 +89,11 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                                 <p>Interest Rate: {result.interestRate}%</p>
                                 <p>Monthly Payment: {formatCurrency(Number(result.monthlyPayment))}</p>
                                 <p>Total Payment:  {formatCurrency(Number(result.totalPayment))}</p>
-                                <input type="text" id="installmentTotal" name="installmentTotal" value={result.totalPayment} form='checkout' hidden />
+                                <input type="text" id="installmentTotal" name="installmentTotal" value={Math.round(Number(result.totalPayment))} form='checkout' hidden />
+                                <input type="text" id="interestRate" name="interestRate" value={Number(result.interestRate)} form='checkout' hidden />
+                                <input type="text" id="monthlyPayment" name="monthlyPayment" value={Math.round(Number(result.monthlyPayment))} form='checkout' hidden />
+                                <input type="text" id="downPayment" name="downPayment" form='checkout' value={Math.round(Number(result.downPayment))} hidden />
+                                <input type="text" id="loanTerm" name="loanTerm" form='checkout' value={Math.round(Number(result.loanTerm))} hidden />
                                 <div role="alert" className="alert alert-warning">
                                     <TriangleAlert />
                                     <span>Your new total will be updated to the Total Payment above if you choose the Buy Now, Pay Later option</span>

@@ -3,35 +3,23 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, FormEvent } from "react";
+import { Category } from "../(default)/categories/page";
 
-export type Category = {
-  _id: string;
-  name: string;
+interface SideFilterProps {
+  categories: Category[];
 }
 
-export function SideFilter() {
+
+export function SideFilter(props: SideFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(props.categories || []);
   const [selectedCategory, setSelectedCategory] = useState<string[]>(searchParams.get("category")?.split(",") || []);
   const [sortBy, setSortBy] = useState("name");
   const [order, setOrder] = useState("asc");
   const [priceFrom, setPriceFrom] = useState<number | null>(null);
   const [priceTo, setPriceTo] = useState<number | null>(null);
 
-  useEffect(() => {
-    // Fetch categories from API
-    async function fetchCategories() {
-      try {
-        const response = await fetch("http://localhost:3000/api/category");
-        const result = await response.json();
-        if (result.success) setCategories(result.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     updateQuery({ category: selectedCategory });
@@ -312,8 +300,8 @@ export function SideFilter() {
                 value="aToZ"
                 name="radio-filter"
                 onChange={handleSortChange}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
                 checked={sortBy === "name" && order === "asc"}
+                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
               />
               <label
                 htmlFor="aToZ"
@@ -337,40 +325,6 @@ export function SideFilter() {
                 className="ml-2 text-lg font-medium text-brand-500"
               >
                 Alphabetical order (Z - A)
-              </label>
-            </div>
-            <div key="lowToHigh" className="flex items-center my-1">
-              <input
-                id="lowToHigh"
-                type="radio"
-                value="lowToHigh"
-                name="radio-filter"
-                onChange={handleSortChange}
-                checked={sortBy === "price" && order === "asc"}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
-              />
-              <label
-                htmlFor="lowToHigh"
-                className="ml-2 text-lg font-medium text-brand-500"
-              >
-                Price (Low to High)
-              </label>
-            </div>
-            <div key="highToLow" className="flex items-center my-1">
-              <input
-                id="highToLow"
-                type="radio"
-                value="highToLow"
-                name="radio-filter"
-                onChange={handleSortChange}
-                checked={sortBy === "price" && order === "desc"}
-                className="w-4 h-4 text-brand-400 bg-gray-100 border-gray-300 focus:ring-brand-400 focus:ring-2"
-              />
-              <label
-                htmlFor="highToLow"
-                className="ml-2 text-lg font-medium text-brand-500"
-              >
-                Price (High to Low)
               </label>
             </div>
           </div>

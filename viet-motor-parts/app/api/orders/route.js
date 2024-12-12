@@ -46,20 +46,55 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
+    console.log("Incoming request body:", body);
+    const {
+      customer_name,
+      email,
+      phone_number,
+      address,
+      order_details,
+      total_amount,
+      payment_method,
+      additional_notes,
+    } = body;
 
-    // Validate required fields in the order body
-    const { customer_name, phone_number, address, order_details, total_amount, payment_method } = body;
-
-    if (!customer_name || !phone_number || !address || !order_details || !total_amount || !payment_method) {
+    // Validate required fields
+    if (
+      !customer_name ||
+      !email ||
+      !phone_number ||
+      !address ||
+      !order_details ||
+      !total_amount ||
+      !payment_method
+    ) {
       return new Response(
         JSON.stringify({ success: false, error: 'Missing required order fields' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
+    // Enrich order_details
+    const enrichedOrderDetails = order_details.map((item) => ({
+      product_id: item.product_id,
+      product_name: item.product_name, // Add product_name directly
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
     // Create a new order
-    const newOrder = new Order(body);
+    const newOrder = new Order({
+      customer_name,
+      email,
+      phone_number,
+      address,
+      total_amount,
+      payment_method,
+      additional_notes, // Add additional_notes field
+      order_details: enrichedOrderDetails, // Include enriched details
+    });
     const savedOrder = await newOrder.save();
+    console.log("Saved order:", savedOrder);
 
     return new Response(
       JSON.stringify({ success: true, data: savedOrder }),

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Search } from 'lucide-react';
-import { Product } from "./CompatibilityCheckPage";
+import { Product } from "../(default)/products/page";
+
 
 type SearchCompatibilityProps = {
     barType: string;
@@ -47,10 +48,9 @@ export default function SearchBarCompatibility({ barType, onSelect, onResetCompa
         fetchItems();
     }, [barType]);
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setQuery(value);
-
         // Filter the items based on the query
         if (value.trim() !== "") {
             const results = items.filter((item) =>
@@ -67,7 +67,7 @@ export default function SearchBarCompatibility({ barType, onSelect, onResetCompa
             onSelect(null);
             onResetCompatibility();
         }
-    };
+      };
 
     const handleItemClick = (name: string, id: string) => {
         setQuery(name); // Fill the search bar with the item name
