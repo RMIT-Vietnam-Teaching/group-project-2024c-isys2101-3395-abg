@@ -11,6 +11,9 @@ import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
 import { CartItem } from "../cart/useShoppingCart";
 import { TriangleAlert } from "lucide-react";
+import { useShoppingCart } from "../cart/useShoppingCart";
+
+
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -20,8 +23,13 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { getCartFromStorage } = useShoppingCart();
   const router = useRouter();
+
+  const currentCart = getCartFromStorage();
+  if (currentCart.length === 0) {
+    router.push("/cart");
+  }
 
   const handleSubmit = async (formData: FormData) => {
     const customer_name = formData.get("name") as string;
@@ -76,34 +84,36 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       }
 
       // Send confirmation email
-      // try {
-      //   const emailResponse = await fetch("/api/sendInvoice", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       email,
-      //       customer_name,
-      //       order_id: data.data._id,
-      //       order_date: data.data.created_at,
-      //       total_amount,
-      //       address,
-      //       order_details,
-      //       additional_notes,
-      //       phone_number,
-      //     }),
-      //   });
+      try {
+        const emailResponse = await fetch("/api/sendInvoice", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            customer_name,
+            order_id: data.data._id,
+            order_date: data.data.created_at,
+            total_amount,
+            address,
+            order_details,
+            additional_notes,
+            phone_number,
+            payment_method,
+            ...(installment_details && { installment_details }),
+          }),
+        });
 
-      //   const emailData = await emailResponse.json();
-      //   if (!emailResponse.ok) {
-      //     console.error("Failed to send confirmation email:", emailData.error);
-      //   } else {
-      //     console.log("Confirmation email sent successfully");
-      //   }
-      // } catch (emailError) {
-      //   console.error("Error sending confirmation email:", emailError);
-      // }
+        const emailData = await emailResponse.json();
+        if (!emailResponse.ok) {
+          console.error("Failed to send confirmation email:", emailData.error);
+        } else {
+          console.log("Confirmation email sent successfully");
+        }
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+      }
 
       // Store orderID and reset local storage
       setSuccess("Order placed successfully");

@@ -24,7 +24,7 @@ export async function POST(request) {
         });
 
         // Build order details for the email
-        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate: order_date, additionalNotes: additional_notes });
+        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate: order_date, additionalNotes: additional_notes, paymentMethod: payment_method, installmentDetails: installment_details });
 
 
         const mailOptions = {

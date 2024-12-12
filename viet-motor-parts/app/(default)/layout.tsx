@@ -3,6 +3,7 @@ import { Navbar } from "@/app/components/Navbar";
 import { Footer } from "@/app/components/Footer";
 import React from "react";
 import dynamic from "next/dynamic";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const ToastContainer = dynamic(
