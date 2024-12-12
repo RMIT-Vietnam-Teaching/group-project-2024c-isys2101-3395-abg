@@ -7,6 +7,7 @@ import { Product } from "./CompatibilityCheckPage";
 type SearchCompatibilityProps = {
     barType: string;
     onSelect: (item: Product | CompatibleVehicle | null) => void;
+    onResetCompatibility: () => void;
 };
 
 export interface CompatibleVehicle {
@@ -20,7 +21,7 @@ export interface CompatibleVehicle {
 let apiUrlProducts = `http://localhost:3000/api/products`;
 let apiUrlVehicles = `http://localhost:3000/api/vehicles`;
 
-export default function SearchBarCompatibility({ barType, onSelect }: SearchCompatibilityProps) {
+export default function SearchBarCompatibility({ barType, onSelect, onResetCompatibility }: SearchCompatibilityProps) {
     const [query, setQuery] = useState("");
     const [items, setItems] = useState<(Product | CompatibleVehicle)[]>([]);
     const [filteredItems, setFilteredItems] = useState<(Product | CompatibleVehicle)[]>([]);
@@ -59,10 +60,12 @@ export default function SearchBarCompatibility({ barType, onSelect }: SearchComp
             // Call onSelect with null if there are more than one filtered result
             if (results.length !== 1) {
                 onSelect(null);
+                onResetCompatibility();
             }
         } else {
             setFilteredItems([]);
             onSelect(null);
+            onResetCompatibility();
         }
     };
 
@@ -72,6 +75,7 @@ export default function SearchBarCompatibility({ barType, onSelect }: SearchComp
         if (item) {
             setFilteredItems([item]);
             onSelect(item);
+            onResetCompatibility();
         } else {
             console.error("Item not found in filtered results.");
         }

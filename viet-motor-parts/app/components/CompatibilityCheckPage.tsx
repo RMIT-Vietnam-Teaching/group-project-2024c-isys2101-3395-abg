@@ -23,6 +23,8 @@ export default function CompatabilityCheckPage(){
     const [selectedProduct, setSelectedProduct] = useState<SelectedItem>(null);
     const [isCompatible, setIsCompatible] = useState<boolean | null>(null);
 
+    
+
     const handleCheckCompatibility = () => {
         if (selectedProduct && selectedVehicle) {
             const product = selectedProduct as Product;
@@ -36,13 +38,18 @@ export default function CompatabilityCheckPage(){
         }
     };
 
+    const handleResetCompatibility = () => {
+        setIsCompatible(null);
+    };
+
     const isButtonDisabled = selectedVehicle == null || selectedProduct == null;
+    
 
     return (
     <form className="grid grid-cols-1 gap-6 md:grid-cols-7">
         {/* Left Section */}
         <div className="col-span-1 md:col-span-3">
-            <SearchBarCompatibility barType="vehicles" onSelect={setSelectedVehicle}/>                
+            <SearchBarCompatibility barType="vehicles" onSelect={setSelectedVehicle} onResetCompatibility={handleResetCompatibility}/>                
         </div>
 
         {/* Button Section */}
@@ -63,9 +70,9 @@ export default function CompatabilityCheckPage(){
 
         {/* Right Section */}
         <div className="col-span-1 md:col-span-3">
-            <SearchBarCompatibility barType="products" onSelect={setSelectedProduct}/>      
+            <SearchBarCompatibility barType="products" onSelect={setSelectedProduct} onResetCompatibility={handleResetCompatibility}/>      
         </div>
-        {isCompatible !== null && (
+        {(isCompatible !== null) && (
         isCompatible ? 
         (<div className="col-span-1 md:col-span-7 flex justify-center items-center md:order-none order-12 rounded-2xl">
             <div className="flex flex-col md:flex-row items-center bg-brand-600 rounded p-3">
