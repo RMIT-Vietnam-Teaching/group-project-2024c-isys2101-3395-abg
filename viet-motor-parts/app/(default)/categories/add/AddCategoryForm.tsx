@@ -7,14 +7,13 @@ import { Label } from "@/app/components/shadcn/label";
 import { createCategory } from "../createCategory";
 
 export default function AddCategoryForm() {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (formData : FormData) => {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+        const name = formData.get('name') as string;
+        const description = formData.get('description') as string;
 
         if (!token) {
             setError("No token found. Please log in.");
@@ -33,11 +32,8 @@ export default function AddCategoryForm() {
         }
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => { setName(event.target.value); console.log("Category name: " + name)};
-    const handleChangeDes = (event: React.ChangeEvent<HTMLInputElement>) => { setDescription(event.target.value); console.log("Category name: " + event.target.value)};
-
     return (
-    <form onSubmit={handleSubmit}>
+    <form action={handleSubmit}>
         <div className="grid gap-4 py-4">
             <div className="grid grid-row-2 lg:grid-cols-4 items-center  gap-2 lg:gap-4">
                 <Label htmlFor="name" className="text-left lg:text-right font-bold">
@@ -45,7 +41,6 @@ export default function AddCategoryForm() {
                 </Label>
                 <Input
                     id="name" name="name" type="text"
-                    value={name} onChange={handleChange}
                     className="col-span-3 rounded-md p-2 bg-white text-black focus:outline-none"
                     placeholder="e.g. Engine Parts "
                 />
@@ -56,7 +51,6 @@ export default function AddCategoryForm() {
                 </Label>
                 <Input
                     id="description" name="description" type="text"
-                    value={description} onChange={handleChangeDes}
                     className="col-span-3 rounded-md p-2 bg-white text-black focus:outline-none"
                     placeholder="e.g. Parts and accessories for engines."
                 />
