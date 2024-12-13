@@ -11,6 +11,9 @@ import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
 import { CartItem } from "../cart/useShoppingCart";
 import { TriangleAlert } from "lucide-react";
+import { useShoppingCart } from "../cart/useShoppingCart";
+
+
 
 const CheckoutProductList = dynamic(() => import("@/app/components/CheckoutProductList"), { ssr: false });
 const OrderSummary = dynamic(() => import("@/app/components/OrderSummary"), { ssr: false });
@@ -20,8 +23,13 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { getCartFromStorage } = useShoppingCart();
   const router = useRouter();
+
+  const currentCart = getCartFromStorage();
+  if (currentCart.length === 0) {
+    router.push("/cart");
+  }
 
   const handleSubmit = async (formData: FormData) => {
     const customer_name = formData.get("name") as string;
@@ -38,6 +46,16 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       quantity: item.amount,
       price: item.price
     }));
+    let installment_details;
+    if (payment_method === "Installment") {
+      installment_details = {
+        down_payment: parseFloat(formData.get("downPayment") as string),
+        loan_term: parseInt(formData.get("loanTerm") as string, 10),
+        monthly_payment: parseFloat(formData.get("monthlyPayment") as string),
+        interest_rate: parseFloat(formData.get("interestRate") as string),
+      };
+    }
+
 
     setLoading(true);
     try {
@@ -55,6 +73,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
           order_details,
           total_amount,
           payment_method,
+          ...(installment_details && { installment_details }),
         }),
       });
 
@@ -81,6 +100,8 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             order_details,
             additional_notes,
             phone_number,
+            payment_method,
+            ...(installment_details && { installment_details }),
           }),
         });
 

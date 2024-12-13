@@ -5,8 +5,7 @@ import { LoanCalculationResult } from '../calculator/calculation';
 import { Label } from '@/app/components/shadcn/label';
 import { Input } from '@/app/components/shadcn/input';
 import { Button } from '@/app/components/shadcn/button';
-import { Alert, AlertDescription, AlertTitle } from '@/app/components/shadcn/alert';
-import { AlertCircle, CircleXIcon, TriangleAlert } from 'lucide-react';
+import { CircleXIcon, TriangleAlert } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import CurrencyInputVietnam from '@/app/components/CurrencyInputVietnam';
 
@@ -59,7 +58,7 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                     <div>
                         <form action={handleCalculation} className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="loanTerm" className='font-semibold'>Down Payment (VNĐ)</Label>
+                                <Label htmlFor="downPayment" className='font-semibold'>Down Payment (VNĐ)</Label>
                                 <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='downPayment' />
                             </div>
                             <input type="number" id='price' name='price' hidden defaultValue={total() || ''} />
@@ -89,11 +88,11 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                                 <p>Interest Rate: {result.interestRate}%</p>
                                 <p>Monthly Payment: {formatCurrency(Number(result.monthlyPayment))}</p>
                                 <p>Total Payment:  {formatCurrency(Number(result.totalPayment))}</p>
-                                <input type="text" id="installmentTotal" name="installmentTotal" value={Math.round(Number(result.totalPayment))} form='checkout' hidden />
-                                <input type="text" id="interestRate" name="interestRate" value={Number(result.interestRate)} form='checkout' hidden />
-                                <input type="text" id="monthlyPayment" name="monthlyPayment" value={Math.round(Number(result.monthlyPayment))} form='checkout' hidden />
-                                <input type="text" id="downPayment" name="downPayment" form='checkout' value={Math.round(Number(result.downPayment))} hidden />
-                                <input type="text" id="loanTerm" name="loanTerm" form='checkout' value={Math.round(Number(result.loanTerm))} hidden />
+                                <input type="number" id="installmentTotal" name="installmentTotal" value={Math.round(Number(result.totalPayment))} form='checkout' hidden />
+                                <input type="number" id="interestRate" name="interestRate" value={Number(result.interestRate)} form='checkout' hidden />
+                                <input type="number" id="monthlyPayment" name="monthlyPayment" value={Math.round(Number(result.monthlyPayment))} form='checkout' hidden />
+                                <input type="number" id="downPayment" name="downPayment" form='checkout' value={Math.round(Number(result.downPayment))} hidden />
+                                <input type="number" id="loanTerm" name="loanTerm" form='checkout' value={Math.round(Number(result.loanTerm))} hidden />
                                 <div role="alert" className="alert alert-warning">
                                     <TriangleAlert />
                                     <span>Your new total will be updated to the Total Payment above if you choose the Buy Now, Pay Later option</span>

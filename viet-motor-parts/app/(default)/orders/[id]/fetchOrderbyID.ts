@@ -16,6 +16,14 @@ export interface Order {
     order_status: string;
     created_at: string;
     order_details: OrderDetail[];
+    additional_notes?: string;
+    payment_method: string;
+    installment_details?: {
+      down_payment: number;
+      loan_term: number;
+      monthly_payment: number;
+      interest_rate: number;
+    };
   }
 
 export default async function fetchOrderbyID(id: string, phoneNumber: string) : Promise<Order>{

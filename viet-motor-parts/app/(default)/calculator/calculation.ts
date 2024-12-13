@@ -38,7 +38,7 @@ export type LoanCalculationResult = {
             monthlyPayment: monthlyPayment.toFixed(2),
             totalPayment: totalPayment.toFixed(2),
             loanTerm: loanTerm.toFixed(2),
-            downPayment: downPayment.toFixed(2),
+            downPayment: downPayment.toString(),
         };
     }
 

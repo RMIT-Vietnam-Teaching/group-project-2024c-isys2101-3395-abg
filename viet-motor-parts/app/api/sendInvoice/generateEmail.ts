@@ -10,8 +10,26 @@ export function generateEmail(data: {
     orderDetails: { product_name: string; quantity: number; price: string }[];
     totalAmount: string;
     additionalNotes?: string;
+    paymentMethod: string;
+    installmentDetails?: {
+        down_payment: number;
+        loan_term: number;
+        monthly_payment: number;
+        interest_rate: number;
+    };
 }): string {
-    const { orderId, customerName, phoneNumber, address, orderDetails, totalAmount, orderDate, additionalNotes } = data;
+    const {
+        orderId,
+        customerName,
+        phoneNumber,
+        orderDate,
+        address,
+        orderDetails,
+        totalAmount,
+        additionalNotes,
+        paymentMethod,
+        installmentDetails,
+    } = data;
 
     const orderItems = orderDetails
     .map(
@@ -23,6 +41,48 @@ export function generateEmail(data: {
         </tr>`
     )
     .join("");
+
+    const additionalNotesField = additionalNotes ? 
+    `<div style="display: table; width: 100%; margin-bottom: 10px;">
+        <div style="display: table-row;">
+            <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
+                            Additional Notes:
+            </div>
+            <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${additionalNotes}</div>
+        </div>
+    </div>` 
+                : ``;
+    const installmentDetailsField = paymentMethod === "Installment" && installmentDetails ?
+    `<div style="display: table; width: 100%; margin-bottom: 10px;">
+        <div style="display: table-row;">
+            <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
+                            Down Payment:
+            </div>
+            <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${formatCurrency(installmentDetails.down_payment)}
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
+                            Loan Term:
+            </div>
+            <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${installmentDetails.loan_term} months
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
+                            Monthly Payment:
+            </div>
+            <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${formatCurrency(installmentDetails.monthly_payment)}
+            </div>
+        </div>
+        <div style="display: table-row;">
+            <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
+                            Interest Rate:
+            </div>
+            <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${installmentDetails.interest_rate}%
+            </div>
+        </div>
+    </div>` : ``;
 
 return `
     <!DOCTYPE html>
@@ -40,7 +100,7 @@ return `
                 <p style="font-size: 18px; font-weight: bold; margin: 5px 0;">Order ID: <span
                         style="font-weight: normal;">${orderId}</span></p>
                 <p style="font-size: 18px; font-weight: bold; margin: 5px 0;">Order Date: <span
-                        style="font-weight: normal;">${new Date(orderDate).toLocaleDateString()}</span></p>
+                        style="font-weight: normal;">${new Date(orderDate).toLocaleDateString("en-GB")}</span></p>
             </div>
             <div style="padding: 10px 20px;">
                 <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Thank you for your purchase!</h2>
@@ -70,13 +130,21 @@ return `
                         <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${address}</div>
                     </div>
                 </div>
-                <div style="display: table; width: 100%; margin-bottom: 10px;">
+                                <div style="display: table; width: 100%; margin-bottom: 10px;">
                     <div style="display: table-row;">
                         <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
-                            Additional Notes:</div>
-                        <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${additionalNotes || "None"}</div>
+                            Payment Method:</div>
+                        <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${paymentMethod}</div>
                     </div>
                 </div>
+                ${additionalNotesField}
+            </div>
+            <div style="padding: 10px 20px;">
+                <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Installment Details</h2>
+                <h3 style="font-size: 15px; font-weight: semibold; margin-bottom: 10px;">
+                    Your request is subject to our partner's approval. There may be adjustments to this rate.
+                </h3>
+            ${installmentDetailsField}
             </div>
             <div style="padding: 10px 20px;">
                 <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Order Details</h2>
@@ -118,7 +186,7 @@ return `
                         href="mailto:viet.motor24@gmail.com"
                         style="font-weight: bold; color: white; text-decoration: underline;">contact our support team</a>.
                 </p>
-                <p style="font-size: 12px; margin: 5px 0;">© 2023 ABG Group. All rights reserved.</p>
+                <p style="font-size: 12px; margin: 5px 0;">© ${new Date().getFullYear()} ABG Group. All rights reserved.</p>
             </div>
         </div>
     </body>
