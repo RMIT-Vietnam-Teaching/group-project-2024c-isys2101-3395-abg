@@ -75,6 +75,13 @@ export async function POST(request) {
       );
     }
 
+    if (payment_method === 'Installment' && !installment_details) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Missing Installment Details' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Enrich order_details
     const enrichedOrderDetails = order_details.map((item) => ({
       product_id: item.product_id,
