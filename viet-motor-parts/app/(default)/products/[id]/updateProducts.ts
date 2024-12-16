@@ -1,4 +1,5 @@
-import { Product } from "@/app/components/ProductCard";
+import { Product } from "../page";
+
 
 export async function updateProducts(id: string, updates: Partial<Product>): Promise<Product> {
     try {
