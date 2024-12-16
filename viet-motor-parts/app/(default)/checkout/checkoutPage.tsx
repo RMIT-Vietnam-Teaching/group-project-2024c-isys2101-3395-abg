@@ -26,10 +26,6 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
   const { getCartFromStorage } = useShoppingCart();
   const router = useRouter();
 
-  const currentCart = getCartFromStorage();
-  if (currentCart.length === 0) {
-    router.push("/cart");
-  }
 
   const handleSubmit = async (formData: FormData) => {
     const customer_name = formData.get("name") as string;

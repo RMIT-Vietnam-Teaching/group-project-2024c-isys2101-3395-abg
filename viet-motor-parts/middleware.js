@@ -32,7 +32,7 @@ export const config = {
     '/orders/admin/:path*',
     '/products/add/:path*',
     '/products/:id/edit',
-    '/categories/:id/edit',
-    '/categories/add/:path*',
+    '/categories/:path*',
+    '/vehicles/:path*',
   ],
 };

@@ -2,9 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import { Menu, ShoppingCartIcon } from 'lucide-react';
+import { Authentication, Logout } from "@/lib/auth";
+import { Button } from "./shadcn/button";
 
 
-export function Navbar() {
+export async function Navbar() {
+  const isLoggedIn = await Authentication();
+
+
   return (
     <div className="navbar bg-brand-600 font-bold">
       <div className="w-7/12 justify-start">
@@ -48,7 +53,6 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             <li>
               <Link href="/products?page=1">Products</Link>
-
             </li>
             <li>
               <div className="dropdown dropdown-hover dropdown-bottom">
@@ -75,14 +79,22 @@ export function Navbar() {
         </div>
       </div>
       <div className="navbar-end flex gap-5">
-        <Link href='/cart'>
-          <ShoppingCartIcon size={32} />
-        </Link>
-        <div className="tooltip tooltip-warning tooltip-bottom lg:mr-7" data-tip="Only for Admins!">
-          <Link href="/login" className="rounded-3xl bg-brand-500 px-5 py-3">
-            Login
-          </Link>
-        </div>
+        {!isLoggedIn ? (
+          <>
+            <Link href='/cart'>
+              <ShoppingCartIcon size={32} />
+            </Link>
+            <div className="tooltip tooltip-warning tooltip-bottom lg:mr-7" data-tip="Only for Admins!">
+              <Link href="/login" className="rounded-3xl bg-brand-500 px-5 py-3">
+                Login
+              </Link>
+            </div>
+          </>
+        ) : (
+          <form action={Logout}>
+            <Button type="submit" className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl rounded-3xl font-bold">Logout</Button>
+          </form>
+        )}
       </div>
     </div>
   );
