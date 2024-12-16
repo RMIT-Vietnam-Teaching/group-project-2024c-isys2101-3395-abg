@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import OrderTrackingVerify from "@/app/components/OrderTrackingVerify";
+import OrderTrackingVerify from "@/app/(default)/orders/OrderTrackingVerify";
 
 export const metadata: Metadata = {
     title: "Order Tracking | Viet Motor Parts",

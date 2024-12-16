@@ -55,6 +55,7 @@ export async function POST(request) {
       order_details,
       total_amount,
       payment_method,
+      installment_details,
       additional_notes,
     } = body;
 
@@ -74,6 +75,13 @@ export async function POST(request) {
       );
     }
 
+    if (payment_method === 'Installment' && !installment_details) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Missing Installment Details' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Enrich order_details
     const enrichedOrderDetails = order_details.map((item) => ({
       product_id: item.product_id,
@@ -82,8 +90,7 @@ export async function POST(request) {
       price: item.price,
     }));
 
-    // Create a new order
-    const newOrder = new Order({
+    const newOrderConstructor = {
       customer_name,
       email,
       phone_number,
@@ -92,7 +99,15 @@ export async function POST(request) {
       payment_method,
       additional_notes, // Add additional_notes field
       order_details: enrichedOrderDetails, // Include enriched details
-    });
+    }
+
+    // Add installment_details if available
+    if (payment_method === 'Installment' && installment_details) {
+      newOrderConstructor.installment_details = installment_details;
+    }
+
+    // Create a new order
+    const newOrder = new Order(newOrderConstructor);
     const savedOrder = await newOrder.save();
     console.log("Saved order:", savedOrder);
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AlertCircleIcon } from "lucide-react";
 
 export default function OrderTrackingVerify() {
     const [orderId, setOrderId] = useState("");
@@ -24,7 +25,7 @@ export default function OrderTrackingVerify() {
         e.preventDefault();
         setErrorMessage(""); // Reset error message
         setLoading(true);
-    
+
         try {
             const response = await fetch(`/api/orders/${orderId}`, {
                 method: "GET",
@@ -33,7 +34,7 @@ export default function OrderTrackingVerify() {
                     phone_number: phone, // Send phone number in headers for verification
                 },
             });
-    
+
             const data = await response.json();
             if (!response.ok) {
                 setErrorMessage(data.error || "Invalid Order ID or Phone Number.");
@@ -47,7 +48,7 @@ export default function OrderTrackingVerify() {
         } finally {
             setLoading(false);
         }
-    };    
+    };
 
     return (
         <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -97,18 +98,20 @@ export default function OrderTrackingVerify() {
                         </div>
 
                         {errorMessage && (
-                            <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
+                            <div role="alert" className="alert alert-error">
+                                <AlertCircleIcon />
+                                <span>{errorMessage}</span>
+                            </div>
                         )}
 
                         <div>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md ${
-                                    loading
-                                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                        : "bg-brand-300 text-white hover:bg-brand-100 hover:text-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                }`}
+                                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md ${loading
+                                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                    : "bg-brand-300 text-white hover:bg-brand-100 hover:text-brand-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    }`}
                             >
                                 {loading ? "Validating..." : "Submit"}
                             </button>

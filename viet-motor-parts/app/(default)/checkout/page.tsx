@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import CheckoutPage from "./checkoutPage";
+import { calculateLoan } from "../calculator/calculation";
 
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function Page() {
     return (
         <>
-            <CheckoutPage />
+            <CheckoutPage calculateLoan={calculateLoan} />
         </>
     );
 }

@@ -10,14 +10,20 @@ export interface IOrder extends Document {
   total_amount: number;
   order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Canceled';
   payment_method: 'Cash' | 'PayPal' | 'Installment';
-  shipping_label?: string;
   additional_notes?: string;
+  shipping_label?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
     product_name: string; // Add product_name here
     quantity: number;
     price: number;
   }>;
+  installment_details?: {
+    down_payment: number;
+    loan_term: number;
+    monthly_payment: number;
+    interest_rate: number;
+  };
   created_at?: Date;
   updated_at?: Date;
 }
@@ -34,8 +40,8 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ['Confirmed', 'Shipping', 'Delivered', 'Canceled'],
-      default: 'Confirmed',
+      enum: ['Pending','Confirmed', 'Shipping', 'Delivered', 'Canceled'],
+      default: 'Pending',
     },
     payment_method: {
       type: String,
@@ -51,6 +57,12 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
         price: { type: Number, required: true, min: 0 },
       },
     ],
+    installment_details: {
+      down_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      loan_term: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 1 },
+      monthly_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      interest_rate: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+    },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );

@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer";
+import { generateEmail } from "./generateEmail";
 
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { email, customer_name, order_id, order_date, total_amount, address, order_details } = body;
+        const { email, customer_name, order_id, order_date, total_amount, address, order_details, additional_notes, phone_number, payment_method, installment_details } = body;
 
         // Validate the required fields
         if (!email || !customer_name || !order_id) {
@@ -23,27 +24,14 @@ export async function POST(request) {
         });
 
         // Build order details for the email
-        const orderItems = order_details
-            .map(
-                (item) =>
-                    `<li>${item.product_name} - Quantity: ${item.quantity}, Price: ${item.price}</li>`
-            )
-            .join("");
+        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate: order_date, additionalNotes: additional_notes, paymentMethod: payment_method, installmentDetails: installment_details });
+
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
             subject: `Order Confirmation - ${order_id}`,
-            html: `
-                <h1>Thank you for your order, ${customer_name}!</h1>
-                <p>Your order ID is: <strong>${order_id}</strong></p>
-                <p>Order Date: ${new Date(order_date).toLocaleDateString()}</p>
-                <p>Shipping Address: ${address}</p>
-                <p>Total Amount: ${total_amount}</p>
-                <h3>Order Details:</h3>
-                <ul>${orderItems}</ul>
-                <p>We appreciate your business and hope to serve you again soon!</p>
-            `,
+            html: emailContent,
         };
 
         // Send the email

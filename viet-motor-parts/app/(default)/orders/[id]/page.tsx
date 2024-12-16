@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -14,26 +10,18 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 import Link from "next/link";
+import fetchOrderbyID, { OrderDetail } from "./fetchOrderbyID";
 
-interface OrderDetail {
-    product_id: string;
-    product_name: string;
-    quantity: number;
-    price: number;
-}
+export async function generateMetadata({ params }: { params: { id: string } }) {
 
-interface Order {
-    _id: string;
-    customer_name: string;
-    phone_number: string;
-    address: string;
-    total_amount: number;
-    order_status: string;
-    created_at: string;
-    order_details: OrderDetail[];
+  return {
+    title: `Order ${params.id} | Viet Motor Parts`,
+    description: `Order ${params.id} details`,
+  };
 }
 
 const STATUSES = [
+  { key: "Pending", label: "Pending Approval" },
   { key: "Confirmed", label: "Order Confirmed" },
   { key: "Packaged", label: "Packaged" },
   { key: "Shipped", label: "Shipped" },
@@ -43,65 +31,70 @@ const STATUSES = [
 
 export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
   const phoneNumber = searchParams.phone_number || "";
-  const response = await fetch(`http://localhost:3000/api/orders/${params.id}`, {
-    headers: {phone_number: phoneNumber}
-  });
-  if (!response.ok) {
-    redirect('/error');
-  }
-  const data = await response.json();
-  const order:Order = data.data;
+  const order = await fetchOrderbyID(params.id, phoneNumber);
 
-  const STATUS = order.order_status || "Confirmed";
+
+  const STATUS = order.order_status;
 
   const getStatusClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >=
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "bg-green-500 border-none shadow-xl timeline-start timeline-box"
       : "border-none shadow-xl timeline-start timeline-box bg-brand-600";
 
   const getCircleClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >=
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "w-5 h-5 text-green-500"
       : "";
 
   const getLineClass = (currentStatus: string, activeStatus: string) =>
     STATUSES.findIndex((status) => status.key === activeStatus) >
-    STATUSES.findIndex((status) => status.key === currentStatus)
+      STATUSES.findIndex((status) => status.key === currentStatus)
       ? "bg-green-500"
       : "";
 
   return (
     <div className="container mx-auto">
-      <div className="grid lg:grid-cols-3 items-center justify-center">
+      <div className="grid  items-center justify-center">
         <h1 className="p-5 text-5xl font-extrabold text-center col-start-2">
-          Order #{order._id}
+          #{order._id}
         </h1>
-        <div className="flex justify-center">
-          <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-            Change Status
-          </button>
-        </div>
+      </div>
+      <div className="flex justify-center">
+        <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
+          Change Status
+        </button>
       </div>
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
         <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
           <p className="text-2xl font-bold">Order Information</p>
           <div className="flex justify-between">
             <p className="font-semibold">Name:</p>
-            <p>{order.customer_name}</p>
+            <p className="text-right line-clamp-2">{order.customer_name}</p>
           </div>
           <div className="flex justify-between">
             <p className="font-semibold">Phone:</p>
-            <p>{order.phone_number}</p>
+            <p className="text-right line-clamp-2">{order.phone_number}</p>
           </div>
           <div className="flex justify-between">
             <p className="font-semibold">Address:</p>
-            <p className="line-clamp-1">{order.address}</p>
+            <p className="line-clamp-2 text-right">{order.address}</p>
           </div>
           <div className="flex justify-between">
             <p className="font-semibold">Order Date:</p>
-            <p>{new Date(order.created_at).toLocaleDateString()}</p>
+            <p className="text-right line-clamp-2">{new Date(order.created_at).toLocaleDateString("en-GB")}</p>
+          </div>
+          {order.additional_notes ?
+            <div className="flex justify-between">
+              <p className="font-semibold">Additional Notes:</p>
+              <p className="text-right line-clamp-2">{order.additional_notes}</p>
+            </div>
+            : <></>
+          }
+          <div className="flex justify-between">
+            <p className="font-semibold">Payment Method:</p>
+            <p className="text-right line-clamp-2">{order.payment_method}</p>
           </div>
         </div>
         <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
@@ -117,7 +110,10 @@ export default async function Page({ params, searchParams }: { params: { id: str
                     id={`${status.key.toLowerCase()}-line-1`}
                   />
                 )}
-                <div className={getStatusClass(status.key, STATUS)}>
+                <div
+                  className={`${getStatusClass(status.key, STATUS)} ${index % 2 === 0 ? "timeline-start" : "timeline-end"
+                    }`}
+                >
                   {status.label}
                 </div>
                 <div className="timeline-middle">
@@ -136,6 +132,35 @@ export default async function Page({ params, searchParams }: { params: { id: str
             ))}
           </ul>
         </div>
+        {order.payment_method === "Installment" && order.installment_details && (
+          <div className="md:col-span-2 bg-brand-500 rounded-xl shadow-xl py-5">
+            <div className="text-center flex flex-col gap-3">
+              <h1 className="text-3xl font-extrabold">Installment Details</h1>
+              {order.order_status === "Pending" ?
+                <h2 className="text-lg font-semibold">Your request is subject to our partner's approval. There may be adjustments to this rate.</h2>
+                : <></>}
+            </div>
+            <div className="grid grid-cols-1 gap-2 px-5">
+              <div className="flex justify-between">
+                <p className="font-semibold">Down Payment:</p>
+                <p>{formatCurrency(order.installment_details.down_payment)}</p>
+              </div>
+              <div className="flex justify-between">
+                <p className="font-semibold">Loan Term:</p>
+                <p>{order.installment_details.loan_term} months</p>
+              </div>
+              <div className="flex justify-between">
+                <p className="font-semibold">Monthly Payment:</p>
+                <p>{formatCurrency(order.installment_details.monthly_payment)}</p>
+              </div>
+              <div className="flex justify-between">
+                <p className="font-semibold">Interest Rate:</p>
+                <p>{order.installment_details.interest_rate}%</p>
+              </div>
+            </div>
+          </div>
+        )
+        }
       </div>
       <Table className="p-5 rounded-lg shadow-lg bg-brand-500">
         <TableHeader>
