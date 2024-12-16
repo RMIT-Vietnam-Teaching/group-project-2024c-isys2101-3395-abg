@@ -6,7 +6,7 @@ import { Textarea } from "@/app/components/shadcn/textarea";
 import VietnameseAddressInput from "@/app/components/VietnameseAddressInput";
 import PaymentMethod from "./paymentMethod";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { LoanCalculationResult } from "../calculator/calculation";
 import { CartItem } from "../cart/useShoppingCart";
@@ -27,9 +27,13 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
   const router = useRouter();
 
   const currentCart = getCartFromStorage();
-  if (currentCart.length === 0) {
-    router.push("/cart");
-  }
+
+  useEffect(() => {
+    if (currentCart.length === 0) {
+      router.push("/cart");
+    }
+  }, [router]);
+
 
   const handleSubmit = async (formData: FormData) => {
     const customer_name = formData.get("name") as string;
@@ -83,37 +87,39 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         return;
       }
 
-      // Send confirmation email
-      try {
-        const emailResponse = await fetch("/api/sendInvoice", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            customer_name,
-            order_id: data.data._id,
-            order_date: data.data.created_at,
-            total_amount,
-            address,
-            order_details,
-            additional_notes,
-            phone_number,
-            payment_method,
-            ...(installment_details && { installment_details }),
-          }),
-        });
+      // // Send confirmation email
+      // try {
+      //   const emailResponse = await fetch("/api/sendInvoice", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       email,
+      //       customer_name,
+      //       order_id: data.data._id,
+      //       order_date: data.data.created_at,
+      //       total_amount,
+      //       address,
+      //       order_details,
+      //       additional_notes,
+      //       phone_number,
+      //       payment_method,
+      //       ...(installment_details && { installment_details }),
+      //     }),
+      //   });
 
-        const emailData = await emailResponse.json();
-        if (!emailResponse.ok) {
-          console.error("Failed to send confirmation email:", emailData.error);
-        } else {
-          console.log("Confirmation email sent successfully");
-        }
-      } catch (emailError) {
-        console.error("Error sending confirmation email:", emailError);
-      }
+      //   const emailData = await emailResponse.json();
+      //   if (!emailResponse.ok) {
+      //     console.error("Failed to send confirmation email:", emailData.error);
+      //   } else {
+      //     console.log("Confirmation email sent successfully");
+      //   }
+      // } catch (emailError) {
+      //   console.error("Error sending confirmation email:", emailError);
+      // }
+
+
 
       // Store orderID and reset local storage
       setSuccess("Order placed successfully");
