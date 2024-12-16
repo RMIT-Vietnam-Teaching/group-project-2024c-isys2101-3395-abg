@@ -1,14 +1,14 @@
 import dbConnect from '@/app/lib/db';
 import User from '@/app/lib/models/users';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { SignJWT } from 'jose';
+import { serialize } from 'cookie';
 
 export async function POST(request) {
   await dbConnect();
 
   try {
     const body = await request.json();
-
     const { username, password } = body;
 
     // Validate input
@@ -30,24 +30,40 @@ export async function POST(request) {
 
     // Verify the password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (password !== user.password) { // replace to !isPasswordValid in the future
+    if (!isPasswordValid) {
       return new Response(
         JSON.stringify({ message: 'Invalid password' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Generate a JWT token
-    const token = jwt.sign(
-      { id: user._id, username: user.username, role: user.role }, // Payload
-      process.env.JWT_SECRET, // Secret key
-      { expiresIn: '365d' } // Token expiry
-    );
+    // Generate a JWT token with jose
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const token = await new SignJWT({ id: user._id, username: user.username, role: user.role })
+      .setProtectedHeader({ alg: 'HS256' }) // Algorithm
+      .setIssuedAt() // Issued at timestamp
+      .setExpirationTime('365d') // Expiry (1 year)
+      .sign(secret); // Secret key
 
-    // Respond with the token
+    // Create a cookie
+    const serializedCookie = serialize('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Secure in production
+      sameSite: 'strict',
+      maxAge: 365 * 24 * 60 * 60, // One year
+      path: '/',
+    });
+
+    // Set the cookie in the response
     return new Response(
-      JSON.stringify({ message: 'Login successful', token }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ message: 'Login successful' }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Set-Cookie': serializedCookie,
+        },
+      }
     );
   } catch (error) {
     console.error('Error during login:', error);
