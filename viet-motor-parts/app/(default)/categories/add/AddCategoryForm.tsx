@@ -5,10 +5,12 @@ import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { createCategory } from "../createCategory";
+import { useRouter } from "next/navigation";
 
 export default function AddCategoryForm() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (formData : FormData) => {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
@@ -25,6 +27,9 @@ export default function AddCategoryForm() {
             setSuccess('Category created successfully!');
             setError('');
             console.log('Category created:', newCategory);
+            router.push("/categories");
+            router.refresh();
+            
         } catch (error) {
             setError('Failed to create category.');
             setSuccess('');
