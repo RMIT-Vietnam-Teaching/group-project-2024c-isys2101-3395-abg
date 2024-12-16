@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
@@ -6,13 +6,16 @@ import { Label } from "@/app/components/shadcn/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 export default function LoginForm() {
     const router = useRouter();
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
         const username = formData.get("username") as string;
         const password = formData.get("password") as string;
 
@@ -34,9 +37,6 @@ export default function LoginForm() {
                 setSuccess("Login successful!");
                 setError("");
 
-                // Save the token in localStorage (save the token in a cookie for production)
-                localStorage.setItem("token", data.token);
-
                 // Redirect to orders page
                 router.push("/orders/admin");
             }
@@ -47,14 +47,13 @@ export default function LoginForm() {
         }
     };
 
-
     return (
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl text-center">
                 Log in to Admin account
             </h1>
 
-            <form id="loginForm" className="space-y-4 md:space-y-6" action={handleSubmit}>
+            <form id="loginForm" className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                     <Label htmlFor="username" className="text-white font-semibold">
                         Username
