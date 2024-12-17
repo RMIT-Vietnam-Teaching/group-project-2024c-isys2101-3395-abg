@@ -23,6 +23,7 @@ export interface IOrder extends Document {
     loan_term: number;
     monthly_payment: number;
     interest_rate: number;
+    total_with_interest: number;
   };
   created_at?: Date;
   updated_at?: Date;
@@ -62,6 +63,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       loan_term: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 1 },
       monthly_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
       interest_rate: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      total_with_interest: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
     },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

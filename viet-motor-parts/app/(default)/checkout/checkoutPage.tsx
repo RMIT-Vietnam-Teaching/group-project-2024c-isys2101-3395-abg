@@ -35,7 +35,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
     const additional_notes = formData.get("addNotes") as string;
     const payment_method = formData.get("paymentMethod") as string;
     const cartItems = formData.get("cartItems") as string;
-    const total_amount = payment_method === "Installment" ? (formData.get("installmentTotal") as string) : (formData.get("total") as string);
+    const total_amount = formData.get('total') as string;
     const order_details = JSON.parse(cartItems).map((item: CartItem) => ({
       product_id: item.id,
       product_name: item.name,
@@ -49,6 +49,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         loan_term: parseInt(formData.get("loanTerm") as string, 10),
         monthly_payment: parseFloat(formData.get("monthlyPayment") as string),
         interest_rate: parseFloat(formData.get("interestRate") as string),
+        total_with_interest: parseFloat(formData.get("installmentTotal") as string),
       };
     }
 

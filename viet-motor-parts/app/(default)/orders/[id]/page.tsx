@@ -15,6 +15,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuthStatus, getAuthToken } from "@/lib/auth";
 import Button from "@/app/components/Button";
+import StatusModal from "@/app/components/changeOrderStatusModal";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-const STATUSES = [
+export const STATUSES = [
   { key: "Pending", label: "Pending Approval" },
   { key: "Confirmed", label: "Order Confirmed" },
   { key: "Packaged", label: "Packaged" },
@@ -80,10 +81,8 @@ export default async function Page({ params, searchParams }: { params: { id: str
         </h1>
       </div>
       {isLoggedIn ?
-        <div className="flex justify-center gap-5">
-          <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-            Change Status
-          </button>
+        <div className="flex justify-center items-center gap-5">
+          <StatusModal order_id={order._id} current_status={STATUS} />
           <Button title="Edit Order Details" link={`/orders/${order._id}/edit`} />
         </div> : <></>}
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
