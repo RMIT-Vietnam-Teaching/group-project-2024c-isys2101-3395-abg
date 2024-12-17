@@ -1,6 +1,5 @@
 import dbConnect from '@/app/lib/db';
 import Order from '@/app/lib/models/order';
-import { verifyAdminToken } from '@/app/lib/middleware/auth';
 
 export async function GET(request) {
   await dbConnect();
@@ -15,16 +14,6 @@ export async function GET(request) {
       );
     }
 
-    // Verify admin token
-    try {
-      verifyAdminToken({ headers: { authorization: authHeader } }); // Pass headers to middleware
-    } catch (error) {
-      console.error('Unauthorized admin:', error.message);
-      return new Response(
-        JSON.stringify({ success: false, error: error.message }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
 
     // Fetch all orders
     const orders = await Order.find({});
