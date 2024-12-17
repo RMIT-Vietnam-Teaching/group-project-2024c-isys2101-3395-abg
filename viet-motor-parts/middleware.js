@@ -39,5 +39,6 @@ export const config = {
     '/products/:id/edit',
     '/categories/:path*',
     '/vehicles/:path*',
+    '/orders/:id/edit/:path*',
   ],
 };

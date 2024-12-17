@@ -2,7 +2,7 @@ import Image from "next/image";
 import { formatCurrency, getProductImage } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
 import { fetchProductbyID } from "./fetchProductbyID";
-import { Authentication } from "@/lib/auth";
+import { getAuthStatus } from "@/lib/auth";
 import Button from "@/app/components/Button";
 
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 export default async function Page({ params }: { params: { id: string } }) {
     const product = await fetchProductbyID(params.id);
-    const isLoggedIn = await Authentication();
+    const isLoggedIn = await getAuthStatus();
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

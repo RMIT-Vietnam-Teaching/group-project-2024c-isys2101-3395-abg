@@ -8,11 +8,13 @@ import {
   TableFooter,
 } from "@/app/components/shadcn/table";
 import { formatCurrency } from "@/lib/utils";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, CircleX } from "lucide-react";
 import Link from "next/link";
 import fetchOrderbyID, { OrderDetail } from "./fetchOrderbyID";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAuthStatus, getAuthToken } from "@/lib/auth";
+import Button from "@/app/components/Button";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -32,13 +34,13 @@ const STATUSES = [
 ];
 
 export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
-  // If the phone number is provided in the query params, use it to fetch the order, else use the auth token in cookie
+  const isLoggedIn = await getAuthStatus();
   const phoneNumber = searchParams.phone_number || "";
   let order;
   if (phoneNumber) {
     order = await fetchOrderbyID({ id: params.id, phoneNumber });
   } else {
-    const token = cookies().get('token')?.value;
+    const token = await getAuthToken();
     if (!token) {
       redirect('/error');
     }
@@ -60,24 +62,30 @@ export default async function Page({ params, searchParams }: { params: { id: str
       ? "w-5 h-5 text-green-500"
       : "";
 
-  const getLineClass = (currentStatus: string, activeStatus: string) =>
-    STATUSES.findIndex((status) => status.key === activeStatus) >
-      STATUSES.findIndex((status) => status.key === currentStatus)
+  const getLineClass = (currentStatus: string, activeStatus: string) => {
+    const currentIndex = STATUSES.findIndex((status) => status.key === currentStatus);
+    const activeIndex = STATUSES.findIndex((status) => status.key === activeStatus);
+
+    return activeIndex >= currentIndex
       ? "bg-green-500"
       : "";
+  };
+
 
   return (
     <div className="container mx-auto">
-      <div className="grid  items-center justify-center">
-        <h1 className="p-5 text-5xl font-extrabold text-center col-start-2">
+      <div className="grid items-center justify-center">
+        <h1 className="p-5 text-5xl font-extrabold text-center col-start-2 line-clamp-2">
           #{order._id}
         </h1>
       </div>
-      <div className="flex justify-center">
-        <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-          Change Status
-        </button>
-      </div>
+      {isLoggedIn ?
+        <div className="flex justify-center gap-5">
+          <button className="col-start-3 rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
+            Change Status
+          </button>
+          <Button title="Edit Order Details" link={`/orders/${order._id}/edit`} />
+        </div> : <></>}
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
         <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
           <p className="text-2xl font-bold">Order Information</p>
@@ -109,41 +117,51 @@ export default async function Page({ params, searchParams }: { params: { id: str
             <p className="text-right line-clamp-2">{order.payment_method}</p>
           </div>
         </div>
-        <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
-          <ul className="timeline timeline-vertical">
-            {STATUSES.map((status, index) => (
-              <li key={status.key} id={status.key.toLowerCase()}>
-                {index > 0 && (
-                  <hr
-                    className={getLineClass(
-                      STATUSES[index - 1].key,
-                      STATUS
-                    )}
-                    id={`${status.key.toLowerCase()}-line-1`}
-                  />
-                )}
-                <div
-                  className={`${getStatusClass(status.key, STATUS)} ${index % 2 === 0 ? "timeline-start" : "timeline-end"
-                    }`}
-                >
-                  {status.label}
-                </div>
-                <div className="timeline-middle">
-                  <CircleCheck
-                    className={getCircleClass(status.key, STATUS)}
-                    id={`${status.key.toLowerCase()}Circle`}
-                  />
-                </div>
-                {index < STATUSES.length - 1 && (
-                  <hr
-                    className={getLineClass(status.key, STATUS)}
-                    id={`${status.key.toLowerCase()}-line-2`}
-                  />
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {STATUS === "Canceled" ? (
+          <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-5 shadow-xl rounded-xl bg-brand-500 text-white">
+            <CircleX className="w-16 h-16" color="#ef4444" />
+            <h2 className="text-3xl font-bold">Order Canceled</h2>
+            <p className="text-center text-lg">
+              This order has been canceled and will not be processed further.
+            </p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-full h-full shadow-xl rounded-xl bg-brand-500">
+            <ul className="timeline timeline-vertical py-5">
+              {STATUSES.map((status, index) => (
+                <li key={status.key} id={status.key.toLowerCase()}>
+                  {index > 0 && (
+                    <hr
+                      className={getLineClass(
+                        STATUSES[index - 1].key,
+                        STATUS
+                      )}
+                      id={`${status.key.toLowerCase()}-line-1`}
+                    />
+                  )}
+                  <div
+                    className={`${getStatusClass(status.key, STATUS)} ${index % 2 === 0 ? "timeline-start" : "timeline-end"
+                      }`}
+                  >
+                    {status.label}
+                  </div>
+                  <div className="timeline-middle">
+                    <CircleCheck
+                      className={getCircleClass(status.key, STATUS)}
+                      id={`${status.key.toLowerCase()}Circle`}
+                    />
+                  </div>
+                  {index < STATUSES.length - 1 && (
+                    <hr
+                      className={getLineClass(status.key, STATUS)}
+                      id={`${status.key.toLowerCase()}-line-2`}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {order.payment_method === "Installment" && order.installment_details && (
           <div className="md:col-span-2 bg-brand-500 rounded-xl shadow-xl py-5">
             <div className="text-center flex flex-col gap-3">
@@ -152,7 +170,7 @@ export default async function Page({ params, searchParams }: { params: { id: str
                 <h2 className="text-lg font-semibold">Your request is subject to our partner's approval. There may be adjustments to this rate.</h2>
                 : <></>}
             </div>
-            <div className="grid grid-cols-1 gap-2 px-5">
+            <div className="grid grid-cols-1 gap-2 px-5 pt-5">
               <div className="flex justify-between">
                 <p className="font-semibold">Down Payment:</p>
                 <p>{formatCurrency(order.installment_details.down_payment)}</p>

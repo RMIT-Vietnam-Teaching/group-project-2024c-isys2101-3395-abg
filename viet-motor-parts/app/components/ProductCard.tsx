@@ -1,15 +1,14 @@
-import useSWR from 'swr';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatCurrency, getProductImage } from '@/lib/utils';
 import AddToCart from './addToCart';
 import { Product } from '../(default)/products/page';
-import { Authentication } from '@/lib/auth';
+import { getAuthStatus } from '@/lib/auth';
 import Button from './Button';
 
 
 export default async function ProductCard({ _id, name, price, image_base64 }: Product) {
-  const isLoggedIn = await Authentication();
+  const isLoggedIn = await getAuthStatus();
 
   return (
     <div className="bg-brand-500 rounded-2xl shadow-xl">

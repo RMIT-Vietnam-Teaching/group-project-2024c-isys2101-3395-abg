@@ -5,6 +5,7 @@ import { OrderDetail } from "../[id]/fetchOrderbyID";
 export interface Order {
     _id: string;
     customer_name: string;
+    email : string;
     phone_number: string;
     address: string;
     total_amount: number;

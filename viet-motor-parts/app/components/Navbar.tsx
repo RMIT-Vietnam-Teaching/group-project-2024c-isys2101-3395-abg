@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import { Menu, ShoppingCartIcon } from 'lucide-react';
-import { Authentication, Logout } from "@/lib/auth";
+import { getAuthStatus, Logout } from "@/lib/auth";
 import { Button } from "./shadcn/button";
 
 
 export async function Navbar() {
-  const isLoggedIn = await Authentication();
+  const isLoggedIn = await getAuthStatus();
 
 
   return (
