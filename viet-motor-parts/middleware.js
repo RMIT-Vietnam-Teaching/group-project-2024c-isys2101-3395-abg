@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export async function middleware(request) {
+  const excludedPaths = ['/_next/static/css/app/(default)/ReactToastify.css.map'];
+
+  if (excludedPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
   // Get the token from cookies
   const token = request.cookies.get('token')?.value;
 

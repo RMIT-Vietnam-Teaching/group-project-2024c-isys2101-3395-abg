@@ -4,6 +4,7 @@ import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { Metadata } from "next";
 import { ScrollArea } from "@/app/components/shadcn/scroll-area";
+import { fetchOrders } from "./fetchOrders";
 
 
 export const metadata: Metadata = {
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
 };
 
 
-export default function Page() {
+export default async function Page() {
+    const orders = await fetchOrders();
     return (
         <div className="container mx-auto flex flex-col gap-5">
             <h1 className="text-center text-3xl font-bold">Order Management</h1>
@@ -28,33 +30,17 @@ export default function Page() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow>
-                            <TableCell className="font-bold text-2xl line-clamp-2">
-                                <Link href="/orders/123" className="hover:underline ">#123</Link>
-                            </TableCell>
-                            <TableCell>Tôn Thất Hữu Luân</TableCell>
-                            <TableCell>Confirmed</TableCell>
-                            <TableCell>CoD</TableCell>
-                            <TableCell className="text-right">{formatCurrency(300000)}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-bold text-2xl line-clamp-2">
-                                <Link href="/orders/124" className="hover:underline ">#124</Link>
-                            </TableCell>
-                            <TableCell>Nguyễn Văn A</TableCell>
-                            <TableCell>Processing</TableCell>
-                            <TableCell>PayPal</TableCell>
-                            <TableCell className="text-right">{formatCurrency(600000)}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-bold text-2xl line-clamp-2">
-                                <Link href="/orders/125" className="hover:underline ">#125</Link>
-                            </TableCell>
-                            <TableCell>Nguyễn Văn B</TableCell>
-                            <TableCell>Delivered</TableCell>
-                            <TableCell>Installment (72 months)</TableCell>
-                            <TableCell className="text-right">{formatCurrency(900000)}</TableCell>
-                        </TableRow>
+                        {orders.map((order) => (
+                            <TableRow key={order._id}>
+                                <TableCell className="font-bold text-2xl line-clamp-2">
+                                    <Link href={`/orders/${order._id}`} className="hover:underline max-w-7 overflow-hidden">{order._id}</Link>
+                                </TableCell>
+                                <TableCell>{order.customer_name}</TableCell>
+                                <TableCell>{order.order_status}</TableCell>
+                                <TableCell>{order.payment_method} {order.payment_method === "Installment" ? `(${order.installment_details?.loan_term} months)` : ""}</TableCell>
+                                <TableCell className="text-right">{formatCurrency(order.total_amount)}</TableCell>
+                            </TableRow>))
+                        }
                     </TableBody>
                     <TableFooter className="sticky bottom-0 bg-brand-500">
                         <TableRow>

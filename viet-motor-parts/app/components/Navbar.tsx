@@ -55,24 +55,36 @@ export async function Navbar() {
               <Link href="/products?page=1">Products</Link>
             </li>
             <li>
-              <div className="dropdown dropdown-hover dropdown-bottom">
-                <div tabIndex={0} role="button">Tools</div>
-                <ul tabIndex={0} className="bg-brand-600 p-2 dropdown-content z-[1] w-52 rounded-lg">
-                  <li>
-                    <Link href="/compatability-check">Compatability Check</Link>
-                  </li>
-                  <li>
-                    <Link href="/calculator">Interest Rate Calculator</Link>
-                  </li>
-                </ul>
-              </div>
+              {isLoggedIn ?
+                (<div className="dropdown dropdown-hover dropdown-bottom">
+                  <div tabIndex={0} role="button">Manage</div>
+                  <ul tabIndex={0} className="bg-brand-600 p-2 dropdown-content z-[1] w-52 rounded-lg">
+                    <li>
+                      <Link href="/categories">Categories</Link>
+                    </li>
+                    <li>
+                      <Link href="/vehicles">Vehicles</Link>
+                    </li>
+                  </ul>
+                </div>) :
+                (<div className="dropdown dropdown-hover dropdown-bottom">
+                  <div tabIndex={0} role="button">Tools</div>
+                  <ul tabIndex={0} className="bg-brand-600 p-2 dropdown-content z-[1] w-52 rounded-lg">
+                    <li>
+                      <Link href="/compatability-check">Compatability Check</Link>
+                    </li>
+                    <li>
+                      <Link href="/calculator">Interest Rate Calculator</Link>
+                    </li>
+                  </ul>
+                </div>)}
             </li>
             <li>
               <Link href="/orders">Order Tracking</Link>
             </li>
           </ul>
-        </div>
-      </div>
+        </div >
+      </div >
       <div className="navbar-center hidden lg:flex">
         <div className="w-[420px]">
           <SearchBar />
@@ -96,6 +108,6 @@ export async function Navbar() {
           </form>
         )}
       </div>
-    </div>
+    </div >
   );
 }

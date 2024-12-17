@@ -11,6 +11,8 @@ import { formatCurrency } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 import Link from "next/link";
 import fetchOrderbyID, { OrderDetail } from "./fetchOrderbyID";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -30,8 +32,18 @@ const STATUSES = [
 ];
 
 export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
+  // If the phone number is provided in the query params, use it to fetch the order, else use the auth token in cookie
   const phoneNumber = searchParams.phone_number || "";
-  const order = await fetchOrderbyID(params.id, phoneNumber);
+  let order;
+  if (phoneNumber) {
+    order = await fetchOrderbyID({ id: params.id, phoneNumber });
+  } else {
+    const token = cookies().get('token')?.value;
+    if (!token) {
+      redirect('/error');
+    }
+    order = await fetchOrderbyID({ id: params.id, authToken: token });
+  }
 
 
   const STATUS = order.order_status;

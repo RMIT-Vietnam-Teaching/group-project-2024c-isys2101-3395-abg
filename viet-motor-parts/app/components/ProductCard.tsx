@@ -4,19 +4,22 @@ import Link from 'next/link';
 import { formatCurrency, getProductImage } from '@/lib/utils';
 import AddToCart from './addToCart';
 import { Product } from '../(default)/products/page';
+import { Authentication } from '@/lib/auth';
+import Button from './Button';
 
 
-export default function ProductCard({ _id, name, price, image_base64 }: Product) {
+export default async function ProductCard({ _id, name, price, image_base64 }: Product) {
+  const isLoggedIn = await Authentication();
 
   return (
-    <div className="bg-brand-500 w-[330px] rounded-2xl shadow-xl">
+    <div className="bg-brand-500 rounded-2xl shadow-xl">
       <Link href={`/products/${_id}`}>
         <Image
-          className="rounded-t-lg"
+          className="rounded-t-lg w-[330px] h-[300px]"
           src={getProductImage(image_base64)}
           alt="product image"
           width={330}
-          height={200}
+          height={300}
         />
       </Link>
       <div className="flex flex-col justify-between gap-3 px-5 pt-3 pb-5">
@@ -29,13 +32,19 @@ export default function ProductCard({ _id, name, price, image_base64 }: Product)
           <span className="text-2xl font-bold" id="price">
             {formatCurrency(price)}
           </span>
-          <AddToCart
+          {isLoggedIn ? (
+            <Button
+              link={`/products/edit/${_id}`}
+              title="Edit"
+            />
+          ) : (<AddToCart
             id={_id}
             name={name}
             price={price}
             image_base64={image_base64}
             amount={1}
           />
+          )}
         </div>
       </div>
     </div>

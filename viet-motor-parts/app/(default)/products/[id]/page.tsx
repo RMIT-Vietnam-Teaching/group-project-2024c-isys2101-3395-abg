@@ -2,6 +2,8 @@ import Image from "next/image";
 import { formatCurrency, getProductImage } from "@/lib/utils";
 import AddToCart from "@/app/components/addToCart";
 import { fetchProductbyID } from "./fetchProductbyID";
+import { Authentication } from "@/lib/auth";
+import Button from "@/app/components/Button";
 
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -16,6 +18,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 export default async function Page({ params }: { params: { id: string } }) {
     const product = await fetchProductbyID(params.id);
+    const isLoggedIn = await Authentication();
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -57,14 +60,23 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </div>
                     <div className="flex">
                         <div className="w-1/2">
-                            <AddToCart
-                                id={product._id}
-                                name={product.name}
-                                price={product.price}
-                                image_base64={product.image_base64}
-                                amount={1} // Default amount to 1 when adding to cart
-                                className="w-full px-4 py-2 font-bold text-white"
-                            />
+                            {isLoggedIn ? (
+                                <Button
+                                    link={`/products/edit/${product._id}`}
+                                    title="Edit"
+                                    className="w-full font-bold"
+                                />
+                            ) : (
+                                <AddToCart
+                                    id={product._id}
+                                    name={product.name}
+                                    price={product.price}
+                                    image_base64={product.image_base64}
+                                    amount={1} // Default amount to 1 when adding to cart
+                                    className="w-full px-4 py-2 font-bold text-white"
+                                />
+                            )}
+
                         </div>
                     </div>
                     <div>
