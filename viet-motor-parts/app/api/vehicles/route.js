@@ -43,3 +43,44 @@ export async function GET(request) {
     );
   }
 }
+
+export async function POST(request) {
+  await dbConnect(); // Connect to the database
+
+  try {
+    const body = await request.json();
+
+    // Destructure fields from the request body
+    const { make, vehicleModel, year } = body;
+
+    // Validate required fields
+    if (!make || !vehicleModel || !year) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Make, vehicleModel, and year are required fields' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Check if the year is valid
+    if (year < 1900) {
+      return new Response(
+        JSON.stringify({ success: false, error: `Year must be larger than 1900.` }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Create a new compatible vehicle
+    const newVehicle = await CompatibleVehicle.create({ make, vehicleModel, year });
+
+    return new Response(
+      JSON.stringify({ success: true, data: newVehicle }),
+      { status: 201, headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error creating vehicle:', error);
+    return new Response(
+      JSON.stringify({ success: false, error: 'Failed to create vehicle' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}

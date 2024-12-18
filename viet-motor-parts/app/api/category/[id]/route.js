@@ -1,5 +1,6 @@
 import dbConnect from '@/app/lib/db';
 import Category from '@/app/lib/models/category';
+import Product from "@/app/lib/models/product";
 import jwt from 'jsonwebtoken';
 
 export async function GET(request, { params }) {
@@ -125,6 +126,19 @@ export async function DELETE(request, { params }) {
       return new Response(
         JSON.stringify({ success: false, error: 'Access denied' }),
         { status: 403 }
+      );
+    }
+
+    // Check if the category is being used in any product
+    const associatedProductsCount = await Product.countDocuments({ category_id: id });
+
+    if (associatedProductsCount > 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Cannot delete category: It is referenced by one or more products.",
+        }),
+        { status: 400 }
       );
     }
 

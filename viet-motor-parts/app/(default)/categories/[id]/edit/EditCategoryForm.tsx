@@ -62,12 +62,15 @@ export default function EditCategoryForm({ category }: { category: Category }) {
                 }
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
                 console.error(`Failed to delete category, Status: ${res.status}`);
-                throw new Error(`HTTP error! Status: ${res.status}`);
+                alert("Cannot delete category: It is referenced by one or more products.");
+                return;
             }
 
-            const data = await res.json();
+            
             console.log('Category deleted:', data.data);
 
             // Navigate back to the vehicles page and reload
@@ -75,6 +78,7 @@ export default function EditCategoryForm({ category }: { category: Category }) {
             router.refresh(); // This will reload the page to ensure updated data is displayed
         } catch (error) {
             console.error('Failed to delete category:', error);
+            alert("An error occurred while deleting the category.");
         }
     }
 
