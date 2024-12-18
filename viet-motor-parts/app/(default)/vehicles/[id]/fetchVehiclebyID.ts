@@ -4,7 +4,7 @@ import { Vehicle } from "../fetchVehicles";
 
 export async function fetchVehiclebyID(id: string): Promise<Vehicle> {
     try {
-        const res = await fetch(`http://localhost:3000/api/vehicles/${id}`, { next: { revalidate: 300 } });
+        const res = await fetch(`http://localhost:3000/api/vehicles/${id}`, { cache: "no-store"});
         if (!res.ok) {
             console.error(`Failed to fetch vehicle with ID: ${id}, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);

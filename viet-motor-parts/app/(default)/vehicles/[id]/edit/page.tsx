@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     return (
         <div className="container mx-auto flex flex-col justify-center gap-10">
             <h1 className="text-center text-5xl font-bold">Edit Vehicle Details</h1>
-            <EditVehicleForm params={params}/>
+            <EditVehicleForm vehicle={vehicle}/>
         </div>
     );
 }

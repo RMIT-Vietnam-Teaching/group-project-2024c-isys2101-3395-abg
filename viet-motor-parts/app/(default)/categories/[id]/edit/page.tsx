@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     return (
         <div className="container mx-auto flex flex-col justify-center gap-10">
             <h1 className="text-center text-5xl font-bold">Edit {category.name}</h1>
-            <EditCategoryForm params={params}/>
+            <EditCategoryForm category={category}/>
         </div>
     );
 }

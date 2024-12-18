@@ -6,20 +6,10 @@ import { Label } from "@/app/components/shadcn/label";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchVehiclebyID } from "../fetchVehiclebyID";
+import { Vehicle } from "../../fetchVehicles";
 
-export default function EditVehicleForm({ params }: { params: { id: string } }) {
-    const [vehicle, setVehicle] = useState<{ make: string; vehicleModel: string; year: number } | null>(null);
+export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
     const router = useRouter();
-
-    useEffect(() => {
-        fetchVehiclebyID(params.id)
-            .then((data) => {
-                setVehicle(data);
-            })
-            .catch((error) => {
-                console.error('Failed to fetch vehicle:', error);
-            });
-    }, [params.id]);
 
     async function handleSubmit(formData: FormData) {
         const make = formData.get("make") as string;
@@ -33,7 +23,7 @@ export default function EditVehicleForm({ params }: { params: { id: string } }) 
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/vehicles/${params.id}`, {
+            const res = await fetch(`http://localhost:3000/api/vehicles/${vehicle._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -67,7 +57,7 @@ export default function EditVehicleForm({ params }: { params: { id: string } }) 
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/vehicles/${params.id}`, {
+            const res = await fetch(`http://localhost:3000/api/vehicles/${vehicle._id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`

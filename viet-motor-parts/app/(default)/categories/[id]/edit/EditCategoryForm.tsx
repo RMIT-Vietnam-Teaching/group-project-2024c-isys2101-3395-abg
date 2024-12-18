@@ -3,25 +3,11 @@
 import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
-import { fetchCategorybyID } from "./fetchCategorybyID";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Category } from "../../page";
 
-export default function EditCategoryForm({ params }: { params: { id: string } }) { // async is not allowed for client components    
-    const [category, setCategory] = useState<{ name: string; description: string } | null>(null);
+export default function EditCategoryForm({ category }: { category: Category }) {
     const router = useRouter();
-    
-    useEffect(() => {
-        async function fetchCategory() {
-            try {
-                const data = await fetchCategorybyID(params.id);
-                setCategory(data);
-            } catch (error) {
-                console.error('Failed to fetch category:', error);
-            }
-        }
-        fetchCategory();
-    }, [params.id]);
 
     async function handleSubmit(formData: FormData) {
 
@@ -35,7 +21,7 @@ export default function EditCategoryForm({ params }: { params: { id: string } })
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/category/${params.id}`, {
+            const res = await fetch(`http://localhost:3000/api/category/${category._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,7 +55,7 @@ export default function EditCategoryForm({ params }: { params: { id: string } })
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/category/${params.id}`, {
+            const res = await fetch(`http://localhost:3000/api/category/${category._id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
