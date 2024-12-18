@@ -11,11 +11,10 @@ import { formatCurrency } from "@/lib/utils";
 import { CircleCheck, CircleX } from "lucide-react";
 import Link from "next/link";
 import fetchOrderbyID, { OrderDetail } from "./fetchOrderbyID";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuthStatus, getAuthToken } from "@/lib/auth";
 import Button from "@/app/components/Button";
-import StatusModal from "@/app/(default)/orders/[id]/edit/changeOrderStatusModal";
+import StatusModal from "./changeOrderStatusModal";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -72,6 +71,32 @@ export default async function Page({ params, searchParams }: { params: { id: str
       : "";
   };
 
+  const getValidStatuses = (currentStatus: string): { key: string; label: string }[] => {
+    const getStatusIndex = (key: string): number => STATUSES.findIndex((status) => status.key === key);
+    const CANCELED_STATUS = { key: "Cancelled", label: "Cancelled" };
+
+    const currentIndex = getStatusIndex(currentStatus);
+    const validStatuses: { key: string; label: string }[] = [];
+
+    // Add the next status if it exists
+    if (currentIndex < STATUSES.length - 1) {
+      validStatuses.push(STATUSES[currentIndex + 1]);
+    }
+
+    // Add "Cancelled" if the current status is less than "Shipped"
+    if (currentIndex < getStatusIndex("Shipped")) {
+      validStatuses.push(CANCELED_STATUS);
+    }
+
+    if (currentStatus === "Cancelled") {
+      return [STATUSES[0]];
+    }
+
+    return validStatuses;
+  };
+
+
+
 
   return (
     <div className="container mx-auto">
@@ -82,7 +107,7 @@ export default async function Page({ params, searchParams }: { params: { id: str
       </div>
       {isLoggedIn ?
         <div className="flex justify-center items-center gap-5">
-          <StatusModal order_id={order._id} current_status={STATUS} />
+          <StatusModal order_id={order._id} current_status={STATUS} validStatuses={getValidStatuses(STATUS)} />
           <Button title="Edit Order Details" link={`/orders/${order._id}/edit`} />
         </div> : <></>}
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
@@ -116,12 +141,12 @@ export default async function Page({ params, searchParams }: { params: { id: str
             <p className="text-right line-clamp-2">{order.payment_method}</p>
           </div>
         </div>
-        {STATUS === "Canceled" ? (
+        {STATUS === "Cancelled" ? (
           <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-5 shadow-xl rounded-xl bg-brand-500 text-white">
             <CircleX className="w-16 h-16" color="#ef4444" />
-            <h2 className="text-3xl font-bold">Order Canceled</h2>
+            <h2 className="text-3xl font-bold">Order Cancelled</h2>
             <p className="text-center text-lg">
-              This order has been canceled and will not be processed further.
+              This order has been cancelled and will not be processed further.
             </p>
           </div>
         ) : (

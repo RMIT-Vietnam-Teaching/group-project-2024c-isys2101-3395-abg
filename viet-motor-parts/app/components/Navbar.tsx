@@ -80,7 +80,7 @@ export async function Navbar() {
                 </div>)}
             </li>
             <li>
-              <Link href="/orders">Order Tracking</Link>
+              {isLoggedIn ? <Link href="/orders/admin">Orders</Link> : <Link href="/orders">Order Tracking</Link>}
             </li>
           </ul>
         </div >
