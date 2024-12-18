@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
 export async function middleware(request) {
+  const excludedPaths = ['/_next/static/css/app/(default)/ReactToastify.css.map'];
+
+  if (excludedPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
+    return NextResponse.next();
+  }
   // Get the token from cookies
   const token = request.cookies.get('token')?.value;
 
@@ -32,7 +37,8 @@ export const config = {
     '/orders/admin/:path*',
     '/products/add/:path*',
     '/products/:id/edit',
-    '/categories/:id/edit',
-    '/categories/add/:path*',
+    '/categories/:path*',
+    '/vehicles/:path*',
+    '/orders/:id/edit/:path*',
   ],
 };

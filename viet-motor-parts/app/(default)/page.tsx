@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <div className="grid w-screen grid-cols-1 gap-6 mx-auto my-5 lg:grid-cols-3 justify-items-center lg:gap-10 ">
+      {/* <div className="grid w-screen grid-cols-1 gap-6 mx-auto my-5 lg:grid-cols-3 justify-items-center lg:gap-10 ">
         <div className="col-span-1 lg:col-start-2 ">
           <h1 className="text-6xl font-bold">
             Top Sellers
@@ -20,8 +20,7 @@ export default function Home() {
         <div className="col-span-1 flex items-center">
           <Button title="View All" link="/products" />
         </div>
-      </div>
-
+      </div> */}
     </div>
   );
 }
