@@ -8,7 +8,7 @@ export interface IOrder extends Document {
   phone_number: string;
   address: string;
   total_amount: number;
-  order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Cancelled';
+  order_status: 'Pending' | 'Confirmed' | 'Packaged' | 'Shipped' | 'On The Way'| 'Delivered' | 'Cancelled';
   payment_method: 'Cash' | 'PayPal' | 'Installment';
   additional_notes?: string;
   shipping_label?: string;
@@ -41,7 +41,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ['Pending','Confirmed', 'Shipping', 'Delivered', 'Cancelled'],
+      enum: ['Pending' , 'Confirmed' , 'Packaged' , 'Shipped' , 'On The Way', 'Delivered' , 'Cancelled'],
       default: 'Pending',
     },
     payment_method: {
