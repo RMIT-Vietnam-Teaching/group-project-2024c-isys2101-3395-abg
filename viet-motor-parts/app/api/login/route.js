@@ -30,7 +30,7 @@ export async function POST(request) {
 
     // Verify the password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+    if (!isPasswordValid) { // replace to !isPasswordValid in the future
       return new Response(
         JSON.stringify({ message: 'Invalid password' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
