@@ -15,7 +15,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAuthStatus, getAuthToken } from "@/lib/auth";
 import Button from "@/app/components/Button";
-import StatusModal from "@/app/components/changeOrderStatusModal";
+import StatusModal from "@/app/(default)/orders/[id]/edit/changeOrderStatusModal";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
