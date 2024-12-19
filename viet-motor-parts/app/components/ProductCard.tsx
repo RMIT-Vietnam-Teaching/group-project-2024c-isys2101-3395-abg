@@ -33,7 +33,7 @@ export default async function ProductCard({ _id, name, price, image_base64 }: Pr
           </span>
           {isLoggedIn ? (
             <Button
-              link={`/products/edit/${_id}`}
+              link={`/products/${_id}/edit`}
               title="Edit"
             />
           ) : (<AddToCart

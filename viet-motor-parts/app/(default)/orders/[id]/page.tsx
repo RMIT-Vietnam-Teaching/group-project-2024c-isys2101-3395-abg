@@ -101,7 +101,7 @@ export default async function Page({ params, searchParams }: { params: { id: str
   return (
     <div className="container mx-auto">
       <div className="grid items-center justify-center">
-        <h1 className="p-5 text-5xl font-extrabold text-center col-start-2 line-clamp-2">
+        <h1 className="p-5 text-2xl md:text-5xl font-extrabold text-center col-start-2 line-clamp-2">
           #{order._id}
         </h1>
       </div>

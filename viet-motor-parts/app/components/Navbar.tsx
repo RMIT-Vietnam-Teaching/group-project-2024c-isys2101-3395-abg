@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SearchBar from "./SearchBar";
 import { Menu, ShoppingCartIcon } from 'lucide-react';
-import { getAuthStatus, Logout } from "@/lib/auth";
+import { getAuthStatus, logout } from "@/lib/auth";
 import { Button } from "./shadcn/button";
 
 
@@ -22,22 +22,43 @@ export async function Navbar() {
             className="menu dropdown-content mt-3 grid w-screen gap-2 rounded-box bg-brand-600 shadow"
           >
             <li>
-              <Link href="/products?page=1">Products</Link>
+              <Link href="/products">Products</Link>
             </li>
-            <li>
-              Tools
-              <ul className="p-2">
+            {isLoggedIn ? (
+              <>
                 <li>
-                  <Link href="/compatability-check">Compatability Check</Link>
+                  Management
+                  <ul className="p-2">
+                    <li>
+                      <Link href="/categories">Categories</Link>
+                    </li>
+                    <li>
+                      <Link href="/vehicles">Vehicles</Link>
+                    </li>
+                  </ul>
                 </li>
                 <li>
-                  <Link href="/calculator">Interest Rate Calculator</Link>
+                  <Link href="/orders/admin">Orders</Link>
                 </li>
-              </ul>
-            </li>
-            <li>
-              <Link href="/orders">Order Tracking</Link>
-            </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  Tools
+                  <ul className="p-2">
+                    <li>
+                      <Link href="/compatability-check">Compatability Check</Link>
+                    </li>
+                    <li>
+                      <Link href="/calculator">Interest Rate Calculator</Link>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <Link href="/orders">Orders</Link>
+                </li>
+              </>
+            )}
             <SearchBar />
           </ul>
         </details>
@@ -52,12 +73,12 @@ export async function Navbar() {
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link href="/products?page=1">Products</Link>
+              <Link href="/products">Products</Link>
             </li>
             <li>
               {isLoggedIn ?
                 (<div className="dropdown dropdown-hover dropdown-bottom">
-                  <div tabIndex={0} role="button">Manage</div>
+                  <div tabIndex={0} role="button">Management</div>
                   <ul tabIndex={0} className="bg-brand-600 p-2 dropdown-content z-[1] w-52 rounded-lg">
                     <li>
                       <Link href="/categories">Categories</Link>
@@ -103,9 +124,11 @@ export async function Navbar() {
             </div>
           </>
         ) : (
-          <form action={Logout}>
-            <Button type="submit" className="w-full bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl rounded-3xl font-bold">Logout</Button>
-          </form>
+          <>
+            <form action={logout}>
+              <Button type="submit" className="px-5 py-3 bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 hover:bg-gradient-to-bl rounded-2xl font-bold lg:mr-7">Logout</Button>
+            </form>
+          </>
         )}
       </div>
     </div >

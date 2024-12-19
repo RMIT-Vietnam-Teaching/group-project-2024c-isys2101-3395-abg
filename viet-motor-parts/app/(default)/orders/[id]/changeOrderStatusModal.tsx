@@ -9,25 +9,7 @@ import { redirect } from "next/navigation";
 
 
 
-async function updateStatus(formData: FormData) {
-    'use server'
-    const authToken = await getAuthToken();
-    const order_id = formData.get("order_id") as string;
-    const order_status = formData.get("order-status") as string;
-    const res = await fetch(`http://localhost:3000/api/orders/${order_id}`,
-        {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                'authorization': `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ order_status })
-        }
-    )
-    if (res.ok) {
-        revalidatePath(`/orders/${order_id}`);
-    }
-}
+
 
 const statusIcons: Map<string, React.ElementType> = new Map([
     ["Pending", Clock],
@@ -40,11 +22,34 @@ const statusIcons: Map<string, React.ElementType> = new Map([
 ]);
 
 
-export default function StatusModal({ order_id, current_status, validStatuses }: { order_id: string, current_status: string, validStatuses: { key: string; label: string }[] }) {
+export default async function StatusModal({ order_id, current_status, validStatuses }: { order_id: string, current_status: string, validStatuses: { key: string; label: string }[] }) {
+
+    async function updateStatus(formData: FormData) {
+        'use server'
+        const authToken = await getAuthToken();
+        const order_status = formData.get("order-status") as string;
+        const res = await fetch(`http://localhost:3000/api/orders/${order_id}`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ order_status })
+            }
+        )
+        if (res.ok) {
+            revalidatePath(`/orders/${order_id}`);
+        } else {
+            const data = await res.json();
+            console.error(`Error: ${data.error}`);
+        }
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">Update Order Status</Button>
+                <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">Update Order Status</Button>
             </DialogTrigger>
             <DialogContent className="bg-brand-500 border-none shadow-lg">
                 <DialogHeader>
@@ -54,7 +59,6 @@ export default function StatusModal({ order_id, current_status, validStatuses }:
                     Current Status of Order : <span className="font-semibold">{current_status}</span>
                 </DialogDescription>
                 <form id="changeStatus" action={updateStatus}>
-                    <Input type="hidden" name="order_id" value={order_id}></Input>
                     <ul className={`grid w-full gap-6 ${validStatuses.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
                         {validStatuses.map(({ key, label }) => {
                             const Icon = statusIcons.get(key);
