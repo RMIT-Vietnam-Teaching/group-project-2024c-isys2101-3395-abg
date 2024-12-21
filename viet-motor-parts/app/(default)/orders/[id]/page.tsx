@@ -47,7 +47,6 @@ export default async function Page({ params, searchParams }: { params: { id: str
     order = await fetchOrderbyID({ id: params.id, authToken: token });
   }
 
-
   const STATUS = order.order_status;
 
   const getStatusClass = (currentStatus: string, activeStatus: string) =>
@@ -250,8 +249,19 @@ export default async function Page({ params, searchParams }: { params: { id: str
               {formatCurrency(order.total_amount)}
             </TableCell>
           </TableRow>
+          {order.payment_method === "Installment" && order.installment_details ?
+            (
+              <TableRow>
+                <TableCell colSpan={3} className="font-bold">
+                  Total (Including Interest)
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(order.installment_details.total_with_interest)}
+                </TableCell>
+              </TableRow>
+            ) : <></>}
         </TableFooter>
       </Table>
-    </div>
+    </div >
   );
 }

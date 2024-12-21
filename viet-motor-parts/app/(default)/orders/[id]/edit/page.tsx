@@ -4,6 +4,8 @@ import { Label } from "@/app/components/shadcn/label";
 import { Input } from "@/app/components/shadcn/input";
 import { Button } from "@/app/components/shadcn/button";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export const metadata: Metadata = {
     title: 'Edit Order Details | Viet Motor Parts'
@@ -13,10 +15,59 @@ export default async function Page({ params, }: { params: { id: string } }) {
     const token = await getAuthToken();
     const order = await fetchOrderbyID({ id: params.id, authToken: token });
 
+    async function updateOrderDetails(formData: FormData) {
+        'use server';
+        const customer_name = formData.get("customer_name") as string;
+        const phone_number = formData.get("phone_number") as string;
+        const email = formData.get("email") as string;
+        const address = formData.get("address") as string;
+        const additional_notes = formData.get("additional_notes") as string;
+        let installment_details;
+        if (order.payment_method === 'Installment' && order.installment_details) {
+            const interest_rate = formData.get("interest_rate") as string;
+            const parsed_interest_rate = parseFloat(interest_rate);
+            const monthlyRate = parsed_interest_rate / 100 / 12;
+            const loanAmount = order.total_amount - order.installment_details.down_payment;
+            const monthly_payment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, order.installment_details.loan_term)) / (Math.pow(1 + monthlyRate, order.installment_details.loan_term) - 1);
+            const total_with_interest = monthly_payment * order.installment_details.loan_term + order.installment_details.down_payment;
+                installment_details = {
+                    interest_rate: parsed_interest_rate,
+                    monthly_payment,
+                    total_with_interest,
+                    loan_term: order.installment_details.loan_term,
+                    down_payment: order.installment_details.down_payment,
+                };
+        }
+
+
+        const response = await fetch(`http://localhost:3000/api/orders/${params.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                customer_name,
+                phone_number,
+                email,
+                address,
+                additional_notes,
+                ...(installment_details && { installment_details }),
+            }),
+        });
+        const data = await response.json();
+        console.log(data.data);
+        if (response.ok) {
+            revalidatePath(`/orders/${params.id}`);
+            redirect(`/orders/${params.id}`);
+        } else {
+            console.log("Failed to update order details.");
+        }
+    }
+
     return (
         <div className="container mx-auto flex flex-col justify-center gap-10">
             <h1 className="text-center text-5xl font-bold">Edit Order Details</h1>
-            <form action="">
+            <form action={updateOrderDetails}>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-row-2 lg:grid-cols-4 items-center  gap-2 lg:gap-4">
                         <Label htmlFor="customer_name" className="text-left lg:text-right font-bold">
