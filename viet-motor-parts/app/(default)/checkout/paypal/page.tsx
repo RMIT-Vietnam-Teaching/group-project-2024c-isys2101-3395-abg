@@ -51,6 +51,8 @@ export default function PayPalProcessingPage(): JSX.Element {
 
         // Store MongoDB order ID in sessionStorage under "orderID"
         sessionStorage.setItem("orderID", data.mongodb_order_id);
+        localStorage.setItem("shoppingCart", "[]");
+        localStorage.setItem("total", "0");
 
         // Redirect to the success page with the MongoDB order ID
         router.push(`/checkout/success?order_id=${data.mongodb_order_id}`);
