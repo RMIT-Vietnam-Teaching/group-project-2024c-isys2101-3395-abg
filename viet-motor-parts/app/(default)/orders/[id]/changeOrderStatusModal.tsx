@@ -28,7 +28,7 @@ export default async function StatusModal({ order_id, current_status, validStatu
         'use server'
         const authToken = await getAuthToken();
         const order_status = formData.get("order-status") as string;
-        const res = await fetch(`http://localhost:3000/api/orders/${order_id}`,
+        const res = await fetch(`${process.env.BACKEND_URL}/api/orders/${order_id}`,
             {
                 method: "PATCH",
                 headers: {

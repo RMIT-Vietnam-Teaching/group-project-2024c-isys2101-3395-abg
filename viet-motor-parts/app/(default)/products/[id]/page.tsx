@@ -23,9 +23,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="-mx-4 flex flex-col md:flex-row">
+            <div className="-mx-4 grid md:grid-cols-2 ">
                 <div className="px-4 md:flex-1">
-                    <div className="relative mb-4 h-[500px] overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700">
+                    <div className="relative mb-4 h-[500px] overflow-hidden  rounded-lg bg-gray-300 dark:bg-gray-700">
                         <Image
                             src={getProductImage(product.image_base64)} // Use Base64 image or fallback
                             alt={product.name || "Motor part image"}
