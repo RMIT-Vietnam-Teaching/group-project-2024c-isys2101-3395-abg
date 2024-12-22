@@ -8,7 +8,7 @@ export interface IOrder extends Document {
   phone_number: string;
   address: string;
   total_amount: number;
-  order_status: 'Pending' | 'Confirmed' | 'Packaged' | 'Shipped' | 'On The Way'| 'Delivered' | 'Cancelled';
+  order_status: 'Pending' | 'Confirmed' | 'Packaged' | 'Shipped' | 'On The Way' | 'Delivered' | 'Cancelled';
   payment_method: 'Cash' | 'PayPal' | 'Installment';
   additional_notes?: string;
   shipping_label?: string;
@@ -16,7 +16,7 @@ export interface IOrder extends Document {
     product_id: mongoose.Types.ObjectId;
     product_name: string; // Add product_name here
     quantity: number;
-    price: number;
+    price: number;  
   }>;
   installment_details?: {
     down_payment: number;

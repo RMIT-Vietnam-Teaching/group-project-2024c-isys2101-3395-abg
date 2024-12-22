@@ -19,6 +19,7 @@ export interface Order {
       loan_term: number;
       monthly_payment: number;
       interest_rate: number;
+      total_with_interest: number;
     };
   }
 

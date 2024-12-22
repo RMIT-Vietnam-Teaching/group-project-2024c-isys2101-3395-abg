@@ -14,7 +14,7 @@ export async function getAuthToken(){
     return cookieStore.get("token")?.value;
 }
 
-export async function Logout(){
+export async function logout(){
     const cookieStore = cookies();
     cookieStore.delete("token");
     // refresh the page

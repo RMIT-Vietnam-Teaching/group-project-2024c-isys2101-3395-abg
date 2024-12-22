@@ -47,7 +47,6 @@ export default async function Page({ params, searchParams }: { params: { id: str
     order = await fetchOrderbyID({ id: params.id, authToken: token });
   }
 
-
   const STATUS = order.order_status;
 
   const getStatusClass = (currentStatus: string, activeStatus: string) =>
@@ -101,7 +100,7 @@ export default async function Page({ params, searchParams }: { params: { id: str
   return (
     <div className="container mx-auto">
       <div className="grid items-center justify-center">
-        <h1 className="p-5 text-5xl font-extrabold text-center col-start-2 line-clamp-2">
+        <h1 className="p-5 text-2xl md:text-5xl font-extrabold text-center col-start-2 line-clamp-2">
           #{order._id}
         </h1>
       </div>
@@ -250,8 +249,19 @@ export default async function Page({ params, searchParams }: { params: { id: str
               {formatCurrency(order.total_amount)}
             </TableCell>
           </TableRow>
+          {order.payment_method === "Installment" && order.installment_details ?
+            (
+              <TableRow>
+                <TableCell colSpan={3} className="font-bold">
+                  Total (Including Interest)
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(order.installment_details.total_with_interest)}
+                </TableCell>
+              </TableRow>
+            ) : <></>}
         </TableFooter>
       </Table>
-    </div>
+    </div >
   );
 }

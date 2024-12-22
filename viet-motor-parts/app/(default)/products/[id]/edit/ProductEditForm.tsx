@@ -127,15 +127,12 @@ export default function ProductEditForm({ product, compatibleVehicles }: Product
           name="price"
         />
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
         <Label htmlFor="image" className="text-left lg:text-right font-bold">
           Image
         </Label>
         <ImageInput defaultBase64={formData.image_base64} onImageChange={handleImageChange} />
       </div>
-
-
       <div className="grid grid-row-2 lg:grid-cols-4 items-center gap-2 lg:gap-4">
         <Label htmlFor="quantity" className="text-left lg:text-right font-bold">
           Stock Quantity

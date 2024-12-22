@@ -63,7 +63,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <div className="w-1/2">
                             {isLoggedIn ? (
                                 <Button
-                                    link={`/products/edit/${product._id}`}
+                                    link={`/products/${product._id}/edit`}
                                     title="Edit"
                                     className="w-full font-bold"
                                 />
