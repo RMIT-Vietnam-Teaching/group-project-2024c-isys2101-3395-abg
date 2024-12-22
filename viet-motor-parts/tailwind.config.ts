@@ -30,6 +30,8 @@ const config: Config = {
         require('flowbite/plugin'),
         require("tailwindcss-animate")
     ],
-    daisyui: {base: false}
+    daisyui: {
+		base: false,
+	}
 };
 export default config;

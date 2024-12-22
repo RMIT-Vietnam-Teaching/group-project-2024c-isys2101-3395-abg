@@ -11,7 +11,7 @@ export default async function ProductCard({ _id, name, price, image_base64 }: Pr
   const isLoggedIn = await getAuthStatus();
 
   return (
-    <div className="bg-brand-500 rounded-2xl shadow-xl">
+    <div className="bg-brand-500 rounded-2xl shadow-xl max-w-[330px] flex justify-between flex-col">
       <Link href={`/products/${_id}`}>
         <Image
           className="rounded-t-lg w-[330px] h-[300px]"
@@ -22,11 +22,19 @@ export default async function ProductCard({ _id, name, price, image_base64 }: Pr
         />
       </Link>
       <div className="flex flex-col justify-between gap-3 px-5 pt-3 pb-5">
-        <Link href={`/products/${_id}`}>
-          <h5 className="text-xl font-semibold tracking-tight line-clamp-2" id="productName">
-            {name}
-          </h5>
-        </Link>
+        {name.length > 30 ? (
+          <Link href={`/products/${_id}`} className='tooltip tooltip-top [--tooltip-color:#A33757] [--tooltip-text-color:#FFFFFF]' data-tip={name}>
+            <h5 className="text-xl font-semibold tracking-tight max-w-[330px] line-clamp-1 overflow-hidden text-left" id="productName">
+              {name}
+            </h5>
+          </Link>
+        ) : (
+          <Link href={`/products/${_id}`}>
+            <h5 className="text-xl font-semibold tracking-tight line-clamp-1 text-left" id="productName">
+              {name}
+            </h5>
+          </Link>
+        )}
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold" id="price">
             {formatCurrency(price)}
