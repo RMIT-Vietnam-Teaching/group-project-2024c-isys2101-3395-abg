@@ -7,8 +7,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchVehiclebyID } from "../fetchVehiclebyID";
 import { Vehicle } from "../../fetchVehicles";
+import { TriangleAlert } from 'lucide-react';
 
 export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
+    const [error, setError] = useState('');
     const router = useRouter();
 
     async function handleSubmit(formData: FormData) {
@@ -64,12 +66,18 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
                 }
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
                 console.error(`Failed to delete vehicle, Status: ${res.status}`);
-                throw new Error(`HTTP error! Status: ${res.status}`);
+                if (data.error === "Cannot delete vehicle: It is referenced by one or more products.") {
+                    setError(data.error);
+                } else {
+                    alert("An error occurred while deleting the vehicle.");
+                }
+                return;
             }
 
-            const data = await res.json();
             console.log('Vehicle deleted:', data.data);
 
             // Navigate back to the vehicles page and reload
@@ -77,6 +85,7 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
             router.refresh(); // This will reload the page to ensure updated data is displayed
         } catch (error) {
             console.error('Failed to delete vehicle:', error);
+            alert("An error occurred while deleting the vehicle.");
         }
     }
 
@@ -84,7 +93,8 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
         return <p>Loading...</p>;
     }
 
-    return (<form action={handleSubmit}>
+    return (<div>
+        <form action={handleSubmit}>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-row-2 lg:grid-cols-4 items-center  gap-2 lg:gap-4">
                         <Label htmlFor="make" className="text-left lg:text-right font-bold">
@@ -126,5 +136,15 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
                         <Button type="submit" className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">Update Vehicle</Button>
                     </div>
                 </div>
-            </form>)
+            </form>
+            {error && (
+                    <div className="flex justify-center">
+                        <div role="alert" className="alert alert-warning w-fit">
+                            <TriangleAlert className="h-6 w-6 shrink-0 stroke-current" />
+                            <span>{error}</span>
+                        </div>
+                    </div>
+            )}
+    </div>
+    )
 }

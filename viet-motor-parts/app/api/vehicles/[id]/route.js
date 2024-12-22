@@ -1,5 +1,5 @@
 import dbConnect from '@/app/lib/db';
-import Category from '@/app/lib/models/category';
+import Product from "@/app/lib/models/product";
 import CompatibleVehicle from '@/app/lib/models/compatiblevehicle';
 import jwt from 'jsonwebtoken';
 
@@ -131,6 +131,19 @@ export async function DELETE(request, { params }) {
                 JSON.stringify({ success: false, error: 'Access denied' }),
                 { status: 403 }
             );
+        }
+
+        // Check if the category is being used in any product
+        const associatedProductsCount = await Product.countDocuments({ compatible_vehicles: id });
+
+        if (associatedProductsCount > 0) {
+        return new Response(
+            JSON.stringify({
+            success: false,
+            error: "Cannot delete vehicle: It is referenced by one or more products.",
+            }),
+            { status: 400 }
+        );
         }
 
         const deletedVehicle = await CompatibleVehicle.findByIdAndDelete(id);
