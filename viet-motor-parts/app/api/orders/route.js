@@ -1,35 +1,37 @@
 import dbConnect from '@/app/lib/db';
 import Order from '@/app/lib/models/order';
-import { verifyAdminToken } from '@/app/lib/middleware/auth';
+// import { verifyAdminToken } from '@/app/lib/middleware/auth';
+import Product from '@/app/lib/models/product';
 
 export async function GET(request) {
   await dbConnect();
 
+  const DEFAULT_LIMIT = 10;
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
+
   try {
-    const authHeader = request.headers.get('authorization');
+    // Fetch paginated orders
+    const skip = (page - 1) * limit;
+    const orders = await Order.find({})
+      .skip(skip)
+      .limit(limit);
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Unauthorized access: Missing Authorization header' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    // Total count for pagination metadata
+    const totalCount = await Order.countDocuments({});
 
-    // Verify admin token
-    try {
-      verifyAdminToken({ headers: { authorization: authHeader } }); // Pass headers to middleware
-    } catch (error) {
-      console.error('Unauthorized admin:', error.message);
-      return new Response(
-        JSON.stringify({ success: false, error: error.message }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Fetch all orders
-    const orders = await Order.find({});
     return new Response(
-      JSON.stringify({ success: true, data: orders }),
+      JSON.stringify({
+        success: true,
+        data: orders,
+        meta: {
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / limit),
+          totalCount,
+          limit,
+        },
+      }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
@@ -110,6 +112,19 @@ export async function POST(request) {
     const newOrder = new Order(newOrderConstructor);
     const savedOrder = await newOrder.save();
     console.log("Saved order:", savedOrder);
+
+    // Handle stock after order
+    for (const item of order_details) {
+      const product = await Product.findById(item.product_id);
+      if (!product) {
+        console.error('Product not found:', item.product_id);
+        continue;
+      }
+
+      // Update stock
+      product.stock_quantity -= item.quantity;
+      await product.save();
+    }
 
     return new Response(
       JSON.stringify({ success: true, data: savedOrder }),
