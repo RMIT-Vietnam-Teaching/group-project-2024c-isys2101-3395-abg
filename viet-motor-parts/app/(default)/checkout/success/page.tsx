@@ -17,6 +17,12 @@ export const metadata: Metadata = {
 
 
 export default function Page() {
+
+    // // Clear the shopping cart and total from the Local Storage
+    //     localStorage.setItem("shoppingCart", "[]");
+    //     localStorage.setItem("total", "0");
+
+
     return (
         <div className="flex flex-col justify-center items-center container mx-auto gap-5">
             <div className="flex flex-col items-center">

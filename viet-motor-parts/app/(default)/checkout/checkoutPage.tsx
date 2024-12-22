@@ -12,6 +12,7 @@ import { LoanCalculationResult } from "../calculator/calculation";
 import { CartItem } from "../cart/useShoppingCart";
 import { TriangleAlert } from "lucide-react";
 import { useShoppingCart } from "../cart/useShoppingCart";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 
 
@@ -60,6 +61,56 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       };
     }
 
+    //Paypal
+
+    if (payment_method === "PayPal") {
+      setLoading(true);
+      try {
+        // Step 1: Store form data in sessionStorage
+        const formDataToStore = {
+          customer_name,
+          phone_number,
+          email,
+          address,
+          total_amount: parseFloat(total_amount), // Convert to number
+          additional_notes: additional_notes || null,
+          order_status: "", // Explicit status
+          payment_method: "PayPal", // Explicit method
+          paypal_order_id: null,
+          order_details
+        };
+        sessionStorage.setItem("orderFormData", JSON.stringify(formDataToStore));
+        console.log("Form data stored in sessionStorage:", formDataToStore);
+    
+        // Step 2: Send the order details to create a PayPal order
+        const response = await fetch("/api/paypal/createOrder", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customer_name,
+            order_details,
+          }),
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+          setError(data.error || "Failed to create PayPal order.");
+          return;
+        }
+    
+        // Step 3: Redirect the user to the PayPal approval URL
+        window.location.href = data.approvalUrl;
+      } catch (err) {
+        console.error("Error creating PayPal order:", err);
+        setError("An unexpected error occurred while processing the PayPal payment. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+      return; // Exit to avoid executing the normal flow
+    }
 
     setLoading(true);
     try {
@@ -87,37 +138,37 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         return;
       }
 
-      // // Send confirmation email
-      // try {
-      //   const emailResponse = await fetch("/api/sendInvoice", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       email,
-      //       customer_name,
-      //       order_id: data.data._id,
-      //       order_date: data.data.created_at,
-      //       total_amount,
-      //       address,
-      //       order_details,
-      //       additional_notes,
-      //       phone_number,
-      //       payment_method,
-      //       ...(installment_details && { installment_details }),
-      //     }),
-      //   });
+      // Send confirmation email
+      try {
+        const emailResponse = await fetch("/api/sendInvoice", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            customer_name,
+            order_id: data.data._id,
+            order_date: data.data.created_at,
+            total_amount,
+            address,
+            order_details,
+            additional_notes,
+            phone_number,
+            payment_method,
+            ...(installment_details && { installment_details }),
+          }),
+        });
 
-      //   const emailData = await emailResponse.json();
-      //   if (!emailResponse.ok) {
-      //     console.error("Failed to send confirmation email:", emailData.error);
-      //   } else {
-      //     console.log("Confirmation email sent successfully");
-      //   }
-      // } catch (emailError) {
-      //   console.error("Error sending confirmation email:", emailError);
-      // }
+        const emailData = await emailResponse.json();
+        if (!emailResponse.ok) {
+          console.error("Failed to send confirmation email:", emailData.error);
+        } else {
+          console.log("Confirmation email sent successfully");
+        }
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+      }
 
 
 

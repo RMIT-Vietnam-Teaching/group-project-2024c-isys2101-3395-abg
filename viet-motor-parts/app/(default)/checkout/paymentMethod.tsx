@@ -40,7 +40,7 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
             <h1 className="p-5 text-2xl font-bold">Payment Method</h1>
             <div className="flex flex-col gap-5 px-5">
                 <div className="flex items-center ps-4 bg-brand-400 rounded-2xl">
-                    <input id="PayPal" type="radio" value="Paypal" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
+                    <input id="PayPal" type="radio" value="PayPal" name="paymentMethod" className="w-4 h-4 accent-brand-200" onChange={handlePaymentMethodChange} form='checkout'>
                     </input>
                     <label htmlFor="PayPal" className="w-full py-4 font-semibold text-white ms-2 text-md">PayPal</label>
                 </div>

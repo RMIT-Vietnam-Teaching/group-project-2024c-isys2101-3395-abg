@@ -10,11 +10,12 @@ export interface IOrder extends Document {
   total_amount: number;
   order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Canceled';
   payment_method: 'Cash' | 'PayPal' | 'Installment';
+  paypal_order_id?: string | null; 
   additional_notes?: string;
   shipping_label?: string;
   order_details: Array<{
     product_id: mongoose.Types.ObjectId;
-    product_name: string; // Add product_name here
+    product_name: string;
     quantity: number;
     price: number;
   }>;
@@ -32,15 +33,15 @@ export interface IOrder extends Document {
 const orderSchema: Schema<IOrder> = new mongoose.Schema(
   {
     customer_name: { type: String, required: true, minLength: 5 },
-    email: { type: String, required: true }, // Email field added
+    email: { type: String, required: true },
     phone_number: { type: String, required: true },
     address: { type: String, required: true },
     total_amount: { type: Number, required: true, min: 0 },
-    additional_notes: { type: String, default: null }, // Notes field added
+    additional_notes: { type: String, default: null },
     order_status: {
       type: String,
       required: true,
-      enum: ['Pending','Confirmed', 'Shipping', 'Delivered', 'Canceled'],
+      enum: ['Pending', 'Confirmed', 'Shipping', 'Delivered', 'Canceled'],
       default: 'Pending',
     },
     payment_method: {
@@ -48,11 +49,12 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       required: true,
       enum: ['Cash', 'PayPal', 'Installment'],
     },
+    paypal_order_id: { type: String, default: null }, // New field for PayPal Order ID
     shipping_label: { type: String, default: null },
     order_details: [
       {
         product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-        product_name: { type: String, required: true }, // Add product_name field here
+        product_name: { type: String, required: true },
         quantity: { type: Number, required: true, min: 1 },
         price: { type: Number, required: true, min: 0 },
       },

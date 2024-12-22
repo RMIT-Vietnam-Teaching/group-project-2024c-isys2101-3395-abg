@@ -1,47 +1,7 @@
 import dbConnect from '@/app/lib/db';
 import Order from '@/app/lib/models/order';
-// import { verifyAdminToken } from '@/app/lib/middleware/auth';
 import Product from '@/app/lib/models/product';
-
-export async function GET(request) {
-  await dbConnect();
-
-  const DEFAULT_LIMIT = 10;
-  const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
-
-  try {
-    // Fetch paginated orders
-    const skip = (page - 1) * limit;
-    const orders = await Order.find({})
-      .skip(skip)
-      .limit(limit);
-
-    // Total count for pagination metadata
-    const totalCount = await Order.countDocuments({});
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        data: orders,
-        meta: {
-          currentPage: page,
-          totalPages: Math.ceil(totalCount / limit),
-          totalCount,
-          limit,
-        },
-      }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
-  } catch (error) {
-    console.error('Error fetching orders:', error.message);
-    return new Response(
-      JSON.stringify({ success: false, error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-}
+import fetch from 'node-fetch';
 
 export async function POST(request) {
   await dbConnect();
@@ -59,6 +19,7 @@ export async function POST(request) {
       payment_method,
       installment_details,
       additional_notes,
+      paypal_order_id, // Added field for PayPal order ID
     } = body;
 
     // Validate required fields
@@ -77,11 +38,52 @@ export async function POST(request) {
       );
     }
 
+    if (payment_method === 'PayPal' && !paypal_order_id) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Missing PayPal Order ID' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (payment_method === 'Installment' && !installment_details) {
       return new Response(
         JSON.stringify({ success: false, error: 'Missing Installment Details' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Capture PayPal payment if payment method is PayPal
+    if (payment_method === 'PayPal') {
+      const auth = Buffer.from(
+        `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
+      ).toString("base64");
+
+      try {
+        const response = await fetch(
+          `https://api-m.sandbox.paypal.com/v2/checkout/orders/${paypal_order_id}/capture`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${auth}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to capture PayPal payment.");
+        }
+
+        console.log("PayPal payment captured:", data);
+      } catch (error) {
+        console.error("PayPal capture failed:", error.message);
+        return new Response(
+          JSON.stringify({ success: false, error: "Failed to capture PayPal payment" }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Enrich order_details
@@ -101,6 +103,11 @@ export async function POST(request) {
       payment_method,
       additional_notes, // Add additional_notes field
       order_details: enrichedOrderDetails, // Include enriched details
+    };
+
+    // Add PayPal order ID if available
+    if (payment_method === 'PayPal') {
+      newOrderConstructor.paypal_order_id = paypal_order_id;
     }
 
     // Add installment_details if available
