@@ -8,7 +8,7 @@ export interface IOrder extends Document {
   phone_number: string;
   address: string;
   total_amount: number;
-  order_status: 'Pending' | 'Confirmed' | 'Shipping' | 'Delivered' | 'Canceled';
+  order_status: 'Pending' | 'Confirmed' | 'Packaged' | 'Shipped' | 'On The Way' | 'Delivered' | 'Cancelled';
   payment_method: 'Cash' | 'PayPal' | 'Installment';
   paypal_order_id?: string | null; 
   additional_notes?: string;
@@ -17,13 +17,14 @@ export interface IOrder extends Document {
     product_id: mongoose.Types.ObjectId;
     product_name: string;
     quantity: number;
-    price: number;
+    price: number;  
   }>;
   installment_details?: {
     down_payment: number;
     loan_term: number;
     monthly_payment: number;
     interest_rate: number;
+    total_with_interest: number;
   };
   created_at?: Date;
   updated_at?: Date;
@@ -41,7 +42,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
     order_status: {
       type: String,
       required: true,
-      enum: ['Pending', 'Confirmed', 'Shipping', 'Delivered', 'Canceled'],
+      enum: ['Pending' , 'Confirmed' , 'Packaged' , 'Shipped' , 'On The Way', 'Delivered' , 'Cancelled'],
       default: 'Pending',
     },
     payment_method: {
@@ -64,6 +65,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       loan_term: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 1 },
       monthly_payment: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
       interest_rate: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
+      total_with_interest: { type: Number, required: function () { return this.payment_method === 'Installment'; }, min: 0 },
     },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

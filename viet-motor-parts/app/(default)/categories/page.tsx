@@ -19,9 +19,9 @@ export default async function Page() {
 
     return (
         <div className="container mx-auto flex flex-col justify-center gap-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3">
-                <h1 className="text-center text-5xl font-bold col-start-2">Categories</h1>
-                <div className="col-start-3 flex justify-center items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-0">
+                <h1 className="text-center text-5xl font-bold lg:col-start-2">Categories</h1>
+                <div className="lg:col-start-3 flex justify-center items-center">
                     <Button title="Add Category" link="/categories/add" />
                 </div>
             </div>

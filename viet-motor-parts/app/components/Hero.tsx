@@ -2,7 +2,7 @@ import Button from "./Button";
 
 export default function Hero() {
   return (
-    <div className="text-white p-8 w-screen text-center h-screen">
+    <div className="text-white p-8 w-screen text-center">
       <div className="justify-center">
         <h1 className="text-5xl md:text-8xl font-extrabold mb-4">
           Empowering Every Ride <br />with <br /> Quality Parts

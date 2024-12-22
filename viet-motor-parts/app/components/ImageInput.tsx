@@ -1,5 +1,6 @@
 "use client";
 
+import { getProductImage } from "@/lib/utils";
 import React, { useState, ChangeEvent } from "react";
 
 type ImageInputProps = {
@@ -28,10 +29,10 @@ export default function ImageInput({ defaultBase64 = "", onImageChange }: ImageI
   return (
     <div className="flex flex-col gap-2">
       {preview ? (
-        <img src={preview} alt="Preview" className="h-32 w-32 object-cover rounded-lg" />
+        <img src={getProductImage(preview)} alt="Preview" className="h-32 w-32 object-cover rounded-lg" />
       ) : (
         <div className="h-32 w-32 bg-gray-200 rounded-lg flex items-center justify-center">
-          No image
+          No image provided
         </div>
       )}
       <input
