@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function PayPalProcessingPage(): JSX.Element {
+  const isProcessing = useRef(false); // Use ref instead of state
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const processPayPalOrder = async (): Promise<void> => {
+      if (isProcessing.current) return; // Prevent duplicate triggers
+      isProcessing.current = true;
+
       try {
         // Extract the PayPal order ID from the URL query parameters
         const query = new URLSearchParams(window.location.search);
@@ -20,12 +24,11 @@ export default function PayPalProcessingPage(): JSX.Element {
         console.log("PayPal Order ID:", paypal_order_id);
 
         // Retrieve the order data from sessionStorage
-        const orderFormData = sessionStorage.getItem("orderFormData");
+        const orderFormData = localStorage.getItem("orderFormData");
 
         if (!orderFormData) {
           throw new Error("Order data is missing from sessionStorage.");
         }
-        console.log("SessionStorage orderFormData:", orderFormData);
 
         const parsedFormData = JSON.parse(orderFormData);
 
@@ -33,11 +36,11 @@ export default function PayPalProcessingPage(): JSX.Element {
         const updatedFormData = {
           ...parsedFormData,
           paypal_order_id,
+          order_status: "Pending", // Explicit status
         };
-        console.log("Updated FormData:", updatedFormData);
 
-        // Send the updated form data to the backend
-        const response = await fetch("/api/paypal/capturePayment", {
+        // Send data to backend to create the order in MongoDB
+        const response = await fetch("/api/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedFormData),
@@ -50,15 +53,17 @@ export default function PayPalProcessingPage(): JSX.Element {
         }
 
         // Store MongoDB order ID in sessionStorage under "orderID"
-        sessionStorage.setItem("orderID", data.mongodb_order_id);
+        sessionStorage.setItem("orderID", data.data._id);
         localStorage.setItem("shoppingCart", "[]");
         localStorage.setItem("total", "0");
 
         // Redirect to the success page with the MongoDB order ID
-        router.push(`/checkout/success?order_id=${data.mongodb_order_id}`);
+        router.push(`/checkout/success?order_id=${data.data._id}`);
       } catch (err) {
         console.error("Error processing PayPal order:", err);
         setError(err instanceof Error ? err.message : "An unexpected error occurred.");
+      } finally {
+        isProcessing.current = false; // Allow further attempts if needed
       }
     };
 

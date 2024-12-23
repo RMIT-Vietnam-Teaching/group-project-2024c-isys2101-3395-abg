@@ -42,15 +42,15 @@ export async function POST(request) {
     const token = await new SignJWT({ id: user._id, username: user.username, role: user.role })
       .setProtectedHeader({ alg: 'HS256' }) // Algorithm
       .setIssuedAt() // Issued at timestamp
-      .setExpirationTime('365d') // Expiry (1 year)
+      .setExpirationTime('10d') // Expiry (1 year)
       .sign(secret); // Secret key
 
     // Create a cookie
     const serializedCookie = serialize('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Secure in production
-      sameSite: 'strict',
-      maxAge: 365 * 24 * 60 * 60, // One year
+      sameSite: 'lax',
+      maxAge: 10 * 24 * 60 * 60, // 10 days
       path: '/',
     });
 

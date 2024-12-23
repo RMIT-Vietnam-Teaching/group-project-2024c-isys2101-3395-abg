@@ -103,6 +103,7 @@ export async function POST(request) {
       payment_method,
       additional_notes, // Add additional_notes field
       order_details: enrichedOrderDetails, // Include enriched details
+      order_status: body.order_status || "Pending",
     };
 
     // Add PayPal order ID if available

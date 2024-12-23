@@ -13,7 +13,6 @@ async function fetchExchangeRate() {
 export async function POST(request) {
   try {
     const { customer_name, order_details } = await request.json();
-
     console.log("Request received at /api/paypal/createOrder");
 
     // Fetch exchange rate
@@ -36,7 +35,6 @@ export async function POST(request) {
       };
     });
 
-    // Ensure itemTotal is precise
     itemTotal = itemTotal.toFixed(2);
 
     const auth = Buffer.from(
@@ -66,6 +64,7 @@ export async function POST(request) {
               },
             },
             items,
+            custom_id: `Order_${Date.now()}`, // Short, unique identifier
           },
         ],
         application_context: {
@@ -100,4 +99,3 @@ export async function POST(request) {
     );
   }
 }
-

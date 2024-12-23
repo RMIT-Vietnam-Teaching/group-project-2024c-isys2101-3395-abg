@@ -12,7 +12,7 @@ import { LoanCalculationResult } from "../calculator/calculation";
 import { CartItem } from "../cart/useShoppingCart";
 import { TriangleAlert } from "lucide-react";
 import { useShoppingCart } from "../cart/useShoppingCart";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 
 
 
@@ -72,7 +72,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
           paypal_order_id: null,
           order_details
         };
-        sessionStorage.setItem("orderFormData", JSON.stringify(formDataToStore));
+        localStorage.setItem("orderFormData", JSON.stringify(formDataToStore));
         console.log("Form data stored in sessionStorage:", formDataToStore);
     
         // Step 2: Send the order details to create a PayPal order
