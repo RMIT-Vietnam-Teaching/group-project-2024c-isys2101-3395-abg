@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
+import { getAuthToken } from "@/lib/auth";
 
 export default function AddVehicleForm() {
     const router = useRouter();
@@ -12,7 +13,7 @@ export default function AddVehicleForm() {
         const make = formData.get("make") as string;
         const vehicleModel = formData.get("model") as string;
         const year = formData.get("year") as string;
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             console.error("No token found. Please log in.");

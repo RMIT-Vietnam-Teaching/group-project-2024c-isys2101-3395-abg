@@ -1,13 +1,15 @@
 import { Product } from "../page";
+import { getAuthToken } from "@/lib/auth";
 
 
 export async function updateProducts(id: string, updates: Partial<Product>): Promise<Product> {
     try {
+        const token = await getAuthToken();
         const res = await fetch(`http://localhost:3000/api/products/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NTU3YjAwN2M3ODBhODM0NzM0ODRhOSIsInVzZXJuYW1lIjoiYWRtaW5Vc2VyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzMzNjcxODg0LCJleHAiOjE3NjUyMDc4ODR9.-45HxCGZsu07FVYdq1NLvQCdAcd25ee3H5Nr2uonlUw`, // Add the admin token
+                "Authorization": `Bearer ${token}`, // Add the admin token
             },
             body: JSON.stringify(updates),
         });

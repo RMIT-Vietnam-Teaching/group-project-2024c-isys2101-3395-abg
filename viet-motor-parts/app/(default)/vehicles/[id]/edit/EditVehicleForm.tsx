@@ -5,7 +5,7 @@ import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchVehiclebyID } from "../fetchVehiclebyID";
+import { getAuthToken } from "@/lib/auth";
 import { Vehicle } from "../../fetchVehicles";
 import { TriangleAlert } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
         const make = formData.get("make") as string;
         const vehicleModel = formData.get("model") as string;
         const year = formData.get("year") as string;
-        const token = localStorage.getItem("token");
+        const token = await getAuthToken();
 
         if (!token) {
             console.error("No token found. Please log in.");

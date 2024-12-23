@@ -6,14 +6,15 @@ import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { createCategory } from "../createCategory";
 import { useRouter } from "next/navigation";
+import { getAuthToken } from "@/lib/auth";
 
 export default function AddCategoryForm() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const router = useRouter();
 
-    const handleSubmit = async (formData : FormData) => {
-        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    async function handleSubmit(formData: FormData) {
+        const token = await getAuthToken();
         const name = formData.get('name') as string;
         const description = formData.get('description') as string;
 

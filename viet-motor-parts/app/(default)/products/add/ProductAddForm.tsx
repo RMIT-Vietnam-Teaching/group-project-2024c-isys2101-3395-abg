@@ -8,31 +8,28 @@ import { Button } from "@/app/components/shadcn/button";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
-import { updateProducts } from "../updateProducts";
-import { Product } from "../../page";
+import { createProducts } from "./createProducts";
 import { Category } from "@/app/(default)/categories/page";
-import { fetchCategories } from "@/app/(default)/categories/fetchCategories";
 import { Vehicle } from "@/app/(default)/vehicles/fetchVehicles";
 
-type ProductEditFormProps = {
-  product: Product;
+type ProductAddFormProps = {
   compatibleVehicles: Vehicle[];
+  categories: Category[];
 };
 
-export default function ProductEditForm({
-  product,
+export default function ProductAddForm({
   compatibleVehicles,
-}: ProductEditFormProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
+  categories,
+}: ProductAddFormProps) {
   const [formData, setFormData] = useState({
-    name: product.name,
-    brand: product.brand,
-    description: product.description,
-    price: product.price,
-    stock_quantity: product.stock_quantity,
-    category_id: product.category_id,
-    image_base64: product.image_base64,
-    compatible_vehicles: product.compatible_vehicles || [],
+    name: "",
+    brand: "",
+    description: "",
+    price: 0,
+    stock_quantity: 0,
+    category_id: "",
+    image_base64: "",
+    compatible_vehicles: [] as string[],
   });
 
   const handleInputChange = (
@@ -58,27 +55,14 @@ export default function ProductEditForm({
     e.preventDefault();
 
     try {
-      const updatedProduct = await updateProducts(product._id, formData);
-      alert("Product updated successfully!");
-      window.location.href = `/products/${product._id}`;
+      const newProduct = await createProducts(formData);
+      alert("Product added successfully!");
+      window.location.href = `/products/${newProduct._id}`;
     } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product.");
+      console.error("Error adding product:", error);
+      alert("Failed to add product.");
     }
   };
-
-  useEffect(() => {
-    async function fetchCategoryData() {
-      try {
-        const fetchedCategories = await fetchCategories();
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
-
-    fetchCategoryData();
-  }, []);
 
   return (
     <form onSubmit={handleSaveChanges} className="space-y-4">
@@ -192,12 +176,11 @@ export default function ProductEditForm({
               compatible_vehicles: selectedVehicles,
             }))
           }
-          selectedVehicleIds={formData.compatible_vehicles}
         />
       </div>
       <div className="flex justify-end">
         <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-          Save Changes
+          Add Product
         </Button>
       </div>
     </form>

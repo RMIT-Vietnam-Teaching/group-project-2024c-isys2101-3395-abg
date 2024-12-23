@@ -4,7 +4,7 @@ import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
 import { TriangleAlert } from 'lucide-react';
-
+import { getAuthToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Category } from "../../page";
 import { useState } from "react";
@@ -17,7 +17,7 @@ export default function EditCategoryForm({ category }: { category: Category }) {
 
         const name = formData.get("name") as string;
         const description = formData.get("description") as string;
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             console.error("No token found. Please log in.");
