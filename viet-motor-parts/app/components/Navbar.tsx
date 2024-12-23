@@ -38,7 +38,7 @@ export async function Navbar() {
                   </ul>
                 </li>
                 <li>
-                  <Link href="/orders/admin">Orders</Link>
+                  <Link href="/orders">Orders</Link>
                 </li>
               </>
             ) : (
@@ -55,7 +55,7 @@ export async function Navbar() {
                   </ul>
                 </li>
                 <li>
-                  <Link href="/orders">Orders</Link>
+                  <Link href="/orders">Order Tracking</Link>
                 </li>
               </>
             )}
@@ -101,7 +101,7 @@ export async function Navbar() {
                 </div>)}
             </li>
             <li>
-              {isLoggedIn ? <Link href="/orders/admin">Orders</Link> : <Link href="/orders">Order Tracking</Link>}
+              {isLoggedIn ? <Link href="/orders">Orders</Link> : <Link href="/orders">Order Tracking</Link>}
             </li>
           </ul>
         </div >

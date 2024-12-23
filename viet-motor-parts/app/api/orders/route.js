@@ -3,6 +3,46 @@ import Order from '@/app/lib/models/order';
 import Product from '@/app/lib/models/product';
 import fetch from 'node-fetch';
 
+export async function GET(request) {
+  await dbConnect();
+
+  const DEFAULT_LIMIT = 10;
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
+
+  try {
+    // Fetch paginated orders
+    const skip = (page - 1) * limit;
+    const orders = await Order.find({})
+      .skip(skip)
+      .limit(limit);
+
+    // Total count for pagination metadata
+    const totalCount = await Order.countDocuments({});
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: orders,
+        meta: {
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / limit),
+          totalCount,
+          limit,
+        },
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error fetching orders:', error.message);
+    return new Response(
+      JSON.stringify({ success: false, error: error.message }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
+
 export async function POST(request) {
   await dbConnect();
 

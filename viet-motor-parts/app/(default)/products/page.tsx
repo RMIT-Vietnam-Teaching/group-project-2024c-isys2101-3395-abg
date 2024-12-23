@@ -3,6 +3,7 @@ import { SideFilter } from '@/app/components/SideFilter';
 import { Metadata } from "next/types";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/app/components/shadcn/pagination';
 import { fetchCategories } from '../categories/fetchCategories';
+import CustomPagination from '@/app/components/CustomPagination';
 
 export interface Product {
     _id: string;
@@ -61,7 +62,6 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
     const categories = await fetchCategories();
 
     const totalPages = data.meta.totalPages;
-
     const prevPage = page - 1 > 0 ? page - 1 : 1;
     const nextPage = page + 1;
     const pageNumbers: Number[] = [];
@@ -88,21 +88,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
                     ))}
                 </section>
                 <div>
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                {page === 1 ? <PaginationPrevious className='opacity-60' aria-disabled="true" /> : <PaginationPrevious href={`?page=${prevPage}`} />}
-                            </PaginationItem>
-                            {pageNumbers.map((pageNumber, index) => (
-                                <PaginationItem key={index}>
-                                    <PaginationLink href={`?page=${pageNumber}`} className={page === pageNumber ? "bg-brand-500 text-white" : ""}>{pageNumber.toString()}</PaginationLink>
-                                </PaginationItem>
-                            ))}
-                            <PaginationItem>
-                                {page === totalPages ? <PaginationNext className='opacity-60' aria-disabled="true" /> : <PaginationNext href={`?page=${nextPage}`} />}
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
+                    <CustomPagination page={page} totalPages={totalPages} pageNumbers={pageNumbers} prevPage={prevPage} nextPage={nextPage} />
                 </div>
             </div>
         </section>

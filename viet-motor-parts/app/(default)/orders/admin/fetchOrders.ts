@@ -23,16 +23,16 @@ export interface Order {
     };
   }
 
-export async function fetchOrders(): Promise<Order[]> {
+export async function fetchOrders(page: number): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
     try {
-        const res = await fetch(`http://localhost:3000/api/orders`, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
+        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
         if (!res.ok) {
             console.error(`Failed to fetch orders, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);
         }
         const data = await res.json();
 
-        return data.data;
+        return data;
     } catch (error) {
         console.error("Error fetching orders:", error);
         throw error;
