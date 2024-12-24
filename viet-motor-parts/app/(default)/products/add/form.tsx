@@ -1,7 +1,7 @@
 'use client'
 
 import { revalidatePath } from "next/cache";
-import { createProducts } from "./createProducts";
+import { addProduct, createProducts } from "./createProducts";
 import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import { Label } from "@/app/components/shadcn/label";
@@ -19,38 +19,6 @@ interface AddProductFormProps {
 }
 
 export default function AddProductForm({ categories }: AddProductFormProps) {
-    const addProduct = async (state: any, formData: FormData) => {
-        formData.append("image", imageBase64);
-        const name = formData.get("name") as string;
-        const brand = formData.get("brand") as string;
-        const description = formData.get("description") as string;
-        const price = formData.get("price") as string;
-        const stock_quantity = formData.get("stock_quantity") as string;
-        const category_id = formData.get("category_id") as string;
-        const image_base64 = formData.get("image") as string;
-        const compatible_vehicles = formData.get("compatibleVehicles") as string;
-
-
-        const product = {
-            name,
-            brand,
-            description,
-            price: parseInt(price),
-            stock_quantity: parseInt(stock_quantity),
-            category_id,
-            image_base64,
-            compatible_vehicles: JSON.parse(compatible_vehicles),
-        }
-
-        const res = await createProducts(product);
-        if (res.success) {
-            revalidatePath("/products");
-            router.push(`/products/${res.data._id}`);
-        } else {
-            return res.error;
-        }
-
-    };
     const [error, formAction] = useFormState(addProduct, null); // Hook to display error message
     const router = useRouter();
     let imageBase64 = "";
@@ -68,6 +36,7 @@ export default function AddProductForm({ categories }: AddProductFormProps) {
                     type="text"
                     className="col-span-3 bg-white text-black"
                     required
+                    minLength={3}
                 />
             </div>
             <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
