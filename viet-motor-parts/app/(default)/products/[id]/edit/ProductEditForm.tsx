@@ -1,87 +1,62 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import CompatibleVehicle from "@/app/components/CompatibleVehicle";
 import CurrencyInputVietnam from "@/app/components/CurrencyInputVietnam";
-import ImageInput from "@/app/components/ImageInput";
 import { Button } from "@/app/components/shadcn/button";
 import { Textarea } from "@/app/components/shadcn/textarea";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
-import { updateProducts } from "../updateProducts";
 import { Product } from "../../page";
 import { Category } from "@/app/(default)/categories/page";
-import { fetchCategories } from "@/app/(default)/categories/fetchCategories";
+import { getProductImage } from "@/lib/utils";
+import { useFormState, useFormStatus } from "react-dom";
+import ClientImageInput from "@/app/components/ImageInput";
+import { CircleXIcon } from "lucide-react";
 import { Vehicle } from "@/app/(default)/vehicles/fetchVehicles";
+import { updateProduct } from "./updateProducts";
+import { useRouter } from "next/navigation";
 
 type ProductEditFormProps = {
   product: Product;
-  compatibleVehicles: Vehicle[];
+  compatibleVehicles?: Vehicle[];
+  categories: Category[];
 };
 
-export default function ProductEditForm({
-  product,
-  compatibleVehicles,
-}: ProductEditFormProps) {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [formData, setFormData] = useState({
-    name: product.name,
-    brand: product.brand,
-    description: product.description,
-    price: product.price,
-    stock_quantity: product.stock_quantity,
-    category_id: product.category_id,
-    image_base64: product.image_base64,
-    compatible_vehicles: product.compatible_vehicles || [],
-  });
+export default function ProductEditForm({ product, compatibleVehicles, categories }: ProductEditFormProps) {
+  const router = useRouter();
+  const [error, formAction] = useFormState(editProduct, null); // Hook to display error message
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  async function editProduct(state: any, formData: FormData) {
+    const name = formData.get("name") as string;
+    const brand = formData.get("brand") as string;
+    const description = formData.get("description") as string;
+    const price = formData.get("price") as string;
+    const stock_quantity = formData.get("stock_quantity") as string;
+    const category_id = formData.get("category_id") as string;
+    const image_base64 = formData.get("image") as string;
+    const compatible_vehicles = formData.get("compatibleVehicles") as string;
 
-  const handlePriceChange = (value: number) => {
-    setFormData({ ...formData, price: value });
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, category_id: e.target.value });
-  };
-
-  const handleImageChange = (base64: string) => {
-    setFormData((prev) => ({ ...prev, image_base64: base64 }));
-  };
-
-  const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const updatedProduct = await updateProducts(product._id, formData);
-      alert("Product updated successfully!");
-      window.location.href = `/products/${product._id}`;
-    } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product.");
+    const productToUpdate: Partial<Product> = {
+      name,
+      brand,
+      description,
+      price: parseInt(price),
+      stock_quantity: parseInt(stock_quantity),
+      category_id,
+      image_base64,
+      compatible_vehicles: JSON.parse(compatible_vehicles),
+    };
+    const res = await updateProduct(product._id, productToUpdate);
+    if (res.success) {
+      router.push(`/products/${res.data._id}`);
+    } else {
+      return res.error;
     }
-  };
+  }
 
-  useEffect(() => {
-    async function fetchCategoryData() {
-      try {
-        const fetchedCategories = await fetchCategories();
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    }
-
-    fetchCategoryData();
-  }, []);
 
   return (
-    <form onSubmit={handleSaveChanges} className="space-y-4">
+    <form action={formAction} className="space-y-4">
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
         <Label htmlFor="name" className="text-left font-bold lg:text-right">
           Name
@@ -91,8 +66,8 @@ export default function ProductEditForm({
           name="name"
           type="text"
           className="col-span-3 bg-white text-black"
-          value={formData.name}
-          onChange={handleInputChange}
+          required
+          defaultValue={product.name}
         />
       </div>
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
@@ -104,8 +79,8 @@ export default function ProductEditForm({
           name="brand"
           type="text"
           className="col-span-3 bg-white text-black"
-          value={formData.brand}
-          onChange={handleInputChange}
+          required
+          defaultValue={product.brand}
         />
       </div>
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
@@ -119,8 +94,9 @@ export default function ProductEditForm({
           id="description"
           name="description"
           className="col-span-3 bg-white text-black"
-          value={formData.description}
-          onChange={handleInputChange}
+          required
+          minLength={10}
+          defaultValue={product.description}
         />
       </div>
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
@@ -128,19 +104,15 @@ export default function ProductEditForm({
           Price (VNĐ)
         </Label>
         <CurrencyInputVietnam
-          defaultValue={formData.price}
-          onChange={handlePriceChange}
           name="price"
+          defaultValue={product.price}
         />
       </div>
       <div className="grid grid-cols-1 gap-2 lg:grid-cols-4 lg:gap-4">
         <Label htmlFor="image" className="text-left font-bold lg:text-right">
           Image
         </Label>
-        <ImageInput
-          defaultBase64={formData.image_base64}
-          onImageChange={handleImageChange}
-        />
+        <ClientImageInput name="image" defaultValue={getProductImage(product.image_base64)} />
       </div>
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
         <Label htmlFor="quantity" className="text-left font-bold lg:text-right">
@@ -152,8 +124,8 @@ export default function ProductEditForm({
           type="number"
           min="0"
           className="col-span-3 bg-white text-black"
-          value={formData.stock_quantity}
-          onChange={handleInputChange}
+          required
+          defaultValue={product.stock_quantity}
         />
       </div>
       <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
@@ -167,8 +139,7 @@ export default function ProductEditForm({
           className="select col-span-3 bg-white text-black"
           name="category_id"
           id="category_id"
-          value={formData.category_id}
-          onChange={handleCategoryChange}
+          defaultValue={product.category_id}
         >
           {categories.map((category) => (
             <option key={category._id} value={category._id}>
@@ -184,22 +155,28 @@ export default function ProductEditForm({
         >
           Compatible Vehicles
         </Label>
-        <CompatibleVehicle
-          vehicles={compatibleVehicles}
-          onSelect={(selectedVehicles) =>
-            setFormData((prev) => ({
-              ...prev,
-              compatible_vehicles: selectedVehicles,
-            }))
-          }
-          selectedVehicleIds={formData.compatible_vehicles}
-        />
+        <CompatibleVehicle vehicles={compatibleVehicles} />
       </div>
       <div className="flex justify-end">
-        <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">
-          Save Changes
-        </Button>
+        <SubmitButton />
       </div>
+      {error ? (
+        <div className="flex justify-center">
+          <div role="alert" className="alert alert-error">
+            <CircleXIcon />
+            <span>{error}</span>
+          </div>
+        </div>
+      ) : null}
     </form>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl" disabled={pending}>
+      {pending ? "Submitting" : "Edit Product"}
+    </Button>
   );
 }

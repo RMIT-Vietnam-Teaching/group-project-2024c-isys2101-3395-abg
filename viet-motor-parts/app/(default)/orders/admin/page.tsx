@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 
+
 export default async function AdminPage({ searchParams }: { searchParams: Record<string, string> }) {
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
-    const ordersData = await fetchOrders(page);
+    const ordersData = await fetchOrders({ searchParams });
     const orders = ordersData.data;
     const totalPages = ordersData.meta.totalPages;
     const prevPage = page - 1 > 0 ? page - 1 : 1;

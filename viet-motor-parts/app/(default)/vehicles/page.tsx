@@ -1,6 +1,12 @@
 import Button from "@/app/components/Button";
 import { fetchVehicles } from "./fetchVehicles";
 import VehicleFilter from "./vehicleDisplay";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Vehicles | Viet Motor Parts",
+    description: "All Vehicles of Viet Motor Parts",
+};
 
 export default async function Page() {
     const vehicles = await fetchVehicles();

@@ -2,6 +2,7 @@ import dbConnect from '@/app/lib/db';
 import Category from '@/app/lib/models/category';
 import Product from "@/app/lib/models/product";
 import jwt from 'jsonwebtoken';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request, { params }) {
   await dbConnect();
@@ -84,6 +85,7 @@ export async function PATCH(request, { params }) {
       );
     }
 
+
     return new Response(
       JSON.stringify({ success: true, data: updatedCategory }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
@@ -151,6 +153,7 @@ export async function DELETE(request, { params }) {
       );
     }
 
+    revalidatePath('/categories');
     return new Response(
       JSON.stringify({ success: true, data: deletedCategory }),
       { status: 200 }
