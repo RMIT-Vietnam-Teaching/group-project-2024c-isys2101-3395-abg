@@ -133,10 +133,11 @@ export async function POST(request) {
       { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error creating product:', error);
+    const errorMessages = Object.values(error.errors || {}).map(err => err.message);
+
     return new Response(
-      JSON.stringify({ success: false, error: 'Failed to create product' }),
-      { status: 500 }
+      JSON.stringify({ success: false, error: errorMessages.join(', ') }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
