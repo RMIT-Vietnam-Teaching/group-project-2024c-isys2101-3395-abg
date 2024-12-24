@@ -30,7 +30,6 @@ export default function AddCategoryForm() {
             console.log('Category created:', newCategory);
             router.push("/categories");
             router.refresh();
-            
         } catch (error) {
             setError('Failed to create category.');
             setSuccess('');
