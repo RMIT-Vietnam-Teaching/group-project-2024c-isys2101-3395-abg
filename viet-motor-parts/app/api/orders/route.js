@@ -59,13 +59,13 @@ export async function GET(request) {
 
     // Fetch paginated orders
     const skip = (page - 1) * limit;
-    const orders = await Order.find({}) //If pass filter in it return nothing (successful but nothing) even when not filtering.
+    const orders = await Order.find(filter) //If pass filter in it return nothing (successful but nothing) even when not filtering.
       .sort({ [sortBy]: sortOrder }) //Also this doesn't work when switch to other type of sorting
       .skip(skip)
       .limit(limit);
 
     // Total count for pagination metadata
-    const totalCount = await Order.countDocuments({});
+    const totalCount = await Order.countDocuments(filter);
 
     return new Response(
       JSON.stringify({

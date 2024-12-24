@@ -17,8 +17,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Record
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
 
-    // let query = searchParams.query || "";
-    let status = searchParams.status || "";
+    let status = searchParams.status || ""; //It default to "" >>> searchParams.status does not exist???
     let sortBy = searchParams.sortBy || "";
     let order = searchParams.order || "";
     let priceFrom = searchParams.priceFrom || "";

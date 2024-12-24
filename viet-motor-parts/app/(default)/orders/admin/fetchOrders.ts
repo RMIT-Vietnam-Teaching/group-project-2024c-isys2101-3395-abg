@@ -32,8 +32,10 @@ export async function fetchOrders(page: number,
 : Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
     // Construct API URL dynamically
     let apiUrl = `http://localhost:3000/api/orders?page=${page}`;
+    console.log(status + "nothing");
     if (status) {
         apiUrl += `&status=${encodeURIComponent(status)}`;
+        console.log("Status filter exist;")
     }
     if (sortBy) {
         apiUrl += `&sortBy=${encodeURIComponent(sortBy)}`;
@@ -47,8 +49,9 @@ export async function fetchOrders(page: number,
     if (priceTo) {
         apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
     }
+    console.log("Pass through all the api building");
     try {
-        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
+        const res = await fetch(apiUrl, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
         if (!res.ok) {
             console.error(`Failed to fetch orders, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);

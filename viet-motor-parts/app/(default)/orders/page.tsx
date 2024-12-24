@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function Page() {
     const isLoggedIn = await getAuthStatus();
     if (isLoggedIn) {
-        return <AdminPage searchParams={{ param: "1" }} />; // Default for page 1
+        return <AdminPage searchParams={{ param: "1"}} />; // Default for page 1
     } else {
         return <OrderTrackingVerify />;
     }
