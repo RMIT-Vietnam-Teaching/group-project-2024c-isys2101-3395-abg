@@ -20,9 +20,7 @@ export async function middleware(request) {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
 
-    // Log the payload for debugging
-    console.log('Token payload:', payload);
-
+    
     // Allow the request to continue
     return NextResponse.next();
   } catch (error) {

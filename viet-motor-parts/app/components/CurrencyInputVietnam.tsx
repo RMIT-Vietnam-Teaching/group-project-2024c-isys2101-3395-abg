@@ -26,7 +26,7 @@ export default function CurrencyInputVietnam({ className, defaultValue, onChange
 
     return (<div className="col-span-3">
         <CurrencyInput id={name} allowDecimals={false} suffix={"đ"} allowNegativeValue={false} className={twMerge(`form-control w-full rounded-md p-2 bg-white text-black focus:outline-none`, className)} onValueChange={handleValueChange} placeholder="e.g 120,000đ" value={rawValue} />
-        <input id={`${name}-real`} type="number" name={name} min="0" value={rawValue?.replace(/\D/g, "") || 0} readOnly className="hidden" />
+        <input id={`${name}-real`} type="number" name={name} min="0" value={rawValue?.replace(/\D/g, "") || 0} readOnly className="hidden" required />
     </div>
     )
 }

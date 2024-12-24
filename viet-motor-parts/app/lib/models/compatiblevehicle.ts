@@ -14,7 +14,7 @@ const compatibleVehicleSchema: Schema<ICompatibleVehicle> = new mongoose.Schema(
   {
     make: { type: String, required: true },
     vehicleModel: { type: String, required: true },
-    year: { type: Number, required: true, min: 1900, max: new Date().getFullYear() },
+    year: { type: Number, required: true, min: 1900, max: new Date().getFullYear() + 1 },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
