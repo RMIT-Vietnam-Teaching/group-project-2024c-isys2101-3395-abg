@@ -23,7 +23,30 @@ export interface Order {
     };
   }
 
-export async function fetchOrders(page: number): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+export async function fetchOrders(page: number,
+    status: string,
+    sortBy: string,
+    order: string,
+    priceFrom: string,
+    priceTo: string)
+: Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+    // Construct API URL dynamically
+    let apiUrl = `http://localhost:3000/api/orders?page=${page}`;
+    if (status) {
+        apiUrl += `&status=${encodeURIComponent(status)}`;
+    }
+    if (sortBy) {
+        apiUrl += `&sortBy=${encodeURIComponent(sortBy)}`;
+    }
+    if (order) {
+        apiUrl += `&order=${encodeURIComponent(order)}`;
+    }
+    if (priceFrom) {
+        apiUrl += `&priceFrom=${encodeURIComponent(priceFrom)}`;
+    }
+    if (priceTo) {
+        apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
+    }
     try {
         const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
         if (!res.ok) {
