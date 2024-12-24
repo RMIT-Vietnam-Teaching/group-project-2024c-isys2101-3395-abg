@@ -25,6 +25,12 @@ export interface Order {
   }
 
 export async function fetchOrders({ searchParams }: { searchParams: Record<string, string> }): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+    let status = searchParams.status || "";
+    let sortBy = searchParams.sortBy || "";
+    let order = searchParams.order || "";
+    let priceFrom = searchParams.priceFrom || "";
+    let priceTo = searchParams.priceTo || "";
+
     const token = await getAuthToken();
     let page = parseInt(searchParams.page, 10) || 1;
     try {
