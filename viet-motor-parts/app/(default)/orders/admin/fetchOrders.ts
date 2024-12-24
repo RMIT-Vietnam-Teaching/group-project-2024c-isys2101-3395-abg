@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { OrderDetail } from "../[id]/fetchOrderbyID";
+import { getAuthToken } from "@/lib/auth";
 
 
 export interface Order {
@@ -23,9 +24,15 @@ export interface Order {
     };
   }
 
-export async function fetchOrders(page: number): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+export async function fetchOrders({ searchParams }: { searchParams: Record<string, string> }): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+    const token = await getAuthToken();
+    let page = parseInt(searchParams.page, 10) || 1;
     try {
-        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
+        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, 
+        { cache: "no-store", 
+            headers : {
+            'authorization' : `Bearer ${token}`} 
+        });
         if (!res.ok) {
             console.error(`Failed to fetch orders, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);
