@@ -3,7 +3,7 @@ import { fetchVehicles } from "./fetchVehicles";
 import VehicleFilter from "./vehicleDisplay";
 import { Metadata } from "next";
 
-const metadata: Metadata = {
+export const metadata: Metadata = {
     title: "Vehicles | Viet Motor Parts",
     description: "All Vehicles of Viet Motor Parts",
 };

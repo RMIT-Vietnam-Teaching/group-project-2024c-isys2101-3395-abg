@@ -3,11 +3,10 @@
 import { Button } from "@/app/components/shadcn/button";
 import { Input } from "@/app/components/shadcn/input";
 import { Label } from "@/app/components/shadcn/label";
-import { CircleXIcon, TriangleAlert } from 'lucide-react';
+import { CircleXIcon } from 'lucide-react';
 import { getAuthToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { Category } from "../../page";
-import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { updateCategory } from "./editCategory";
 
