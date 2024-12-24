@@ -13,17 +13,12 @@ export const metadata: Metadata = {
 };
 
 
+
 export default async function AdminPage({ searchParams }: { searchParams: Record<string, string> }) {
     let page = parseInt(searchParams.page, 10) || 1;
     page = !page || page < 1 ? 1 : page;
 
-    let status = searchParams.status || ""; //It default to "" >>> searchParams.status does not exist???
-    let sortBy = searchParams.sortBy || "";
-    let order = searchParams.order || "";
-    let priceFrom = searchParams.priceFrom || "";
-    let priceTo = searchParams.priceTo || "";
-
-    const ordersData = await fetchOrders(page, status, sortBy, order, priceFrom, priceTo);
+    const ordersData = await fetchOrders({ searchParams });
     const orders = ordersData.data;
     const totalPages = ordersData.meta.totalPages;
     const prevPage = page - 1 > 0 ? page - 1 : 1;

@@ -51,7 +51,7 @@ export default function EditVehicleForm({ vehicle }: { vehicle: Vehicle }) {
     }
 
     async function handleDelete() {
-        const token = localStorage.getItem("token");
+        const token = await getAuthToken();
 
         if (!token) {
             console.error("No token found. Please log in.");

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { OrderDetail } from "../[id]/fetchOrderbyID";
+import { getAuthToken } from "@/lib/auth";
 
 
 export interface Order {
@@ -23,35 +24,21 @@ export interface Order {
     };
   }
 
-export async function fetchOrders(page: number,
-    status: string,
-    sortBy: string,
-    order: string,
-    priceFrom: string,
-    priceTo: string)
-: Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
-    // Construct API URL dynamically
-    let apiUrl = `http://localhost:3000/api/orders?page=${page}`;
-    console.log(status + "nothing");
-    if (status) {
-        apiUrl += `&status=${encodeURIComponent(status)}`;
-        console.log("Status filter exist;")
-    }
-    if (sortBy) {
-        apiUrl += `&sortBy=${encodeURIComponent(sortBy)}`;
-    }
-    if (order) {
-        apiUrl += `&order=${encodeURIComponent(order)}`;
-    }
-    if (priceFrom) {
-        apiUrl += `&priceFrom=${encodeURIComponent(priceFrom)}`;
-    }
-    if (priceTo) {
-        apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
-    }
-    console.log("Pass through all the api building");
+export async function fetchOrders({ searchParams }: { searchParams: Record<string, string> }): Promise<{ data: Order[], meta: { totalItems: number, totalPages: number } }> {
+    let status = searchParams.status || "";
+    let sortBy = searchParams.sortBy || "";
+    let order = searchParams.order || "";
+    let priceFrom = searchParams.priceFrom || "";
+    let priceTo = searchParams.priceTo || "";
+
+    const token = await getAuthToken();
+    let page = parseInt(searchParams.page, 10) || 1;
     try {
-        const res = await fetch(apiUrl, { cache: "no-store", headers : {'authorization' : `Bearer ${cookies().get('token')?.value}`} });
+        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, 
+        { cache: "no-store", 
+            headers : {
+            'authorization' : `Bearer ${token}`} 
+        });
         if (!res.ok) {
             console.error(`Failed to fetch orders, Status: ${res.status}`);
             throw new Error(`HTTP error! Status: ${res.status}`);

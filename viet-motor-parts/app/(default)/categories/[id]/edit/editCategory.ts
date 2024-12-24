@@ -1,13 +1,17 @@
 'use server'
-import { revalidatePath } from "next/cache";
-import { Product } from "../../page";
+
 import { getAuthToken } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
+import { Category } from "../../page";
 
 
-export async function updateProduct(id: string, updates: Partial<Product>) {
+
+
+
+export async function updateCategory(id: string, updates: Partial<Category>) {
     try {
         const token = await getAuthToken();
-        const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+        const res = await fetch(`http://localhost:3000/api/category/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -17,7 +21,7 @@ export async function updateProduct(id: string, updates: Partial<Product>) {
         });
 
         if (res.ok){
-            revalidatePath("/products");
+            revalidatePath("/categories");
         }
         const data  = await res.json();
         return data;
@@ -25,4 +29,9 @@ export async function updateProduct(id: string, updates: Partial<Product>) {
         return error;
       }
 }
+
+
+
+
+
 

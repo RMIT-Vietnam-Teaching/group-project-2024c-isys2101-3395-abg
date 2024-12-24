@@ -14,7 +14,6 @@ import ClientImageInput from "@/app/components/ImageInput";
 import { CircleXIcon } from "lucide-react";
 import { Vehicle } from "@/app/(default)/vehicles/fetchVehicles";
 import { updateProduct } from "./updateProducts";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 
 type ProductEditFormProps = {
@@ -49,7 +48,6 @@ export default function ProductEditForm({ product, compatibleVehicles, categorie
     };
     const res = await updateProduct(product._id, productToUpdate);
     if (res.success) {
-      revalidatePath("/products");
       router.push(`/products/${res.data._id}`);
     } else {
       return res.error;
