@@ -33,8 +33,26 @@ export async function fetchOrders({ searchParams }: { searchParams: Record<strin
 
     const token = await getAuthToken();
     let page = parseInt(searchParams.page, 10) || 1;
+
+    let apiUrl = `http://localhost:3000/api/orders?page=${page}`;
+    if (status) {
+        apiUrl += `&status=${encodeURIComponent(status)}`;
+    }
+    if (sortBy) {
+        apiUrl += `&sortBy=${encodeURIComponent(sortBy)}`;
+    }
+    if (order) {
+        apiUrl += `&order=${encodeURIComponent(order)}`;
+    }
+    if (priceFrom) {
+        apiUrl += `&priceFrom=${encodeURIComponent(priceFrom)}`;
+    }
+    if (priceTo) {
+        apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
+    }
+
     try {
-        const res = await fetch(`http://localhost:3000/api/orders?page=${page}`, 
+        const res = await fetch(apiUrl, 
         { cache: "no-store", 
             headers : {
             'authorization' : `Bearer ${token}`} 

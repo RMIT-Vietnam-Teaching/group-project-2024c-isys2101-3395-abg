@@ -89,7 +89,7 @@ export function OrderSideFilter() {
         }
       }
     });
-    router.push(`/orders?${searchParams.toString()}`);
+    router.push(`/orders/admin/?${searchParams.toString()}`);
   };
 
   // Track open accordion panels
