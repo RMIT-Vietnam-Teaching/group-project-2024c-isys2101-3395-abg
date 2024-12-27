@@ -125,8 +125,13 @@ export async function POST(request) {
       );
     }
 
+    const discount_perc = Math.floor(Math.random() * (60 - 20 + 1)) + 20;
+
     // Create a new product
-    const newProduct = await Product.create(body);
+    const newProduct = await Product.create({
+      ...body,
+      discount_perc, // Include the generated discount_perc
+    });
 
     return new Response(
       JSON.stringify({ success: true, data: newProduct }),

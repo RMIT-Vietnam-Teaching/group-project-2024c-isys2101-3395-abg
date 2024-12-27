@@ -10,6 +10,7 @@ export interface IProduct extends Document {
   stock_quantity: number;
   image_base64: string;
   compatible_vehicles: mongoose.Types.ObjectId[];
+  discount_perc?: number | null;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -30,6 +31,12 @@ const productSchema: Schema<IProduct> = new mongoose.Schema(
         ref: 'CompatibleVehicle',
       },
     ],
+    discount_perc: {
+      type: Number,
+      min: 20,
+      max: 60,
+      default: null, // Allows null as a valid value
+    },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
