@@ -37,6 +37,7 @@ export default function ProductEditForm({
     const brand = formData.get("brand") as string;
     const description = formData.get("description") as string;
     const price = formData.get("price") as string;
+    const discount_perc = formData.get("discount_perc") as string;
     const stock_quantity = formData.get("stock_quantity") as string;
     const category_id = formData.get("category_id") as string;
     const image_base64 = formData.get("image") as string;
@@ -47,6 +48,7 @@ export default function ProductEditForm({
       brand,
       description,
       price: parseInt(price),
+      discount_perc: parseInt(discount_perc),
       stock_quantity: parseInt(stock_quantity),
       category_id,
       image_base64,
@@ -143,6 +145,12 @@ export default function ProductEditForm({
             Price (VNĐ)
           </Label>
           <CurrencyInputVietnam name="price" defaultValue={product.price} />
+        </div>
+        <div className="grid-row-2 grid items-center gap-2 lg:grid-cols-4 lg:gap-4">
+          <Label htmlFor="discount_perc" className="text-left font-bold lg:text-right">
+            Discount Percentage
+          </Label>
+          <Input type="number" step={1} min={20} max={60} name="discount_perc" defaultValue={product.discount_perc} className="col-span-3 bg-white text-black" />
         </div>
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-4 lg:gap-4">
           <Label htmlFor="image" className="text-left font-bold lg:text-right">

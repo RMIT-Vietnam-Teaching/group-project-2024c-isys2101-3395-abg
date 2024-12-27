@@ -34,21 +34,14 @@ export default async function Page({ params }: { params: { id: string } }) {
                         />
                     </div>
                 </div>
-                <div className="flex flex-col gap-2 px-4">
+                <div className="flex flex-col gap-3 px-4">
                     <div className="flex flex-col gap-3">
                         <h2 className="text-5xl font-extrabold text-brand-100">
                             {product.name}
                         </h2>
                         <p className="text-base text-brand-200">{product.brand}</p>
                     </div>
-                    <div className="flex">
-                        <div className="mr-4">
-                            <span className="text-lg font-bold text-brand-100">Price:</span>
-                            <span className="text-lg font-extrabold text-brand-200">
-                                {" "}
-                                {formatCurrency(product.price)}
-                            </span>
-                        </div>
+                    <div className="flex flex-col gap-2">
                         <div>
                             <span className="text-lg font-bold text-brand-100">
                                 In Stock:
@@ -57,6 +50,24 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 {" "}
                                 {product.stock_quantity}
                             </span>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div id="real-price" className="flex items-center gap-2">
+                                <span className="text-5xl font-extrabold text-brand-200">
+                                    {" "}
+                                    {formatCurrency(product.price)}
+                                </span>
+                                <span className="font-extrabold text-lg bg-brand-500 p-3 rounded-lg">
+                                    {" "}
+                                    -{product.discount_perc}%
+                                </span>
+                            </div>
+                            <div id="list-price" className="text-sm">
+                                <span className="font-bold text-brand-100">List Price:{" "}</span>
+                                <span className="font-extrabold text-brand-200 line-through">
+                                    {formatCurrency(product.price + product.price * (product.discount_perc / 100))}
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div className="flex">
@@ -88,7 +99,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             {product.description}
                         </p>
                     </div>
-                    <CompatCheckProductPage product={product}/>
+                    <CompatCheckProductPage product={product} />
                 </div>
             </div>
         </div>

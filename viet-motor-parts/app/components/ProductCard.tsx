@@ -7,7 +7,7 @@ import { getAuthStatus } from '@/lib/auth';
 import Button from './Button';
 
 
-export default async function ProductCard({ _id, name, price, image_base64 }: Product) {
+export default async function ProductCard({ _id, name, price, discount_perc, image_base64 }: Product) {
   const isLoggedIn = await getAuthStatus();
 
   return (
@@ -36,9 +36,19 @@ export default async function ProductCard({ _id, name, price, image_base64 }: Pr
           </Link>
         )}
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold" id="price">
-            {formatCurrency(price)}
-          </span>
+          <div id='pricing' className='flex flex-col gap-2'>
+            <span className="text-2xl font-bold" id="price">
+              {formatCurrency(price)}
+            </span>
+            <div id='fake-price' className='flex gap-2 items-center'>
+              <span className="text-xs font-semibold line-through" id="fake-og-price">
+                {formatCurrency(price + price * (discount_perc / 100))}
+              </span>
+              <span className='text-sm font-bold bg-brand-600 p-1 rounded-lg'>
+                -{discount_perc}%
+              </span>
+            </div>
+          </div>
           {isLoggedIn ? (
             <Button
               link={`/products/${_id}/edit`}

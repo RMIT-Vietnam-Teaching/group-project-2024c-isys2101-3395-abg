@@ -1,7 +1,6 @@
 import ProductCard from '@/app/components/ProductCard';
 import { SideFilter } from '@/app/components/SideFilter';
 import { Metadata } from "next/types";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from '@/app/components/shadcn/pagination';
 import { fetchCategories } from '../categories/fetchCategories';
 import CustomPagination from '@/app/components/CustomPagination';
 import { getAuthStatus } from '@/lib/auth';
@@ -17,6 +16,7 @@ export interface Product {
     stock_quantity: number;
     category_id: string;
     compatible_vehicles: string[];
+    discount_perc: number;
 }
 
 export const metadata: Metadata = {
@@ -96,7 +96,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
                     <section
                         className="grid justify-center grid-cols-1 gap-3 mb-5 md:grid-cols-2 min-[1440px]:grid-cols-3 justify-items-center md:max-w-2xl lg:max-w-full lg:mx-0">
                         {products.map((product: Product) => (
-                            <ProductCard key={product._id} _id={product._id} name={product.name} price={product.price} image_base64={product.image_base64 || ""} description={product.description} brand={product.brand} compatible_vehicles={product.compatible_vehicles} stock_quantity={product.stock_quantity} category_id={product.category_id} />
+                            <ProductCard key={product._id} _id={product._id} name={product.name} price={product.price} image_base64={product.image_base64 || ""} description={product.description} brand={product.brand} compatible_vehicles={product.compatible_vehicles} stock_quantity={product.stock_quantity} category_id={product.category_id} discount_perc={product.discount_perc} />
                         ))}
                     </section>
                     <div>
