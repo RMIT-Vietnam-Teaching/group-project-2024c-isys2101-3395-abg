@@ -13,10 +13,10 @@ interface SideFilterProps {
 export function SideFilter(props: SideFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [categories, setCategories] = useState(props.categories || []);
+  const categories = props.categories || [];
   const [selectedCategory, setSelectedCategory] = useState<string[]>(searchParams.get("category")?.split(",") || []);
-  const [sortBy, setSortBy] = useState("name");
-  const [order, setOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "name");
+  const [order, setOrder] = useState(searchParams.get("order") || "asc");
   const [priceFrom, setPriceFrom] = useState<number | null>(null);
   const [priceTo, setPriceTo] = useState<number | null>(null);
 
