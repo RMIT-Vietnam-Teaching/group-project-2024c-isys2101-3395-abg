@@ -229,15 +229,15 @@ export function OrderSideFilter() {
               </li>
               <li className="flex items-center">
                   <input
-                  id="OnTheWay"
+                  id="On The Way"
                   type="checkbox"
                   onChange={handleStatusChange}
-                  value="OnTheWay"
+                  value="On The Way"
                   className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                  checked={selectedStatus.includes("OnTheWay")}
+                  checked={selectedStatus.includes("On The Way")}
                   />
                   <label
-                  htmlFor="OnTheWay"
+                  htmlFor="On The Way"
                   className="ml-2 text-lg font-medium text-brand-400"
                   >
                   On The Way
