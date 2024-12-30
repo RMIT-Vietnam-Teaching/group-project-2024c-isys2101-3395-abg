@@ -28,6 +28,15 @@ export default async function StatusModal({ order_id, current_status, validStatu
         'use server'
         const authToken = await getAuthToken();
         const order_status = formData.get("order-status") as string;
+        let shipping_label;
+        let body;
+        if (current_status === "Packaged") {
+            shipping_label = formData.get("shipping_label") as string;
+            body = { order_status, shipping_label };
+        } else {
+            body = { order_status };
+        }
+
         const res = await fetch(`${process.env.BACKEND_URL}/api/orders/${order_id}`,
             {
                 method: "PATCH",
@@ -35,7 +44,7 @@ export default async function StatusModal({ order_id, current_status, validStatu
                     "Content-Type": "application/json",
                     'authorization': `Bearer ${authToken}`,
                 },
-                body: JSON.stringify({ order_status })
+                body: JSON.stringify(body)
             }
         )
         if (res.ok) {
@@ -78,6 +87,12 @@ export default async function StatusModal({ order_id, current_status, validStatu
                             );
                         })}
                     </ul>
+                    {current_status === "Packaged" ? (
+                        <div className="mt-5 flex flex-col gap-2">
+                            <Label htmlFor="shipping_label" className="text-white font-bold">Shipping Label</Label>
+                            <Input type="text" id="shipping_label" name="shipping_label" className="w-full p-3 bg-white rounded-lg" />
+                        </div>
+                    ) : <></>}
                 </form>
                 <DialogFooter>
                     <Button type="submit" form="changeStatus" className="rounded-lg bg-gradient-to-r from-brand-300 via-brand-400 to-brand-600 px-5 py-2.5 text-center text-sm font-bold text-white hover:bg-gradient-to-bl">Update Status</Button>
