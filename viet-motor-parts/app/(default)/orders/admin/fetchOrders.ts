@@ -30,6 +30,7 @@ export async function fetchOrders({ searchParams }: { searchParams: Record<strin
     let order = searchParams.order || "";
     let priceFrom = searchParams.priceFrom || "";
     let priceTo = searchParams.priceTo || "";
+    let paymentMethod = searchParams.paymentMethod || "";
 
     const token = await getAuthToken();
     let page = parseInt(searchParams.page, 10) || 1;
@@ -50,7 +51,9 @@ export async function fetchOrders({ searchParams }: { searchParams: Record<strin
     if (priceTo) {
         apiUrl += `&priceTo=${encodeURIComponent(priceTo)}`;
     }
-
+    if (paymentMethod) {
+        apiUrl += `&paymentMethod=${encodeURIComponent(paymentMethod)}`;
+    }
     try {
         const res = await fetch(apiUrl, 
         { cache: "no-store", 

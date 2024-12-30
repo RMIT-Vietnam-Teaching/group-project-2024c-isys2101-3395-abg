@@ -15,6 +15,7 @@ export async function GET(request) {
   const order = searchParams.get('order') || 'asc';
   const priceFrom = parseInt(searchParams.get('priceFrom') || '0', 10);
   const priceTo = parseInt(searchParams.get('priceTo') || 'Infinity', 10);
+  const paymentMethod = searchParams.get('paymentMethod')?.split(',') || '';
 
   try {
     //Begin of new code
@@ -35,6 +36,8 @@ export async function GET(request) {
 
     const statusFilter = status.length ? { order_status: { $in: status } } : {};
 
+    const paymentMethodFilter = paymentMethod.length ? { payment_method: { $in: paymentMethod } } : {};
+
     const priceFilter = {};
     if (priceFrom && !priceTo && !isNaN(priceFrom)) {
       priceFilter.$gte = parseInt(priceFrom, 10);
@@ -50,6 +53,7 @@ export async function GET(request) {
 
     const filter = {
       ...statusFilter,
+      ...paymentMethodFilter,
       // name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
     };
 
