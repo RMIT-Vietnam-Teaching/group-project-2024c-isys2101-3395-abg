@@ -29,7 +29,7 @@ export const STATUSES = [
   { key: "Confirmed", label: "Order Confirmed" },
   { key: "Packaged", label: "Packaged" },
   { key: "Shipped", label: "Shipped" },
-  { key: "OnTheWay", label: "On The Way" },
+  { key: "On The Way", label: "On The Way" },
   { key: "Delivered", label: "Delivered" },
 ];
 
