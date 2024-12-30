@@ -54,7 +54,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Record
                 <TableBody>
                     {orders.map((order: Order) => (
                         <TableRow key={order._id}>
-                            <TableCell className="font-bold text-2xl line-clamp-2">
+                            <TableCell className="font-bold text-2xl table-cell">
                                 <Link href={`/orders/${order._id}`} className="hover:underline max-w-7 overflow-hidden">{order._id}</Link>
                             </TableCell>
                             <TableCell>{order.customer_name}</TableCell>

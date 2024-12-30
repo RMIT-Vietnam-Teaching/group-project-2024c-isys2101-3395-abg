@@ -13,6 +13,7 @@ export function OrderSideFilter() {
   const [order, setOrder] = useState("asc");
   const [priceFrom, setPriceFrom] = useState<number | null>(null);
   const [priceTo, setPriceTo] = useState<number | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string[]>(searchParams.get("paymentMethod")?.split(",") || []);
 
 
   useEffect(() => {
@@ -22,6 +23,10 @@ export function OrderSideFilter() {
   useEffect(() => {
     updateQuery({ sortBy, order });
   }, [sortBy, order]);
+
+  useEffect(() => {
+    updateQuery({ paymentMethod: selectedPaymentMethod }); 
+  }, [selectedPaymentMethod]);
 
   useEffect(() => {
     const params: Record<string, string | string[]> = {};
@@ -45,6 +50,16 @@ export function OrderSideFilter() {
     });
   };
 
+  const handlePaymentMethodChange = (e: ChangeEvent<HTMLInputElement>) => { 
+    const { value, checked } = e.target; 
+    setSelectedPaymentMethod((prevMethods: string[]) => { 
+      if (checked) {
+         return [...prevMethods, value]; 
+        } else { 
+          return prevMethods.filter((method) => method !== value); 
+        } 
+    });
+  };
   const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     if (id === "price_from") {
@@ -147,107 +162,186 @@ export function OrderSideFilter() {
           </svg>
         </button>
         {isOpen("category") && (
-            <ul className="space-y-2 text-lg mt-3 ml-2">
-                <li className="flex items-center">
-                    <input
-                    id="Pending"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="Pending" // Use category ID as the value
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("Pending")}
-                    />
-                    <label
-                    htmlFor="Pending"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    Pending
-                    </label>
-                </li>
-                <li className="flex items-center">
-                    <input
-                    id="Confirmed"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="Confirmed"
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("Confirmed")}
-                    />
-                    <label
-                    htmlFor="Confirmed"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    Confirmed
-                    </label>
-                </li>
-                <li className="flex items-center">
-                    <input
-                    id="Packaged"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="Packaged"
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("Packaged")}
-                    />
-                    <label
-                    htmlFor="Packaged"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    Packaged
-                    </label>
-                </li>
-                <li className="flex items-center">
-                    <input
-                    id="Shipped"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="Shipped"
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("Shipped")}
-                    />
-                    <label
-                    htmlFor="Shipped"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    Shipped
-                    </label>
-                </li>
-                <li className="flex items-center">
-                    <input
-                    id="OnTheWay"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="OnTheWay"
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("OnTheWay")}
-                    />
-                    <label
-                    htmlFor="OnTheWay"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    On The Way
-                    </label>
-                </li>
-                <li className="flex items-center">
-                    <input
-                    id="Delivered"
-                    type="checkbox"
-                    onChange={handleStatusChange}
-                    value="Delivered"
-                    className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
-                    checked={selectedStatus.includes("Delivered")}
-                    />
-                    <label
-                    htmlFor="Delivered"
-                    className="ml-2 text-lg font-medium text-brand-400"
-                    >
-                    Delivered
-                    </label>
-                </li>
-            </ul>
+          <ul className="space-y-2 text-lg mt-3 ml-2">
+              <li className="flex items-center">
+                  <input
+                  id="Pending"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="Pending" // Use category ID as the value
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("Pending")}
+                  />
+                  <label
+                  htmlFor="Pending"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Pending
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="Confirmed"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="Confirmed"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("Confirmed")}
+                  />
+                  <label
+                  htmlFor="Confirmed"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Confirmed
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="Packaged"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="Packaged"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("Packaged")}
+                  />
+                  <label
+                  htmlFor="Packaged"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Packaged
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="Shipped"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="Shipped"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("Shipped")}
+                  />
+                  <label
+                  htmlFor="Shipped"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Shipped
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="OnTheWay"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="OnTheWay"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("OnTheWay")}
+                  />
+                  <label
+                  htmlFor="OnTheWay"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  On The Way
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="Delivered"
+                  type="checkbox"
+                  onChange={handleStatusChange}
+                  value="Delivered"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedStatus.includes("Delivered")}
+                  />
+                  <label
+                  htmlFor="Delivered"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Delivered
+                  </label>
+              </li>
+          </ul>
         )}
       </div>
 
+      {/* Payment Method Accordion */}
+      <div className="my-3">
+        <button
+          type="button"
+          onClick={() => toggleSection("paymentMethod")}
+          className={`flex items-center justify-between w-full py-3 font-medium text-brand-500 border-b border-gray-200 gap-3 rounded ${isOpen("paymentMethod") ? "bg-white" : ""
+            }`}
+        >
+          <h6 className="mx-3 text-xl font-medium">Payment Method</h6>
+          <svg
+            className={`w-4 h-4 mx-3 transform ${isOpen("paymentMethod") ? "rotate-180" : ""
+              }`}
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M9 5 5 1 1 5"
+            />
+          </svg>
+        </button>
+        {isOpen("paymentMethod") && (
+          <ul className="space-y-2 text-lg mt-3 ml-2">
+              <li className="flex items-center">
+                  <input
+                  id="Cash"
+                  type="checkbox"
+                  onChange={handlePaymentMethodChange}
+                  value="Cash"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedPaymentMethod.includes("Cash")}
+                  />
+                  <label
+                  htmlFor="Cash"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Cash
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="PayPal"
+                  type="checkbox"
+                  onChange={handlePaymentMethodChange}
+                  value="PayPal"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedPaymentMethod.includes("PayPal")}
+                  />
+                  <label
+                  htmlFor="PayPal"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  PayPal
+                  </label>
+              </li>
+              <li className="flex items-center">
+                  <input
+                  id="Installment"
+                  type="checkbox"
+                  onChange={handlePaymentMethodChange}
+                  value="Installment"
+                  className="w-5 h-5 bg-gray-100 border-gray-300 rounded text-brand-400 focus:ring-brand-400 focus:ring-2"
+                  checked={selectedPaymentMethod.includes("Installment")}
+                  />
+                  <label
+                  htmlFor="Installment"
+                  className="ml-2 text-lg font-medium text-brand-400"
+                  >
+                  Installment
+                  </label>
+              </li>
+          </ul>
+        )}
+      </div>
 
       {/* Price Accordion */}
       <div className="my-3">
