@@ -41,7 +41,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Record
                 className="left-0 w-full rounded-lg bg-palette-3 md:max-lg:block lg:block lg:sticky top-10 h-5/6 lg:w-1/4 md:max-lg:center-and-half">
                 <OrderSideFilter/>
             </aside>
-            <Table className="p-5 w-full rounded-lg shadow-lg bg-brand-500 xl:w-3/4">
+            <Table className="p-5 w-full h-fit rounded-lg shadow-lg bg-brand-500 xl:w-3/4">
                 <TableHeader className="sticky top-0 bg-brand-500 rounded-t-lg">
                     <TableRow>
                         <TableHead className="w-[100px]">Order ID</TableHead>
