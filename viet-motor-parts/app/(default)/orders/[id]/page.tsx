@@ -91,6 +91,11 @@ export default async function Page({ params, searchParams }: { params: { id: str
       return [STATUSES[0]];
     }
 
+    // Add "On The Way" if the current status is "Delivered"
+    if (currentStatus === "Delivered") {
+      validStatuses.push(STATUSES[4]);
+    }
+
     return validStatuses;
   };
 

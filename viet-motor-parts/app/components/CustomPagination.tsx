@@ -16,12 +16,12 @@ export interface PaginationData {
 export default function CustomPagination({ page, totalPages, pageNumbers, prevPage, nextPage }: PaginationData) {
     const searchParams = useSearchParams();
 
-    const buildUrlWithParams = (newParams: Record<string, string>) => { 
-        const params = new URLSearchParams(searchParams.toString()); 
-        Object.keys(newParams).forEach(key => { 
-            params.set(key, newParams[key]); 
-        }); 
-        return `?${params.toString()}`; 
+    const buildUrlWithParams = (newParams: Record<string, string>) => {
+        const params = new URLSearchParams(searchParams.toString());
+        Object.keys(newParams).forEach(key => {
+            params.set(key, newParams[key]);
+        });
+        return `?${params.toString()}`;
     };
 
     return (
