@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import { getAuthStatus, getAuthToken } from "@/lib/auth";
 import Button from "@/app/components/Button";
 import StatusModal from "./changeOrderStatusModal";
+import { Order } from "../admin/fetchOrders";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
 
@@ -36,7 +37,7 @@ export const STATUSES = [
 export default async function Page({ params, searchParams }: { params: { id: string }, searchParams: Record<string, string> }) {
   const isLoggedIn = await getAuthStatus();
   const phoneNumber = searchParams.phone_number || "";
-  let order;
+  let order: Order;
   if (phoneNumber) {
     order = await fetchOrderbyID({ id: params.id, phoneNumber });
   } else {
@@ -144,6 +145,13 @@ export default async function Page({ params, searchParams }: { params: { id: str
             <p className="font-semibold">Payment Method:</p>
             <p className="text-right line-clamp-2">{order.payment_method}</p>
           </div>
+          {order.shipping_label ?
+            <div className="flex justify-between">
+              <p className="font-semibold">Shipping Label:</p>
+              <p className="text-right line-clamp-2">{order.shipping_label}</p>
+            </div>
+            : <></>
+          }
         </div>
         {STATUS === "Cancelled" ? (
           <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-5 shadow-xl rounded-xl bg-brand-500 text-white">

@@ -15,6 +15,7 @@ export interface Order {
     order_details: OrderDetail[];
     additional_notes?: string;
     payment_method: string;
+    shipping_label?: string;
     installment_details?: {
       down_payment: number;
       loan_term: number;

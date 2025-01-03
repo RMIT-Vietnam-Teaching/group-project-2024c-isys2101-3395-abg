@@ -88,9 +88,9 @@ export default async function StatusModal({ order_id, current_status, validStatu
                         })}
                     </ul>
                     {current_status === "Packaged" ? (
-                        <div className="mt-5 flex flex-col gap-2">
+                        <div className="mt-5 flex flex-col gap-3">
                             <Label htmlFor="shipping_label" className="text-white font-bold">Shipping Label</Label>
-                            <Input type="text" id="shipping_label" name="shipping_label" className="w-full p-3 bg-white rounded-lg" />
+                            <Input type="text" id="shipping_label" name="shipping_label" className="w-full p-3 bg-white rounded-lg text-black" />
                         </div>
                     ) : <></>}
                 </form>

@@ -60,8 +60,8 @@ export default function PaymentMethod({ calculateLoan }: { calculateLoan: (formD
                             <div className="space-y-2">
                                 <Label htmlFor="downPayment" className='font-semibold'>Down Payment (VNĐ)</Label>
                                 <CurrencyInputVietnam className='flex w-full px-3 py-1 text-white transition-colors rounded-md shadow-sm h-9 bg-brand-500 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-zinc-950 placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm' name='downPayment' />
+                                <input type="number" id='price' name='price' hidden defaultValue={Number(total()) ? Number(total()) + 30000 : 0} />
                             </div>
-                            <input type="number" id='price' name='price' hidden defaultValue={total() || ''} />
                             <div className="space-y-2">
                                 <Label htmlFor="loanTerm" className='font-semibold'>Loan Term (max 72 months)</Label>
                                 <Input
