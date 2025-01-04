@@ -16,16 +16,27 @@ export async function POST(request) {
 
         // Configure Nodemailer
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: process.env.EMAIL_HOST || "smtp.gmail.com",
+            port: process.env.EMAIL_PORT || 587,
+            secure: false,
             auth: {
-                user: process.env.EMAIL_USER, // Your email
-                pass: process.env.EMAIL_PASSWORD, // Your email password
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD,
             },
-        });
-
-        // Build order details for the email
-        const emailContent = generateEmail({ orderId: order_id, customerName: customer_name, phoneNumber: phone_number, address: address, orderDetails: order_details, totalAmount: total_amount, orderDate: order_date, additionalNotes: additional_notes, paymentMethod: payment_method, installmentDetails: installment_details });
-
+          });
+          
+          const emailContent = generateEmail({
+            orderId: order_id,
+            customerName: customer_name,
+            phoneNumber: phone_number || "N/A",
+            address: address || "N/A",
+            orderDetails: order_details || [],
+            totalAmount: total_amount || 0,
+            orderDate: order_date || new Date().toISOString(),
+            additionalNotes: additional_notes || "No additional notes.",
+            paymentMethod: payment_method || "N/A",
+          });
+          
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
