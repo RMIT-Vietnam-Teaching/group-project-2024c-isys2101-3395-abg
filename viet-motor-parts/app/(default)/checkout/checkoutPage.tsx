@@ -36,7 +36,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
     const additional_notes = formData.get("addNotes") as string;
     const payment_method = formData.get("paymentMethod") as string;
     const cartItems = formData.get("cartItems") as string;
-    const total_amount = formData.get('total') as string;
+    const total_amount = formData.get("total") as string;
     const order_details = JSON.parse(cartItems).map((item: CartItem) => ({
       product_id: item.id,
       product_name: item.name,
@@ -53,58 +53,79 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
         total_with_interest: parseFloat(formData.get("installmentTotal") as string),
       };
     }
-
-    //Paypal
-
+  
     if (payment_method === "PayPal") {
       setLoading(true);
-      try {
-        // Step 1: Store form data in sessionStorage
-        const formDataToStore = {
-          customer_name,
-          phone_number,
-          email,
-          address,
-          total_amount: parseFloat(total_amount), // Convert to number
-          additional_notes: additional_notes || null,
-          order_status: "", // Explicit status
-          payment_method: "PayPal", // Explicit method
-          paypal_order_id: null,
-          order_details
-        };
-        localStorage.setItem("orderFormData", JSON.stringify(formDataToStore));
-        console.log("Form data stored in sessionStorage:", formDataToStore);
     
-        // Step 2: Send the order details to create a PayPal order
+      try {
+        // Step 1: Send all order data to the backend
         const response = await fetch("/api/paypal/createOrder", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             customer_name,
+            phone_number,
+            email,
+            address,
+            additional_notes: additional_notes || null,
             order_details,
+            total_amount: parseFloat(total_amount),
+            payment_method: "PayPal",
           }),
         });
     
         const data = await response.json();
-    
         if (!response.ok) {
-          setError(data.error || "Failed to create PayPal order.");
-          return;
+          throw new Error(data.error || "Failed to create PayPal order.");
         }
     
-        // Step 3: Redirect the user to the PayPal approval URL
+        console.log("PayPal Order Data:", data);
+        sessionStorage.setItem("orderID", data.orderId);
+    
+        // Step 2: Send the confirmation email
+        try {
+          const emailResponse = await fetch("/api/sendInvoice", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              customer_name,
+              order_id: data.orderId,
+              order_date: data.created_at,
+              total_amount,
+              address,
+              order_details,
+              additional_notes,
+              phone_number,
+              payment_method,
+            }),
+          });
+    
+          const emailData = await emailResponse.json();
+          if (!emailResponse.ok) {
+            console.error("Failed to send confirmation email:", emailData.error);
+          } else {
+            console.log("Confirmation email sent successfully");
+          }
+        } catch (emailError) {
+          console.error("Error sending confirmation email:", emailError);
+        }
+    
+        // Step 3: Redirect to PayPal for payment approval
         window.location.href = data.approvalUrl;
       } catch (err) {
-        console.error("Error creating PayPal order:", err);
-        setError("An unexpected error occurred while processing the PayPal payment. Please try again.");
+        console.error("Error handling PayPal order:", err);
+        setError("An unexpected error occurred. Please try again.");
       } finally {
         setLoading(false);
       }
-      return; // Exit to avoid executing the normal flow
+    
+      return; // Exit the flow to avoid executing other payment logic
     }
-
+    
+    
+  
+    // Logic for non-PayPal orders
     setLoading(true);
     try {
       const response = await fetch("/api/orders", {
@@ -124,13 +145,13 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
           ...(installment_details && { installment_details }),
         }),
       });
-
+  
       const data = await response.json();
       if (!response.ok) {
         setError(data.error || "Failed to process your order.");
         return;
       }
-
+  
       // Send confirmation email
       try {
         const emailResponse = await fetch("/api/sendInvoice", {
@@ -152,7 +173,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
             ...(installment_details && { installment_details }),
           }),
         });
-
+  
         const emailData = await emailResponse.json();
         if (!emailResponse.ok) {
           console.error("Failed to send confirmation email:", emailData.error);
@@ -162,19 +183,16 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       } catch (emailError) {
         console.error("Error sending confirmation email:", emailError);
       }
-
-
-
+  
       // Store orderID and reset local storage
       setSuccess("Order placed successfully");
       setError("");
       localStorage.setItem("shoppingCart", "[]");
       localStorage.setItem("total", "0");
       sessionStorage.setItem("orderID", data.data._id);
-
+  
       // Redirect to the order success page
       router.push(`/checkout/success`);
-
     } catch (err) {
       console.error("Error placing order:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -182,7 +200,7 @@ export default function CheckoutPage({ calculateLoan }: { calculateLoan: (formDa
       setLoading(false);
     }
   };
-
+  
 
 
   return (
