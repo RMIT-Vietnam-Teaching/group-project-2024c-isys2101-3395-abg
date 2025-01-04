@@ -8,10 +8,60 @@ export async function GET(request) {
 
   const DEFAULT_LIMIT = 10;
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const limit = parseInt(searchParams.get("limit") || DEFAULT_LIMIT, 10);
+  const status = searchParams.get('status')?.split(',') || [];
+  const page = parseInt(searchParams.get('page') || '1', 10);
+  const limit = parseInt(searchParams.get('limit') || DEFAULT_LIMIT, 10);
+  const sortBy = searchParams.get('sortBy') || 'customer_name';
+  const order = searchParams.get('order') || 'asc';
+  const priceFrom = parseInt(searchParams.get('priceFrom') || '0', 10);
+  const priceTo = parseInt(searchParams.get('priceTo') || 'Infinity', 10);
+  const paymentMethod = searchParams.get('paymentMethod')?.split(',') || '';
 
   try {
+    //Begin of new code
+    const validSortFields = ['customer_name','total_amount'];
+    const validOrders = ['asc', 'desc'];
+
+    if (!validSortFields.includes(sortBy) || !validOrders.includes(order)) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'Invalid sortBy or order parameter. Use "customer_name" or "total_amount" for sortBy and "asc" or "desc" for order.',
+        }),
+        { status: 400 }
+      );
+    }
+
+    const sortOrder = order === 'asc' ? 1 : -1;
+
+    const statusFilter = status.length ? { order_status: { $in: status } } : {};
+
+    const paymentMethodFilter = paymentMethod.length ? { payment_method: { $in: paymentMethod } } : {};
+
+    const priceFilter = {};
+    if (priceFrom && !priceTo && !isNaN(priceFrom)) {
+      priceFilter.$gte = parseInt(priceFrom, 10);
+    } else if (!priceFrom && priceTo && !isNaN(priceTo)) {
+      priceFilter.$lte = parseInt(priceFrom, 10);
+    } else if (!isNaN(priceFrom) && !isNaN(priceTo) && priceFrom < priceTo) {
+      priceFilter.$gte = parseInt(priceFrom, 10);
+      priceFilter.$lte = parseInt(priceTo, 10);
+    } else if (!isNaN(priceTo) && !isNaN(priceFrom) && priceFrom > priceTo) {
+      priceFilter.$lte = parseInt(priceFrom, 10);
+      priceFilter.$gte = parseInt(priceTo, 10);
+    }
+
+    const filter = {
+      ...statusFilter,
+      ...paymentMethodFilter,
+      // name: { $regex: query, $options: 'i' }, // Case-insensitive regex search
+    };
+
+    if (Object.keys(priceFilter).length > 0) {
+      filter.total_amount = priceFilter;
+    }
+
+    // Fetch paginated orders
     const skip = (page - 1) * limit;
     const orders = await Order.find(filter) //If pass filter in it return nothing (successful but nothing) even when not filtering.
       .sort({ [sortBy]: sortOrder }) //Also this doesn't work when switch to other type of sorting
