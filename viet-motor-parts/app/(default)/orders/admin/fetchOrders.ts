@@ -14,6 +14,7 @@ export interface Order {
     order_details: OrderDetail[];
     additional_notes?: string;
     payment_method: string;
+    paypal_order_id?: string;
     installment_details?: {
       down_payment: number;
       loan_term: number;

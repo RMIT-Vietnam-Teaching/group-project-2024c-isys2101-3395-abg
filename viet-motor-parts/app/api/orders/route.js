@@ -139,6 +139,13 @@ export async function POST(request) {
       );
     }
 
+    if (payment_method === "PayPal" && !paypal_order_id) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Missing PayPal Order ID" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const enrichedOrderDetails = order_details.map((item) => ({
       product_id: item.product_id,
       product_name: item.product_name,
@@ -162,25 +169,16 @@ export async function POST(request) {
       newOrderConstructor.installment_details = installment_details;
     }
 
-    console.log("Order Creation Payload:", {
-      customer_name,
-      email,
-      phone_number,
-      address,
-      total_amount,
-      payment_method,
-      additional_notes,
-      order_details,
-      paypal_order_id,
-      order_status: "Pending",
-    });
-    
+    if (payment_method === "PayPal" && paypal_order_id) {
+      newOrderConstructor.paypal_order_id = paypal_order_id;
+    }
+
+
 
     const newOrder = await Order.create(newOrderConstructor);
     const savedOrder = await newOrder.save();
 
     console.log("Saved Order:", newOrder);
-    console.error("Error in Order Creation:", error);
 
 
     for (const item of order_details) {
@@ -199,7 +197,7 @@ export async function POST(request) {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ success: false, error: "Failed to create order" }),
+      JSON.stringify({ success: false, error: error.message }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

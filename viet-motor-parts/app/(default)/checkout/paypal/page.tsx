@@ -116,7 +116,7 @@ async function fetchPayPalAccessToken() {
 }
 
 // Helper function to check PayPal payment status
-async function checkPayPalPaymentStatus(paypal_order_id, accessToken) {
+async function checkPayPalPaymentStatus(paypal_order_id: string, accessToken: string) {
   const response = await fetch(
     `https://api-m.sandbox.paypal.com/v2/checkout/orders/${paypal_order_id}`,
     {
@@ -139,7 +139,7 @@ async function checkPayPalPaymentStatus(paypal_order_id, accessToken) {
 }
 
 // Helper function to capture PayPal payment
-async function capturePayPalPayment(paypal_order_id, accessToken) {
+async function capturePayPalPayment(paypal_order_id: string, accessToken: string) {
   const response = await fetch(
     `https://api-m.sandbox.paypal.com/v2/checkout/orders/${paypal_order_id}/capture`,
     {
