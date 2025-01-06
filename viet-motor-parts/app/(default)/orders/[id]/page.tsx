@@ -105,7 +105,7 @@ export default async function Page({ params, searchParams }: { params: { id: str
     status: order.order_status,
     paypalOrderId: order.paypal_order_id,
   });
-  
+
 
 
   return (
@@ -119,7 +119,16 @@ export default async function Page({ params, searchParams }: { params: { id: str
         <div className="flex justify-center items-center gap-5">
           <StatusModal order_id={order._id} current_status={STATUS} validStatuses={getValidStatuses(STATUS)} />
           <Button title="Edit Order Details" link={`/orders/${order._id}/edit`} />
-        </div> : <></>}
+        </div> : <>
+          {order.payment_method === "PayPal" && order.order_status === "Pending" && order.paypal_order_id && (
+            <div className="flex justify-center items-center gap-5">
+              <Button
+                link={`https://www.sandbox.paypal.com/checkoutnow?token=${order.paypal_order_id}`}
+                title="Complete PayPal Payment"
+              />
+            </div>
+          )}
+        </>}
       <div className="grid grid-cols-1 gap-5 py-5 md:grid-cols-2">
         <div className="grid w-full h-full grid-cols-1 gap-2 p-6 shadow-xl rounded-xl bg-brand-500">
           <p className="text-2xl font-bold">Order Information</p>
@@ -159,17 +168,6 @@ export default async function Page({ params, searchParams }: { params: { id: str
           }
         </div>
 
-        {order.payment_method === "PayPal" && order.order_status === "Pending" && order.paypal_order_id && (
-          <div className="flex justify-center mt-5">
-            <a
-              href={`https://www.sandbox.paypal.com/checkoutnow?token=${order.paypal_order_id}`}
-              className="inline-block px-6 py-3 text-white bg-green-500 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Complete PayPal Payment
-             </a>
-          </div>
-      )}
-        
         {STATUS === "Cancelled" ? (
           <div className="flex flex-col items-center justify-center w-full h-full gap-4 p-5 shadow-xl rounded-xl bg-brand-500 text-white">
             <CircleX className="w-16 h-16" color="#ef4444" />
