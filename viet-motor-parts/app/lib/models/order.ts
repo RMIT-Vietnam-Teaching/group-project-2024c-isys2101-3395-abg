@@ -50,7 +50,7 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema(
       required: true,
       enum: ['Cash', 'PayPal', 'Installment'],
     },
-    paypal_order_id: { type: String, required: function () { return this.payment_method === 'PayPal'; }}, // New field for PayPal Order ID
+    paypal_order_id: { type: String, default: null}, // New field for PayPal Order ID
     shipping_label: { type: String, default: null },
     order_details: [
       {
