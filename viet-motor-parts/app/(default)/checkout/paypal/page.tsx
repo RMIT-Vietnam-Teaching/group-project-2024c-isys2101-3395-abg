@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LoaderCircle } from 'lucide-react';
 
 export default function PayPalProcessingPage(): JSX.Element {
   const isProcessing = useRef(false);
@@ -67,8 +68,12 @@ export default function PayPalProcessingPage(): JSX.Element {
         // Redirect to the success page
         router.push(`/checkout/success?order_id=${orderID}`);
       } catch (err) {
+        const query = new URLSearchParams(window.location.search);
+        const orderID = query.get("order_id") || sessionStorage.getItem("orderID");
         console.error("Error processing PayPal order:", err);
         setError(err instanceof Error ? err.message : "An unexpected error occurred.");
+        // Redirect to the success page
+        router.push(`/checkout/success?order_id=${orderID}`);
       } finally {
         isProcessing.current = false;
       }
@@ -90,9 +95,10 @@ export default function PayPalProcessingPage(): JSX.Element {
           <p className="text-red-600">{error}</p>
         </div>
       ) : (
-        <div>
-          <h1 className="text-2xl font-bold">Processing your order...</h1>
-          <p>Please wait while we finalize your order.</p>
+        <div className="flex flex-col justify-center items-center min-h-screen">
+                <LoaderCircle size={75} className="animate-spin text-brand-100 self-center"/>
+                <h1 className="text-2xl font-bold"> Processing your order</h1>
+                <p>Please wait while we finalize your order.</p>
         </div>
       )}
     </div>
