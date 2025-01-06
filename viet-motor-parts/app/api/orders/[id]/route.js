@@ -94,10 +94,6 @@ export async function GET(request, { params }) {
 
 export async function PATCH(request, { params }) {
 
-  console.log("PATCH Request Payload:", {
-    paypal_order_id,
-    order_status,
-  });
   
   await dbConnect();
 
