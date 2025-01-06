@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:22.12.0
+FROM node:22.12.0-alpine
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -12,9 +12,6 @@ RUN npm install
 
 # Copy the rest of the application code to the working directory
 COPY . .
-
-# Copy the .env file to the working directory
-COPY .env.local .env.local
 
 # Expose the port the app runs on
 EXPOSE 3000
