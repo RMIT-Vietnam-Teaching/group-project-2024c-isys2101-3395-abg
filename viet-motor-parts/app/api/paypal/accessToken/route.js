@@ -15,6 +15,7 @@ export async function GET() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: "grant_type=client_credentials",
+        cache: "no-store",
       }
     );
 
@@ -28,7 +29,12 @@ export async function GET() {
       );
     }
 
-    console.log("PayPal Access Token Retrieved Successfully");
+    console.log("PayPal Access Token:", data.access_token);
+    console.log("Token Expires In:", data.expires_in, "seconds");
+    console.log(
+      "Token Expiration Time:",
+      new Date(Date.now() + data.expires_in * 1000).toISOString()
+    );
     return NextResponse.json({ accessToken: data.access_token });
   } catch (error) {
     console.error("Error fetching PayPal access token:", error);

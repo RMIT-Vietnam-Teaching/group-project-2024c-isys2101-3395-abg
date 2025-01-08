@@ -32,6 +32,7 @@ export default function PayPalProcessingPage(): JSX.Element {
 
         // Fetch PayPal Access Token
         const accessToken = await fetchPayPalAccessToken();
+        console.log("PayPal Access Token:", accessToken);
 
         // Confirm the PayPal payment status
         const paymentStatus = await checkPayPalPaymentStatus(paypal_order_id, accessToken);
@@ -103,7 +104,7 @@ export default function PayPalProcessingPage(): JSX.Element {
 // Helper function to fetch PayPal Access Token
 async function fetchPayPalAccessToken() {
   const response = await fetch("/api/paypal/accessToken", {
-    method: "GET",
+    method: "GET", cache: "no-store",
   });
 
   if (!response.ok) {
@@ -126,13 +127,14 @@ async function checkPayPalPaymentStatus(paypal_order_id: string, accessToken: st
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }
   );
 
   if (!response.ok) {
     const errorText = await response.text();
     console.error("Failed to check PayPal payment status:", errorText);
-    throw new Error("Failed to verify PayPal payment.");
+    throw new Error(errorText);
   }
 
   const data = await response.json();
@@ -149,6 +151,7 @@ async function capturePayPalPayment(paypal_order_id: string, accessToken: string
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }
   );
 
