@@ -63,9 +63,11 @@ export default function PayPalProcessingPage(): JSX.Element {
 
         const data = await response.json();
         console.log("Order updated successfully:", data);
-
+        localStorage.setItem("shoppingCart", "[]");
+        localStorage.setItem("total", "0");
+        sessionStorage.setItem("orderID", orderID);
         // Redirect to the success page
-        router.push(`/checkout/success?order_id=${orderID}`);
+        router.push(`/checkout/success`);
       } catch (err) {
         console.error("Error processing PayPal order:", err);
         setError(err instanceof Error ? err.message : "An unexpected error occurred.");
@@ -78,8 +80,7 @@ export default function PayPalProcessingPage(): JSX.Element {
   }, [router]);
 
   // setError("");
-  localStorage.setItem("shoppingCart", "[]");
-  localStorage.setItem("total", "0");
+
   // sessionStorage.removeItem("orderID");
 
   return (
