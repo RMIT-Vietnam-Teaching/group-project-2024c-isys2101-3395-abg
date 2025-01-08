@@ -120,7 +120,7 @@ export default function SearchBar() {
           {filteredResults.length > maxResults && (
             <div className="rounded-b bg-brand-500 p-4">
               <div className="flex items-center gap-4">
-                <a href="/products" className="flex-1 text-brand-100">
+                <a href={`/products?query=${query}`} className="flex-1 text-brand-100">
                   See all products...
                 </a>
               </div>
