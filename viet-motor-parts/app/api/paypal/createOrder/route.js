@@ -158,7 +158,7 @@ export async function POST(request) {
           ],
           application_context: {
             return_url: `${process.env.BACKEND_URL}/checkout/paypal?order_id=${newOrder._id}`, // Include the order ID
-            cancel_url: `${process.env.BACKEND_URL}/checkout`,
+            cancel_url: `${process.env.BACKEND_URL}/orders/${newOrder._id}?phone_number=${newOrder.phone_number}`,
           },
         }),
       });

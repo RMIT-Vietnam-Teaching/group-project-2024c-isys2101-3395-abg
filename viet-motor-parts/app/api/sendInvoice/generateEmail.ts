@@ -53,7 +53,14 @@ export function generateEmail(data: {
     </div>` 
                 : ``;
     const installmentDetailsField = paymentMethod === "Installment" && installmentDetails ?
-    `<div style="display: table; width: 100%; margin-bottom: 10px;">
+    
+    `
+    <div style="padding: 10px 20px;">
+        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Installment Details</h2>
+        <h3 style="font-size: 15px; font-weight: semibold; margin-bottom: 10px;">
+            Your request is subject to our partner's approval. There may be adjustments to this rate.
+        </h3>
+    <div style="display: table; width: 100%; margin-bottom: 10px;">
         <div style="display: table-row;">
             <div style="display: table-cell; width: 50%; text-align: left; font-weight: bold; font-size: 16px;">
                             Down Payment:
@@ -82,6 +89,7 @@ export function generateEmail(data: {
             <div style="display: table-cell; width: 50%; text-align: right; font-size: 16px;">${installmentDetails.interest_rate}%
             </div>
         </div>
+    </div>
     </div>` : ``;
 
 return `
@@ -139,13 +147,8 @@ return `
                 </div>
                 ${additionalNotesField}
             </div>
-            <div style="padding: 10px 20px;">
-                <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Installment Details</h2>
-                <h3 style="font-size: 15px; font-weight: semibold; margin-bottom: 10px;">
-                    Your request is subject to our partner's approval. There may be adjustments to this rate.
-                </h3>
             ${installmentDetailsField}
-            </div>
+
             <div style="padding: 10px 20px;">
                 <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Order Details</h2>
                 <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
