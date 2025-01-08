@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export const STATUSES = [
+export const STATUSES: { key: string; label: string }[] = [
   { key: "Pending", label: "Pending Approval" },
   { key: "Confirmed", label: "Order Confirmed" },
   { key: "Packaged", label: "Packaged" },

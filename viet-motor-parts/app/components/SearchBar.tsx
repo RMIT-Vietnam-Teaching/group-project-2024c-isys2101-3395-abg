@@ -95,14 +95,14 @@ export default function SearchBar() {
                 key={item.id}
                 className="flex items-center gap-4 border-b-2 border-brand-100 bg-brand-500 p-4"
               >
-                <a href="#" className="h-12 w-12 shrink-0">
+                <a href={`/products/${item.id}`} className="h-12 w-12 shrink-0">
                   <img
                     className="h-full w-full rounded"
                     src={item.image}
                     alt={item.name}
                   />
                 </a>
-                <a href="#" className="flex-1 text-brand-100 hover:underline">
+                <a href={`/products/${item.id}`} className="flex-1 text-brand-100 hover:underline">
                   {item.name}
                 </a>
               </div>
@@ -120,7 +120,7 @@ export default function SearchBar() {
           {filteredResults.length > maxResults && (
             <div className="rounded-b bg-brand-500 p-4">
               <div className="flex items-center gap-4">
-                <a href="#" className="flex-1 text-brand-100">
+                <a href="/products" className="flex-1 text-brand-100">
                   See all products...
                 </a>
               </div>
