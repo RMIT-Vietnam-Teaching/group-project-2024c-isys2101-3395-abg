@@ -37,8 +37,8 @@ export default function LoginForm() {
                 setSuccess("Login successful!");
                 setError("");
 
-                // Redirect to orders page
-                router.push("/orders/admin");
+                // Redirect to home page
+                router.push("/");
             }
         } catch (err) {
             console.error("Error logging in:", err);
